@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:graduation_project/shared/constants.dart';
+import 'package:graduation_project/shared/resources/color_manager.dart';
+
+class AppFormField extends StatelessWidget {
+  TextEditingController controller;
+  TextInputType type;
+  TextInputAction inputAction;
+  Iterable<String>? autoFill;
+  String hint;
+  IconData? prefixIcon;
+  IconData? suffixIcon;
+  bool isPassword;
+  FocusNode? focusNode;
+  bool enabled;
+  double padding;
+  VoidCallback? onPressed;
+  ValueChanged<String>? onSubmit;
+  String? Function(String?)? validate;
+  ValueChanged<String>? onChanged;
+  AppFormField({
+    required this.hint,
+    required this.type,
+    this.inputAction = TextInputAction.done,
+    required this.controller,
+    this.prefixIcon,
+    this.isPassword = false,
+    this.enabled = true,
+    this.suffixIcon,
+    this.autoFill,
+    this.onChanged,
+    this.focusNode,
+    this.padding = 5,
+    this.onPressed,
+    this.onSubmit,
+    this.validate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      cursorColor: ColorManager.dark,
+      enabled: enabled,
+      controller: controller,
+      keyboardType: type,
+      autofillHints: autoFill,
+      obscureText: isPassword,
+      textInputAction: inputAction,
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: padding),
+        isDense: true,
+        hintText: hint,
+        hintStyle:
+            kTheme.textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
+        prefixIconConstraints: BoxConstraints(),
+        suffixIconConstraints: BoxConstraints(),
+        prefixIcon: prefixIcon != null
+            ? Padding(
+                padding: EdgeInsets.only(right: 15.0),
+                child: FaIcon(
+                  prefixIcon,
+                  size: 24,
+                  color: ColorManager.primary,
+                ),
+              )
+            : null,
+        suffix: suffixIcon != null
+            ? CircleAvatar(
+                radius: 15,
+                backgroundColor: ColorManager.primary.withOpacity(0.2),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                  icon:
+                      FaIcon(suffixIcon, size: 15, color: ColorManager.primary),
+                  onPressed: onPressed,
+                ),
+              )
+            : null,
+      ),
+      style: TextStyle(
+        color: ColorManager.dark,
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+      onFieldSubmitted: onSubmit,
+      validator: validate,
+      onChanged: onChanged,
+    );
+  }
+}

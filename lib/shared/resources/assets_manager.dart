@@ -1,0 +1,33 @@
+const String IMAGE_PATH = "assets/images";
+const String MODELS_PATH = "assets/models";
+
+class ImageAssets {
+  static const String splashLogo = "$IMAGE_PATH/splash_logo.png";
+  static const String loading = "$IMAGE_PATH/loading.gif";
+  static const String loadingFull = "$IMAGE_PATH/loading_full.gif";
+  static const String noImage = "$IMAGE_PATH/no_image.png";
+  static const String error = "$IMAGE_PATH/error.svg";
+  static const String emptyCart = "$IMAGE_PATH/empty_cart.svg";
+
+  static const String onBoarding1 = "$IMAGE_PATH/onboarding/onboarding1.svg";
+  static const String onBoarding2 = "$IMAGE_PATH/onboarding/onboarding2.svg";
+  static const String onBoarding3 = "$IMAGE_PATH/onboarding/onboarding3.svg";
+  static const String login = "$IMAGE_PATH/login.svg";
+  static const String register = "$IMAGE_PATH/register.svg";
+  static const String wishlist = "$IMAGE_PATH/wishlist.png";
+  static const String passwordSuccessfully =
+      "$IMAGE_PATH/passwordSuccessfully.svg";
+
+  static const String banner1 = "$IMAGE_PATH/banners/1.png";
+  static const String banner2 = "$IMAGE_PATH/banners/2.png";
+  static const String banner3 = "$IMAGE_PATH/banners/3.png";
+  static const String banner4 = "$IMAGE_PATH/banners/4.png";
+  static const String banner5 = "$IMAGE_PATH/banners/5.png";
+
+  static const banners = [banner1, banner2, banner3, banner4, banner5];
+}
+
+class ModelsAssets {
+  static const String regions = "$MODELS_PATH/regions.json";
+  static const String cities = "$MODELS_PATH/cities.json";
+}

@@ -97,13 +97,10 @@ class SettingsView extends StatelessWidget {
                         children: [
                           Text(
                             "Security Information".toUpperCase(),
-                            style: kTheme.textTheme.headline5!.copyWith(
-                              color: ColorManager.subtitle,
-                              fontSize: 12,
-                            ),
+                            style: kTheme.textTheme.headline5,
                           ),
                           kVSeparator(factor: 0.01),
-                          MyOutButton(
+                          SolidButton(
                             text: "Change Password".toUpperCase(),
                             heightFactor: 0.06,
                             widthFactor: 0.5,
@@ -114,7 +111,7 @@ class SettingsView extends StatelessWidget {
                                 child: EditPasswordWidget(),
                               );
                             },
-                            color: ColorManager.dark,
+                            color: ColorManager.white,
                           )
                         ],
                       ),

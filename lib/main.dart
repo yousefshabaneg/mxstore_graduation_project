@@ -14,7 +14,7 @@ import 'business_logic/bloc_observer.dart';
 void chooseStartupWidget({required bool onBoarding, required String token}) {
   if (onBoarding) {
     ConstantsManager.startRoute =
-        token.isNotEmpty ? Routes.mainRoute : Routes.loginRoute;
+        token.isNotEmpty ? Routes.mainRoute : Routes.accountRoute;
   }
 }
 

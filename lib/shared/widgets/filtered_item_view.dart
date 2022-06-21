@@ -21,17 +21,17 @@ class FilteredProductView extends StatefulWidget {
   }) : super(key: key);
 
   var filteredModel;
-  int? brandId;
-  int? categoryId;
-  List<ProductItemModel> products = [];
+  final int? brandId;
+  final int? categoryId;
 
   @override
   State<FilteredProductView> createState() => _FilteredProductViewState();
 }
 
 class _FilteredProductViewState extends State<FilteredProductView> {
+  List<ProductItemModel> products = [];
   loadData() async {
-    widget.products = await ShopCubit.get(context).getFilteredProducts(
+    products = await ShopCubit.get(context).getFilteredProducts(
         categoryId: widget.categoryId, brandId: widget.brandId);
   }
 
@@ -42,26 +42,30 @@ class _FilteredProductViewState extends State<FilteredProductView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        print(products.length);
         return CupertinoPageScaffold(
           navigationBar: customAppBar(context, "${widget.filteredModel.name}"),
           child: Scaffold(
             backgroundColor: ColorManager.lightGray,
-            body: SearchCubit.get(context).isSearching
-                ? SearchView()
-                : ConditionalBuilder(
-                    condition: state is! ShopLoadingFilteredProductsState ||
-                        widget.products.length != 0,
-                    builder: (context) => ProductsItemsGridBuilder(
-                      products: widget.products,
-                      brandId: widget.brandId,
-                      categoryId: widget.categoryId,
-                    ),
-                    fallback: (context) => ShimmerGridViewLoading(),
-                  ),
+            body: ConditionalBuilder(
+              condition: state is! ShopLoadingFilteredProductsState ||
+                  products.length != 0,
+              builder: (context) => ProductsItemsGridBuilder(
+                products: products,
+                brandId: widget.brandId,
+                categoryId: widget.categoryId,
+              ),
+              fallback: (context) => ShimmerGridViewLoading(),
+            ),
           ),
         );
       },

@@ -42,6 +42,8 @@ class SearchCubit extends Cubit<SearchStates> {
       query: {
         "PageSize": 20,
         "Search": searchWord,
+        "BrandId": brandId,
+        "CategoryId": categoryId
       },
     ).then((json) {
       searchedProducts = ProductsModel.fromJson(json).products!;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graduation_project/data/models/boarding_model.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -17,8 +18,14 @@ class BoardingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Spacer(flex: 4),
-        SvgPicture.asset(model.image, height: 300),
+        ClipPath(
+          clipper: OvalBottomBorderClipper(),
+          child: Container(
+            height: kHeight * 0.6,
+            width: kWidth,
+            child: Image.asset(model.image, fit: BoxFit.cover),
+          ),
+        ),
         Spacer(flex: 2),
         Container(
           child: Text(

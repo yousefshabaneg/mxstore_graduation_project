@@ -42,38 +42,40 @@ class SolidButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      splashColor: splashColor,
-      clipBehavior: Clip.antiAlias,
-      shape: shape ??
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-            side: BorderSide(color: borderColor, width: 1),
-          ),
-      color: backgroundColor ?? ColorManager.primary,
-      minWidth: kWidth * widthFactor,
-      height: kHeight * heightFactor,
-      textColor: Colors.white,
-      onPressed: onTap,
-      disabledTextColor: ColorManager.white,
-      disabledColor: disabledColor ?? ColorManager.primary.withOpacity(0.4),
-      child: child ??
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (withIcon)
-                Row(
-                  children: [
-                    FaIcon(icon, color: color, size: size),
-                    kHSeparator(),
-                  ],
+    return SizedBox(
+      width: kWidth * widthFactor,
+      child: MaterialButton(
+        splashColor: splashColor,
+        clipBehavior: Clip.antiAlias,
+        shape: shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius),
+              side: BorderSide(color: borderColor, width: 1),
+            ),
+        color: backgroundColor ?? ColorManager.primary,
+        height: kHeight * heightFactor,
+        textColor: Colors.white,
+        onPressed: onTap,
+        disabledTextColor: ColorManager.white,
+        disabledColor: disabledColor ?? ColorManager.primary.withOpacity(0.4),
+        child: child ??
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (withIcon)
+                  Row(
+                    children: [
+                      FaIcon(icon, color: color, size: size),
+                      kHSeparator(),
+                    ],
+                  ),
+                Text(
+                  text,
+                  style: TextStyle(fontSize: size, color: color),
                 ),
-              Text(
-                text,
-                style: TextStyle(fontSize: size, color: color),
-              ),
-            ],
-          ),
+              ],
+            ),
+      ),
     );
   }
 }

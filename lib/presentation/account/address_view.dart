@@ -12,7 +12,6 @@ import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/validator.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/textfield.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -20,7 +19,7 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 
 class AddressView extends StatefulWidget {
   AddressView({Key? key, required this.user}) : super(key: key);
-  UserModel? user;
+  final UserModel? user;
 
   @override
   State<AddressView> createState() => _AddressViewState();
@@ -131,7 +130,6 @@ class _AddressViewState extends State<AddressView> {
                                       fontSize: 12,
                                     ),
                                   ),
-                                  kVSeparator(),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -225,7 +223,6 @@ class _AddressViewState extends State<AddressView> {
                                       fontSize: 12,
                                     ),
                                   ),
-                                  kVSeparator(),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

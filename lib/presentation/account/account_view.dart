@@ -96,12 +96,12 @@ class AccountView extends StatelessWidget {
                                     children: [
                                       kHSeparator(factor: 0.02),
                                       FaIcon(FontAwesomeIcons.rightFromBracket,
-                                          color: ColorManager.info),
+                                          color: ColorManager.primary),
                                       kHSeparator(factor: 0.08),
                                       Text(
                                         "Log out",
                                         style: TextStyle(
-                                          color: ColorManager.info,
+                                          color: ColorManager.primary,
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),

@@ -25,7 +25,7 @@ void signOut(context) async {
   await CashHelper.removeData(key: 'token').then((value) {
     if (value) {
       Navigator.of(context, rootNavigator: true)
-          .pushReplacementNamed(Routes.loginRoute);
+          .pushReplacementNamed(Routes.accountRoute);
     }
     UserCubit.get(context).userModel = null;
     ShopCubit.get(context).favoritesProductsIds = [];

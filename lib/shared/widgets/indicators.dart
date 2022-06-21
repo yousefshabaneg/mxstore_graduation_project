@@ -24,7 +24,7 @@ class MyLoadingIndicator extends StatelessWidget {
         child: LoadingIndicator(
           indicatorType: indicatorType,
           colors: [
-            color ?? ColorManager.primary,
+            color ?? ColorManager.gray,
           ],
         ),
       ),

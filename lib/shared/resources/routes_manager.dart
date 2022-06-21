@@ -7,11 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/presentation/categories/categories_view.dart';
+import 'package:graduation_project/presentation/login/account_view.dart';
 import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
-import '../../presentation/login/login.dart';
+import '../../presentation/login/login_view.dart';
 import '../../presentation/main/main_view.dart';
 import '../../presentation/onboarding/onboarding.dart';
-import '../../presentation/register/register.dart';
+import '../../presentation/login/register_view.dart';
 import '../../presentation/splash/splash.dart';
 import 'color_manager.dart';
 import 'strings_manager.dart';
@@ -20,12 +21,13 @@ import 'styles_manager.dart';
 class Routes {
   static const String root = "/";
   static const String mainRoute = "/main";
-  static const String onBoardingRoute = "onboarding";
+  static const String onBoardingRoute = "/onboarding";
+  static const String accountRoute = "/accountRoute";
   static const String loginRoute = "/login";
-  static const String registerRoute = "register";
-  static const String forgotPasswordRoute = "forgotPassword";
-  static const String categories = "categories";
-  static const String categoryItem = "categoryItem";
+  static const String registerRoute = "/register";
+  static const String forgotPasswordRoute = "/forgotPassword";
+  static const String categories = "/categories";
+  static const String categoryItem = "/categoryItem";
 }
 
 class RoutesGenerator {
@@ -35,6 +37,8 @@ class RoutesGenerator {
         return CupertinoPageRoute(builder: (_) => SplashView());
       case Routes.loginRoute:
         return CupertinoPageRoute(builder: (_) => LoginView());
+      case Routes.accountRoute:
+        return CupertinoPageRoute(builder: (_) => AccountPageView());
       case Routes.registerRoute:
         return CupertinoPageRoute(builder: (_) => RegisterView());
       case Routes.onBoardingRoute:

@@ -1,9 +1,5 @@
-import 'package:dialogs/dialogs.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_cubit.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_states.dart';

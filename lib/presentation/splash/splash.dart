@@ -5,6 +5,7 @@ import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 import 'package:graduation_project/shared//resources/color_manager.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
+import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/constants_manager.dart';
 import 'package:graduation_project/shared/resources/font_manager.dart';
 import 'package:graduation_project/shared/resources/routes_manager.dart';
@@ -19,7 +20,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   Timer? _timer;
   _startDelay() {
-    _timer = Timer(Duration(seconds: 2), _goNext);
+    _timer = Timer(Duration(seconds: 3), _goNext);
   }
 
   _goNext() {
@@ -40,33 +41,25 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(ColorManager.white);
     kSize = MediaQuery.of(context).size;
     kHeight = kSize.height;
     kWidth = kSize.width;
     kTheme = Theme.of(context);
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0.1, 0.4, 0.7, 0.9],
-            colors: [
-              Color(0xFF3594DD),
-              Color(0xFF4563DB),
-              Color(0xFF5036D5),
-              Color(0xFF5B16D0),
-            ],
-          ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent,
         ),
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        color: ColorManager.primary,
         child: Center(
-          child: Text(
-            "MX.Store",
-            style: kTheme.textTheme.headline1!.copyWith(
-              fontSize: FontSize.s36,
-              color: ColorManager.white,
-            ),
+          child: Image.asset(
+            ImageAssets.logo,
+            width: kWidth * 0.8,
           ),
         ),
       ),

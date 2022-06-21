@@ -98,27 +98,25 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                   builder: (context, state) => SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     child: Container(
-                      height: kHeight * 0.82,
+                      height: kHeight * 0.78,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Form(
                           key: formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              kVSeparator(),
                               BodyText(
                                 text: "Create new password",
                                 size: 30,
-                                color: ColorManager.dark,
+                                color: ColorManager.black,
                               ),
                               kVSeparator(),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Current password",
-                                      style: kTheme.textTheme.subtitle1),
+                                      style: kTheme.textTheme.headline5),
                                   AppFormField(
                                     hint: "Please enter your current password",
                                     type: TextInputType.visiblePassword,
@@ -136,8 +134,7 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                                   ),
                                   kVSeparator(factor: 0.02),
                                   Text("New Password",
-                                      style: kTheme.textTheme.caption!.copyWith(
-                                          color: ColorManager.subtitle)),
+                                      style: kTheme.textTheme.headline5),
                                   AppFormField(
                                     hint:
                                         "Please enter your new shiny password",
@@ -157,9 +154,8 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                                     }),
                                   ),
                                   kVSeparator(factor: 0.02),
-                                  Text("Confirm new password",
-                                      style: kTheme.textTheme.caption!.copyWith(
-                                          color: ColorManager.subtitle)),
+                                  Text("Confirm Password",
+                                      style: kTheme.textTheme.headline5),
                                   AppFormField(
                                     hint:
                                         "Please confirm your new shiny password",
@@ -244,26 +240,24 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                                 ),
                               ),
                               const Spacer(),
-                              Align(
-                                child: SolidButton(
-                                  child: state is! ChangePasswordLoadingState
-                                      ? Text(
-                                          "Change Password".toUpperCase(),
-                                        )
-                                      : MyLoadingIndicator(
-                                          height: kHeight * 0.05,
-                                          width: kWidth * 0.1,
-                                          indicatorType: Indicator.ballBeat,
-                                        ),
-                                  color: Colors.white,
-                                  radius: 20,
-                                  size: 12,
-                                  heightFactor: 0.06,
-                                  widthFactor: 0.95,
-                                  onTap: changed()
-                                      ? () => _changePassword(context)
-                                      : null,
-                                ),
+                              SolidButton(
+                                child: state is! ChangePasswordLoadingState
+                                    ? Text(
+                                        "Change Password".toUpperCase(),
+                                      )
+                                    : MyLoadingIndicator(
+                                        height: kHeight * 0.05,
+                                        width: kWidth * 0.1,
+                                        indicatorType: Indicator.ballBeat,
+                                      ),
+                                color: Colors.white,
+                                radius: 20,
+                                size: 12,
+                                heightFactor: 0.06,
+                                widthFactor: 0.95,
+                                onTap: changed()
+                                    ? () => _changePassword(context)
+                                    : null,
                               ),
                             ],
                           ),

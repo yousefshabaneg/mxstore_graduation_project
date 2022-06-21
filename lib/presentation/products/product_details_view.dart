@@ -8,6 +8,7 @@ import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/resources/font_manager.dart';
 import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/cart_bottom_sheet.dart';
 import 'package:graduation_project/shared/widgets/gallery_widget.dart';
+import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_item_widget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -245,6 +246,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             radius: 10,
                             text: true ? "Add to cart" : "In Cart",
                             color: true ? Colors.white : Colors.black,
+                            splashColor: ColorManager.primary,
                             heightFactor: 0.07,
                             backgroundColor:
                                 true ? ColorManager.black : Colors.white,
@@ -261,19 +263,28 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                             disabledColor: Colors.black38,
                           ),
                         ),
+                        kVSeparator(),
                         if (widget.product!.numberInStock != 0)
-                          Column(
-                            children: [
-                              kVSeparator(),
-                              SolidButton(
-                                radius: 10,
-                                text: "Buy Now",
-                                color: Colors.white,
-                                heightFactor: 0.07,
-                                backgroundColor: ColorManager.btnBuy,
-                                onTap: () => print("hello"),
-                              ),
-                            ],
+                          SolidButton(
+                            radius: 10,
+                            text: "Buy Now",
+                            color: Colors.white,
+                            heightFactor: 0.07,
+                            backgroundColor: ColorManager.primary,
+                            splashColor: ColorManager.dark,
+                            onTap: () => tabController.index = 3,
+                          )
+                        else
+                          SolidButton(
+                            radius: 10,
+                            text: "Notify Me",
+                            color: Colors.white,
+                            heightFactor: 0.07,
+                            backgroundColor: ColorManager.primary,
+                            splashColor: ColorManager.dark,
+                            withIcon: true,
+                            icon: FontAwesomeIcons.solidBell,
+                            onTap: () => tabController.index = 3,
                           ),
                         kVSeparator(),
                         Padding(
@@ -406,27 +417,28 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
 
 class ShimmerProductDetails extends StatelessWidget {
   const ShimmerProductDetails({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      shrinkWrap: true,
+      physics: BouncingScrollPhysics(),
       children: [
-        Shimmer.fromColors(
-          baseColor: Colors.grey.withOpacity(0.25),
-          highlightColor: Colors.white.withOpacity(0.6),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
-            child: Container(
-              height: kWidth * 0.13,
-              width: kWidth * 0.13,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey.withOpacity(0.9),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey.withOpacity(0.25),
+              highlightColor: Colors.white.withOpacity(0.6),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey.withOpacity(0.9),
+                ),
               ),
             ),
-          ),
+          ],
         ),
         Shimmer.fromColors(
           baseColor: Colors.grey.withOpacity(0.25),
@@ -443,23 +455,9 @@ class ShimmerProductDetails extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey.withOpacity(0.25),
-            highlightColor: Colors.white.withOpacity(0.6),
-            period: const Duration(seconds: 2),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: kHeight * 0.35,
-                width: kWidth * 0.6,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey.withOpacity(0.9),
-                ),
-              ),
-            ),
-          ),
+        SizedBox(
+          height: kHeight * 0.35,
+          child: MyLoadingIndicator(),
         ),
         kVSeparator(),
         Shimmer.fromColors(
@@ -492,7 +490,7 @@ class ShimmerProductDetails extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(),
+        kVSeparator(),
         Row(
           children: List.generate(
             3,

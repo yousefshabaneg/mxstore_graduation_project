@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graduation_project/data/cashe_helper.dart';
 import 'package:graduation_project/data/models/boarding_model.dart';
-import 'package:graduation_project/presentation/login/login.dart';
+import 'package:graduation_project/presentation/login/login_view.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/resources/routes_manager.dart';
 import 'package:graduation_project/shared/resources/strings_manager.dart';
-import 'package:graduation_project/shared/resources/values_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/boarding_item_widget.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({Key? key}) : super(key: key);
@@ -45,96 +42,66 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Color(0xFF3594DD),
-          statusBarIconBrightness: Brightness.dark,
-        ),
-        backgroundColor: Color(0xFF3594DD),
-        actions: [
-          TextButton(
-              onPressed: goToLogin,
-              child: BodyText(text: "Skip", color: Colors.white))
-        ],
+        backgroundColor: Colors.transparent,
+        systemOverlayStyle:
+            SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0.1, 0.4, 0.7, 0.9],
-            colors: [
-              Color(0xFF3594DD),
-              Color(0xFF4563DB),
-              Color(0xFF5036D5),
-              Color(0xFF5B16D0),
-            ],
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.teal,
+      body: Column(children: [
+        Expanded(
+          child: PageView.builder(
+            scrollDirection: Axis.horizontal,
+            controller: _controller,
+            onPageChanged: _onChanged,
+            itemBuilder: (context, index) =>
+                BoardingItem(model: boardingModels[index]),
+            itemCount: 3,
+            physics: BouncingScrollPhysics(),
           ),
+        ), //Image
+        SolidButton(
+          heightFactor: 0.07,
+          widthFactor: 0.9,
+          color: ColorManager.white,
+          backgroundColor: ColorManager.primary,
+          splashColor: ColorManager.white,
+          text: isLast() ? "Get Started" : "Next",
+          size: 20,
+          onTap: nextPage,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppPadding.p20),
-          child: Column(children: [
-            Expanded(
-              child: PageView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _controller,
-                onPageChanged: _onChanged,
-                itemBuilder: (context, index) =>
-                    BoardingItem(model: boardingModels[index]),
-                itemCount: 3,
-                physics: BouncingScrollPhysics(),
+
+        kVSeparator(factor: 0.04),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 2,
+              width: kWidth * 0.3,
+              decoration: BoxDecoration(
+                color: ColorManager.white,
               ),
-            ), //Image
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SmoothPageIndicator(
-                  controller: _controller,
-                  count: boardingModels.length,
-                  axisDirection: Axis.horizontal,
-                  effect: ScrollingDotsEffect(
-                    activeDotColor: ColorManager.white,
-                    dotColor: ColorManager.subtitle,
-                    dotHeight: 10,
-                    dotWidth: 10,
-                    spacing: 10,
-                  ),
-                ),
-              ],
             ),
-            SizedBox(height: 30),
-            isLast()
-                ? SolidButton(
-                    heightFactor: 0.06,
-                    radius: 25,
-                    color: ColorManager.white,
-                    borderColor: Colors.white,
-                    backgroundColor: Color(0xFF5B16D0),
-                    splashColor: ColorManager.white,
-                    text: "Get Started",
-                    size: 20,
-                    onTap: goToLogin,
-                  )
-                : Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () => _controller.nextPage(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeOutSine,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          BodyText(text: "Next", color: Colors.white, size: 20),
-                          SizedBox(width: 10),
-                          Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 20)
-                        ],
-                      ),
-                    ),
-                  ),
-          ]),
+            SizedBox(width: 5),
+            Container(
+              height: 2,
+              width: kWidth * 0.3,
+              decoration: BoxDecoration(
+                color: _currentPage > 0 ? Colors.white : Colors.grey,
+              ),
+            ),
+            SizedBox(width: 5),
+            Container(
+              height: 2,
+              width: kWidth * 0.3,
+              decoration: BoxDecoration(
+                color: _currentPage > 1 ? Colors.white : Colors.grey,
+              ),
+            ),
+          ],
         ),
-      ),
+        kVSeparator(factor: 0.04),
+      ]),
     );
   }
 
@@ -148,11 +115,17 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     });
   }
 
-  void goToLogin() {
-    CashHelper.saveData(key: 'onBoarding', value: true).then((value) {
-      if (value) {
-        pushReplacement(context, LoginView());
-      }
-    });
+  void nextPage() {
+    if (isLast()) {
+      CashHelper.saveData(key: 'onBoarding', value: true).then((value) {
+        if (value) {
+          pushReplacementNamed(context, Routes.accountRoute);
+        }
+      });
+    } else {
+      _controller.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutSine);
+    }
   }
 }

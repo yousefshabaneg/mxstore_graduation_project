@@ -17,6 +17,7 @@ import 'package:graduation_project/shared/resources/routes_manager.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 
 String token = '';
+String basketId = '';
 ThemeData kTheme = ThemeData();
 CupertinoTabController tabController = CupertinoTabController();
 List<PageController> imageControllers = [PageController()];

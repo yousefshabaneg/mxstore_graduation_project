@@ -3,6 +3,7 @@ import 'package:graduation_project/data/dio_helper.dart';
 import 'package:graduation_project/data/models/identity/user_model.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/resources/constants_manager.dart';
+import 'package:uuid/uuid.dart';
 
 import 'user_states.dart';
 
@@ -41,6 +42,8 @@ class UserCubit extends Cubit<UserStates> {
     required String password,
   }) async {
     emit(EmailExistLoadingState());
+    String basketId = Uuid().v4();
+    print(basketId);
     await DioHelper.getData(
         url: ConstantsManager.IsEmailExist,
         query: {"email": email}).then((value) {
@@ -51,6 +54,7 @@ class UserCubit extends Cubit<UserStates> {
           "email": email,
           "password": password,
           "phoneNumber": phone,
+          "userBasketId": basketId,
         }).then((value) {
           userModel = UserModel.fromJson(value);
           successMessage = "Register done successfully";
@@ -90,12 +94,14 @@ class UserCubit extends Cubit<UserStates> {
     });
   }
 
-  void getUserData() {
+  void getUserData() async {
     print(token);
     emit(GetUserDataLoadingState());
-    DioHelper.getData(url: ConstantsManager.Account, token: token).then((data) {
+    await DioHelper.getData(url: ConstantsManager.Account, token: token)
+        .then((data) {
       print("USER DATA $data");
       userModel = UserModel.fromJson(data);
+      basketId = userModel!.basketId!;
       emit(GetUserDataSuccessState(userModel!));
     }).catchError((error) {
       emit(GetUserDataErrorState());

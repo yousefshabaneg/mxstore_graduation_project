@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/data/models/product_model.dart';
+import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
@@ -28,13 +28,13 @@ class CartList extends StatelessWidget {
                 Row(
                   children: [
                     BodyText(
-                      text: "My Wishlist",
+                      text: "My Cart",
                       color: ColorManager.dark,
                       size: 18,
                     ),
                     SubtitleText(
-                      text: " (${ShopCubit.get(context).favoritesProducts.length} item" +
-                          "${ShopCubit.get(context).favoritesProducts.length > 1 ? "s" : ""}" +
+                      text: " (${ShopCubit.get(context).cartProducts.length} item" +
+                          "${ShopCubit.get(context).cartProducts.length > 1 ? "s" : ""}" +
                           ")",
                       size: 14,
                     ),
@@ -43,10 +43,9 @@ class CartList extends StatelessWidget {
                 kVSeparator(factor: 0.03),
                 Column(
                   children: List.generate(
-                      ShopCubit.get(context).favoritesProducts.length,
+                      ShopCubit.get(context).cartProducts.length,
                       (index) => CartItemWidget(
-                            product:
-                                ShopCubit.get(context).favoritesProducts[index],
+                            product: ShopCubit.get(context).cartProducts[index],
                           )),
                 )
               ],
@@ -60,7 +59,7 @@ class CartList extends StatelessWidget {
 
 class CartItemWidget extends StatefulWidget {
   CartItemWidget({Key? key, required this.product}) : super(key: key);
-  final ProductItemModel product;
+  final BasketProductModel product;
 
   @override
   State<CartItemWidget> createState() => _CartItemWidgetState();

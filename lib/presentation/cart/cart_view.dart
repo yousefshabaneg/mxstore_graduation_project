@@ -44,9 +44,9 @@ class CartView extends StatelessWidget {
                         condition: state is! ShopLoadingBasketState ||
                             state is! ShopLoadingAddToCartState,
                         builder: (context) => ConditionalBuilder(
-                          condition:
-                              ShopCubit.get(context).basketModel != null &&
-                                  ShopCubit.get(context).cartProduct != null,
+                          condition: ShopCubit.get(context).basketModel !=
+                                  null &&
+                              ShopCubit.get(context).cartProducts.isNotEmpty,
                           builder: (context) => Column(
                             children: [
                               BlocConsumer<AccountCubit, AccountStates>(
@@ -91,9 +91,7 @@ class CartView extends StatelessWidget {
                                 ),
                               ),
                               kDivider(),
-                              CartItemWidget(
-                                product: ShopCubit.get(context).cartProduct!,
-                              ),
+                              CartList(),
                             ],
                           ),
                           fallback: (context) => Center(

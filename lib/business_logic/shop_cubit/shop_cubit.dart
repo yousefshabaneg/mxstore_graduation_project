@@ -28,8 +28,7 @@ class ShopCubit extends Cubit<ShopStates> {
   List favoritesProductsIds = [];
   List<ProductItemModel> favoritesProducts = [];
 
-  List cartProductsIds = [];
-  ProductItemModel? cartProduct;
+  List<BasketProductModel> cartProducts = [];
   BasketModel? basketModel;
 
   ChangeFavoritesModel? changeFavoritesModel;
@@ -232,14 +231,14 @@ class ShopCubit extends Cubit<ShopStates> {
         .toList();
   }
 
-  void getBasket(String basketName) {
+  void getBasket() {
     emit(ShopLoadingBasketState());
     DioHelper.getData(
         url: "${ConstantsManager.Basket}",
-        query: {"id": basketName}).then((json) async {
+        query: {"id": basketId}).then((json) async {
       ConstantsManager.basketId = json["id"];
       basketModel = BasketModel.fromJson(json);
-      cartProduct = await getProduct(basketModel!.products[0].id!);
+      cartProducts = basketModel!.products;
       emit(ShopSuccessBasketState());
     }).catchError((error) {
       errorMessage = error;
@@ -248,29 +247,18 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   void addToCart(ProductItemModel product) {
-    cartProductsIds.add(product.id);
+    final productToAdd = BasketProductModel.mapProductToBasket(product);
+    basketModel?.products.add(productToAdd);
+    final newBasket = basketModel?.toJson();
+    print(newBasket);
     emit(ShopLoadingAddToCartState());
-    DioHelper.postData(url: "${ConstantsManager.Basket}", data: {
-      "id": "yousefBasket",
-      "items": [
-        {
-          "id": product.id,
-          "productName": product.name,
-          "price": product.price,
-          "quantity": 1,
-          "pictureUrl": product.imageUrl!.replaceFirst("10.0.2.2", "localhost"),
-          "brand": product.brandName,
-          "type": product.typeName,
-          "catgeory": product.categoryName
-        },
-      ],
-      "deliveryMethodId": 1,
-      "shippingPrice": 0
-    }).then((json) async {
+    DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket!)
+        .then((json) async {
       basketModel = BasketModel.fromJson(json);
-      cartProduct = await getProduct(product.id!);
+      cartProducts = basketModel!.products;
       emit(ShopSuccessAddToCartState());
     }).catchError((error) {
+      basketModel?.products.remove(productToAdd);
       errorMessage = error;
       emit(ShopErrorAddToCartState());
     });

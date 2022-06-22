@@ -10,6 +10,7 @@ import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/cart_bott
 import 'package:graduation_project/shared/widgets/gallery_widget.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_item_widget.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
@@ -52,6 +53,13 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     widget.product = await ShopCubit.get(context).getProduct(widget.productId);
   }
 
+  bool inCart = false;
+  void checkCart() {
+    ShopCubit.get(context).cartProducts.forEach((element) {
+      if (element.id == widget.productId) setState(() => inCart = true);
+    });
+  }
+
   @override
   void dispose() {
     imageController.dispose();
@@ -65,7 +73,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is ShopSuccessAddToCartState ||
+            state is ShopSuccessGetProductItemState) {
+          checkCart();
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
@@ -240,18 +253,29 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                           condition: widget.product!.numberInStock > 0,
                           builder: (context) => SolidButton(
                             withIcon: true,
-                            icon: true
+                            icon: !inCart
                                 ? FontAwesomeIcons.cartShopping
                                 : FontAwesomeIcons.check,
                             radius: 10,
-                            text: true ? "Add to cart" : "In Cart",
-                            color: true ? Colors.white : Colors.black,
+                            text: !inCart ? "Add to cart" : "In Cart",
+                            color: !inCart ? Colors.white : Colors.black,
                             splashColor: ColorManager.primary,
                             heightFactor: 0.07,
                             backgroundColor:
-                                true ? ColorManager.black : Colors.white,
-                            onTap: () => ShopCubit.get(context)
-                                .addToCart(widget.product!),
+                                !inCart ? ColorManager.black : Colors.white,
+                            borderColor: !inCart
+                                ? Colors.transparent
+                                : ColorManager.dark,
+                            child: state is! ShopLoadingAddToCartState
+                                ? null
+                                : MyLoadingIndicator(
+                                    height: kHeight * 0.05,
+                                    width: kWidth * 0.1,
+                                    indicatorType: Indicator.ballBeat,
+                                  ),
+                            onTap: () {
+                              ShopCubit.get(context).addToCart(widget.product!);
+                            },
                           ),
                           fallback: (context) => SolidButton(
                             withIcon: true,
@@ -363,52 +387,64 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
             fallback: (context) => ShimmerProductDetails(),
           ),
-          bottomSheet:
-              widget.product != null && widget.product!.numberInStock > 0
-                  ? CartBottomSheet(
-                      controller: scrollController,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "EGP  ",
-                                    style: kTheme.textTheme.caption!
-                                        .copyWith(fontSize: 18),
-                                  ),
-                                  TextSpan(
-                                    text: formatPrice(widget.product!.price!),
-                                    style: kTheme.textTheme.headline2!.copyWith(
-                                      color: ColorManager.dark,
-                                      letterSpacing: -1,
-                                    ),
-                                  ),
-                                ],
+          bottomSheet: widget.product != null &&
+                  widget.product!.numberInStock > 0
+              ? CartBottomSheet(
+                  controller: scrollController,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "EGP  ",
+                                style: kTheme.textTheme.caption!
+                                    .copyWith(fontSize: 18),
                               ),
-                            ),
-                            SolidButton(
-                              withIcon: true,
-                              icon: true
-                                  ? FontAwesomeIcons.cartShopping
-                                  : FontAwesomeIcons.check,
-                              radius: 10,
-                              text: true ? "Add to cart" : "In Cart",
-                              color: true ? Colors.white : Colors.black,
-                              heightFactor: 0.06,
-                              widthFactor: 0.4,
-                              backgroundColor:
-                                  true ? ColorManager.black : Colors.white,
-                              onTap: () => print("add"),
-                            ),
-                          ],
+                              TextSpan(
+                                text: formatPrice(widget.product!.price!),
+                                style: kTheme.textTheme.headline2!.copyWith(
+                                  color: ColorManager.dark,
+                                  letterSpacing: -1,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : null,
+                        SolidButton(
+                          withIcon: true,
+                          icon: !inCart
+                              ? FontAwesomeIcons.cartShopping
+                              : FontAwesomeIcons.check,
+                          radius: 10,
+                          text: !inCart ? "Add to cart" : "In Cart",
+                          color: !inCart ? Colors.white : Colors.black,
+                          splashColor: ColorManager.primary,
+                          heightFactor: 0.06,
+                          widthFactor: 0.4,
+                          backgroundColor:
+                              !inCart ? ColorManager.black : Colors.white,
+                          borderColor:
+                              !inCart ? Colors.transparent : ColorManager.dark,
+                          child: state is! ShopLoadingAddToCartState
+                              ? null
+                              : MyLoadingIndicator(
+                                  height: kHeight * 0.05,
+                                  width: kWidth * 0.1,
+                                  indicatorType: Indicator.ballBeat,
+                                ),
+                          onTap: () {
+                            ShopCubit.get(context).addToCart(widget.product!);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
         );
       },
     );

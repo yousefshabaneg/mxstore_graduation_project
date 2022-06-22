@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
+import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_cubit.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_states.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
+import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
 import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/constants.dart';
 
@@ -14,12 +16,15 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: BlocProvider.of<UserCubit>(context)..getUserData(),
-      child: BlocProvider.value(
-        value: BlocProvider.of<AccountCubit>(context)..getUserAddress(context),
-        child: BlocProvider.value(
-          value: BlocProvider.of<ShopCubit>(context)
-            ..getFavorites()
-            ..getBasket("yousefBasket"),
+      child: BlocConsumer<UserCubit, UserStates>(
+        listener: (context, state) {
+          if (state is GetUserDataSuccessState) {
+            ShopCubit.get(context).getBasket();
+          }
+        },
+        builder: (context, state) => BlocProvider.value(
+          value: BlocProvider.of<AccountCubit>(context)
+            ..getUserAddress(context),
           child: BlocConsumer<ShopCubit, ShopStates>(
             listener: (context, state) {
               if (state is ShopSuccessChangeFavoritesState)

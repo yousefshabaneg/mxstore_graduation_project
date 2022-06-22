@@ -44,6 +44,7 @@ class SolidButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: kWidth * widthFactor,
+      height: kHeight * heightFactor,
       child: MaterialButton(
         splashColor: splashColor,
         clipBehavior: Clip.antiAlias,
@@ -53,7 +54,6 @@ class SolidButton extends StatelessWidget {
               side: BorderSide(color: borderColor, width: 1),
             ),
         color: backgroundColor ?? ColorManager.primary,
-        height: kHeight * heightFactor,
         textColor: Colors.white,
         onPressed: onTap,
         disabledTextColor: ColorManager.white,

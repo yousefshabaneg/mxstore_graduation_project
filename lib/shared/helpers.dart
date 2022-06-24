@@ -2,8 +2,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dialogs/dialogs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

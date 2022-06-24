@@ -9,7 +9,6 @@ import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
 import 'package:graduation_project/data/cashe_helper.dart';
 import 'package:graduation_project/presentation/login/account_view.dart';
-import 'package:graduation_project/presentation/login/register_view.dart';
 import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
@@ -194,10 +193,14 @@ class _LoginViewState extends State<LoginView> {
                               heightFactor: 0.06,
                               size: 20,
                               backgroundColor: ColorManager.white,
-                              onTap: () => accountController.nextPage(
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.easeOutSine,
-                              ),
+                              onTap: () {
+                                CashHelper.saveData(
+                                    key: 'onBoarding', value: false);
+                                accountController.nextPage(
+                                  duration: Duration(milliseconds: 500),
+                                  curve: Curves.easeOutSine,
+                                );
+                              },
                               text: "Sign up",
                             ),
                           ],

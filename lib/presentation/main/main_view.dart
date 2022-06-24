@@ -25,28 +25,42 @@ class MainView extends StatelessWidget {
         builder: (context, state) => BlocProvider.value(
           value: BlocProvider.of<AccountCubit>(context)
             ..getUserAddress(context),
-          child: BlocConsumer<ShopCubit, ShopStates>(
-            listener: (context, state) {
-              if (state is ShopSuccessChangeFavoritesState)
-                showToast(
-                    msg: ShopCubit.get(context).changeFavoritesModel!.message!,
-                    state: ToastStates.SUCCESS);
-              if (state is ShopErrorChangeFavoritesState)
-                showToast(
-                    msg: ShopCubit.get(context).errorMessage,
-                    state: ToastStates.ERROR);
-            },
-            builder: (context, state) => BlocConsumer<AppCubit, AppStates>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                var cubit = AppCubit.get(context);
-                return CupertinoTabScaffold(
-                  controller: tabController,
-                  tabBar: kCupertinoTabBar(cubit.currentIndex),
-                  tabBuilder: (context, index) =>
-                      kCupertinoTabBuilder(context, index),
-                );
+          child: BlocProvider.value(
+            value: BlocProvider.of<ShopCubit>(context)..getFavorites(),
+            child: BlocConsumer<ShopCubit, ShopStates>(
+              listener: (context, state) {
+                if (state is ShopSuccessChangeFavoritesState) {
+                  showToast(
+                      msg:
+                          ShopCubit.get(context).changeFavoritesModel!.message!,
+                      state: ToastStates.SUCCESS);
+                }
+
+                if (state is ShopSuccessAddToCartState ||
+                    state is ShopSuccessRemoveFromCartState)
+                  showToast(
+                      msg: ShopCubit.get(context).successMessage,
+                      state: ToastStates.SUCCESS);
+
+                if (state is ShopErrorAddToCartState ||
+                    state is ShopErrorChangeFavoritesState ||
+                    state is ShopErrorRemoveFromCartState)
+                  showToast(
+                      msg: ShopCubit.get(context).errorMessage,
+                      state: ToastStates.ERROR);
               },
+              builder: (context, state) => BlocConsumer<AppCubit, AppStates>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  var cubit = AppCubit.get(context);
+                  return CupertinoTabScaffold(
+                    controller: tabController,
+                    tabBar: kCupertinoTabBar(cubit.currentIndex),
+                    tabBuilder: (context, index) =>
+                        kCupertinoTabBuilder(context, index),
+                  );
+                },
+              ),
             ),
           ),
         ),

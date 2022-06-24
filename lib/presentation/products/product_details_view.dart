@@ -1,6 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/data/models/comment_model.dart';
@@ -53,13 +52,6 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     widget.product = await ShopCubit.get(context).getProduct(widget.productId);
   }
 
-  bool inCart = false;
-  void checkCart() {
-    ShopCubit.get(context).cartProducts.forEach((element) {
-      if (element.id == widget.productId) setState(() => inCart = true);
-    });
-  }
-
   @override
   void dispose() {
     imageController.dispose();
@@ -73,12 +65,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopCubit, ShopStates>(
-      listener: (context, state) {
-        if (state is ShopSuccessAddToCartState ||
-            state is ShopSuccessGetProductItemState) {
-          checkCart();
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
@@ -251,32 +238,39 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         kVSeparator(factor: 0.03),
                         ConditionalBuilder(
                           condition: widget.product!.numberInStock > 0,
-                          builder: (context) => SolidButton(
-                            withIcon: true,
-                            icon: !inCart
-                                ? FontAwesomeIcons.cartShopping
-                                : FontAwesomeIcons.check,
-                            radius: 10,
-                            text: !inCart ? "Add to cart" : "In Cart",
-                            color: !inCart ? Colors.white : Colors.black,
-                            splashColor: ColorManager.primary,
-                            heightFactor: 0.07,
-                            backgroundColor:
-                                !inCart ? ColorManager.black : Colors.white,
-                            borderColor: !inCart
-                                ? Colors.transparent
-                                : ColorManager.dark,
-                            child: state is! ShopLoadingAddToCartState
-                                ? null
-                                : MyLoadingIndicator(
-                                    height: kHeight * 0.05,
-                                    width: kWidth * 0.1,
-                                    indicatorType: Indicator.ballBeat,
-                                  ),
-                            onTap: () {
-                              ShopCubit.get(context).addToCart(widget.product!);
-                            },
-                          ),
+                          builder: (context) {
+                            bool inCart = ShopCubit.get(context)
+                                .cartProductsIds
+                                .contains(widget.product!.id!);
+                            return SolidButton(
+                              withIcon: true,
+                              icon: !inCart
+                                  ? FontAwesomeIcons.cartShopping
+                                  : FontAwesomeIcons.check,
+                              radius: 10,
+                              text: !inCart ? "Add to cart" : "In Cart",
+                              color: !inCart ? Colors.white : Colors.black,
+                              splashColor: ColorManager.primary,
+                              heightFactor: 0.07,
+                              backgroundColor:
+                                  !inCart ? ColorManager.black : Colors.white,
+                              borderColor: !inCart
+                                  ? Colors.transparent
+                                  : ColorManager.dark,
+                              child: state is ShopLoadingAddToCartState &&
+                                      state.id == widget.productId
+                                  ? MyLoadingIndicator(
+                                      height: kHeight * 0.05,
+                                      width: kWidth * 0.1,
+                                      indicatorType: Indicator.ballBeat,
+                                    )
+                                  : null,
+                              onTap: () {
+                                ShopCubit.get(context)
+                                    .addToCart(widget.product!);
+                              },
+                            );
+                          },
                           fallback: (context) => SolidButton(
                             withIcon: true,
                             icon: FontAwesomeIcons.cartShopping,
@@ -416,20 +410,37 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         ),
                         SolidButton(
                           withIcon: true,
-                          icon: !inCart
+                          icon: !ShopCubit.get(context)
+                                  .cartProductsIds
+                                  .contains(widget.product!.id!)
                               ? FontAwesomeIcons.cartShopping
                               : FontAwesomeIcons.check,
                           radius: 10,
-                          text: !inCart ? "Add to cart" : "In Cart",
-                          color: !inCart ? Colors.white : Colors.black,
+                          text: !ShopCubit.get(context)
+                                  .cartProductsIds
+                                  .contains(widget.product!.id!)
+                              ? "Add to cart"
+                              : "In Cart",
+                          color: !ShopCubit.get(context)
+                                  .cartProductsIds
+                                  .contains(widget.product!.id!)
+                              ? Colors.white
+                              : Colors.black,
                           splashColor: ColorManager.primary,
                           heightFactor: 0.06,
                           widthFactor: 0.4,
-                          backgroundColor:
-                              !inCart ? ColorManager.black : Colors.white,
-                          borderColor:
-                              !inCart ? Colors.transparent : ColorManager.dark,
-                          child: state is! ShopLoadingAddToCartState
+                          backgroundColor: !ShopCubit.get(context)
+                                  .cartProductsIds
+                                  .contains(widget.product!.id!)
+                              ? ColorManager.black
+                              : Colors.white,
+                          borderColor: !ShopCubit.get(context)
+                                  .cartProductsIds
+                                  .contains(widget.product!.id!)
+                              ? Colors.transparent
+                              : ColorManager.dark,
+                          child: state is ShopLoadingAddToCartState &&
+                                  state.id == widget.productId
                               ? null
                               : MyLoadingIndicator(
                                   height: kHeight * 0.05,
@@ -481,9 +492,24 @@ class ShimmerProductDetails extends StatelessWidget {
           highlightColor: Colors.white.withOpacity(0.6),
           child: Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
+                horizontal: kWidth * 0.04, vertical: kHeight * 0.03),
             child: Container(
-              height: kHeight * 0.05,
+              height: kHeight * 0.02,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.grey.withOpacity(0.9),
+              ),
+            ),
+          ),
+        ),
+        Shimmer.fromColors(
+          baseColor: Colors.grey.withOpacity(0.25),
+          highlightColor: Colors.white.withOpacity(0.6),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: kWidth * 0.04, vertical: kHeight * 0.03),
+            child: Container(
+              height: kHeight * 0.02,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Colors.grey.withOpacity(0.9),
@@ -496,59 +522,59 @@ class ShimmerProductDetails extends StatelessWidget {
           child: MyLoadingIndicator(),
         ),
         kVSeparator(),
-        Shimmer.fromColors(
-          baseColor: Colors.grey.withOpacity(0.25),
-          highlightColor: Colors.white.withOpacity(0.6),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
-            child: Container(
-              height: kHeight * 0.03,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.grey.withOpacity(0.9),
-              ),
-            ),
-          ),
-        ),
-        Shimmer.fromColors(
-          baseColor: Colors.grey.withOpacity(0.25),
-          highlightColor: Colors.white.withOpacity(0.6),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
-            child: Container(
-              height: kHeight * 0.03,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.grey.withOpacity(0.9),
-              ),
-            ),
-          ),
-        ),
-        kVSeparator(),
-        Row(
-          children: List.generate(
-            3,
-            (index) => Shimmer.fromColors(
-              baseColor: Colors.grey.withOpacity(0.25),
-              highlightColor: Colors.white.withOpacity(0.6),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
-                child: Container(
-                  height: kHeight * 0.1,
-                  width: kWidth * 0.25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey.withOpacity(0.9),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        kVSeparator(),
+        // Shimmer.fromColors(
+        //   baseColor: Colors.grey.withOpacity(0.25),
+        //   highlightColor: Colors.white.withOpacity(0.6),
+        //   child: Padding(
+        //     padding: EdgeInsets.symmetric(
+        //         horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
+        //     child: Container(
+        //       height: kHeight * 0.03,
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(5),
+        //         color: Colors.grey.withOpacity(0.9),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Shimmer.fromColors(
+        //   baseColor: Colors.grey.withOpacity(0.25),
+        //   highlightColor: Colors.white.withOpacity(0.6),
+        //   child: Padding(
+        //     padding: EdgeInsets.symmetric(
+        //         horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
+        //     child: Container(
+        //       height: kHeight * 0.03,
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(5),
+        //         color: Colors.grey.withOpacity(0.9),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // kVSeparator(),
+        // Row(
+        //   children: List.generate(
+        //     3,
+        //     (index) => Shimmer.fromColors(
+        //       baseColor: Colors.grey.withOpacity(0.25),
+        //       highlightColor: Colors.white.withOpacity(0.6),
+        //       child: Padding(
+        //         padding: EdgeInsets.symmetric(
+        //             horizontal: kWidth * 0.04, vertical: kHeight * 0.01),
+        //         child: Container(
+        //           height: kHeight * 0.1,
+        //           width: kWidth * 0.25,
+        //           decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.circular(5),
+        //             color: Colors.grey.withOpacity(0.9),
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // kVSeparator(),
       ],
     );
   }

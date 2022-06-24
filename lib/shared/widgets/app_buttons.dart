@@ -6,6 +6,7 @@ import 'package:graduation_project/shared/widgets/app_text.dart';
 
 class SolidButton extends StatelessWidget {
   SolidButton({
+    Key? key,
     required this.color,
     this.backgroundColor,
     this.disabledColor,
@@ -22,7 +23,7 @@ class SolidButton extends StatelessWidget {
     this.withIcon = false,
     this.isDisabled = false,
     this.icon,
-  });
+  }) : super(key: key);
   final Color color;
   final Color splashColor;
   final String text;

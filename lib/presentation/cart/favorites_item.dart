@@ -1,24 +1,28 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/data/models/product_model.dart';
+import 'package:graduation_project/presentation/products/product_details_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
+import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
-class FavoritesView extends StatefulWidget {
-  FavoritesView({Key? key}) : super(key: key);
+class FavoritesList extends StatefulWidget {
+  FavoritesList({Key? key}) : super(key: key);
 
   @override
-  State<FavoritesView> createState() => _FavoritesViewState();
+  State<FavoritesList> createState() => _FavoritesListState();
 }
 
-class _FavoritesViewState extends State<FavoritesView> {
+class _FavoritesListState extends State<FavoritesList> {
   bool _isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -67,15 +71,24 @@ class _FavoritesViewState extends State<FavoritesView> {
                     iconColor: Colors.black,
                     children: List.generate(
                         ShopCubit.get(context).favoritesProducts.length,
-                        (index) => FavoriteItemWidget(
-                              product: ShopCubit.get(context)
-                                  .favoritesProducts[index],
+                        (index) => Column(
+                              children: [
+                                FavoriteItemWidget(
+                                  product: ShopCubit.get(context)
+                                      .favoritesProducts[index],
+                                ),
+                                if (index !=
+                                    ShopCubit.get(context)
+                                            .favoritesProducts
+                                            .length -
+                                        1)
+                                  kDivider(factor: 0.02, opacity: 0.3),
+                              ],
                             )),
                   ),
                 ),
               ),
             ),
-            kGrayDivider(),
           ],
         );
       },
@@ -90,90 +103,137 @@ class FavoriteItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: kWidth * 0.6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SubtitleText(
-                    text: product.brandName!,
-                    color: ColorManager.subtitle,
-                    size: 14,
-                  ),
-                  SizedBox(height: 5),
-                  BodyText(
-                    text: product.name!,
-                    color: ColorManager.dark,
-                    size: 14,
-                  ),
-                  SizedBox(height: 5),
-                  if (product.discount != 0)
-                    Text(
-                      "EGP ${formatPrice(product.oldPrice!)}",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: ColorManager.subtitle,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                  SizedBox(height: 5),
-                  Text(
-                    "EGP ${formatPrice(product.price!)}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: ColorManager.dark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Image(
-              image: NetworkImage(product.imageUrl!),
-              width: kWidth * 0.25,
-              height: kHeight * 0.1,
-            ),
-          ],
-        ),
-        kVSeparator(),
-        ProductDetailsHelpers.deliveryTime(),
-        kVSeparator(),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+        InkWell(
+          onTap: () =>
+              push(context, ProductDetailsView(productId: product.id!)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SolidButton(
-                withIcon: true,
-                icon: FontAwesomeIcons.cartShopping,
-                text: "Move to cart",
-                color: ColorManager.white,
-                size: 14,
-                heightFactor: 0.05,
-                widthFactor: 0.4,
-                backgroundColor: ColorManager.black,
-                radius: 10,
-                onTap: () => print("add"),
+              Container(
+                width: kWidth * 0.6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SubtitleText(
+                      text: product.brandName!,
+                      color: ColorManager.subtitle,
+                      size: 14,
+                    ),
+                    SizedBox(height: 5),
+                    BodyText(
+                      text: product.name!,
+                      color: ColorManager.dark,
+                      size: 14,
+                    ),
+                    SizedBox(height: 5),
+                    if (product.discount != 0)
+                      Text(
+                        "EGP ${formatPrice(product.oldPrice!)}",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: ColorManager.subtitle,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    SizedBox(height: 5),
+                    Text(
+                      "EGP ${formatPrice(product.price!)}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: ColorManager.dark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              MyTextButton(
-                withIcon: true,
-                icon: FontAwesomeIcons.trash,
-                widthFactor: 0.2,
-                text: "Remove",
-                color: ColorManager.info.withOpacity(0.6),
-                size: 14,
-                heightFactor: 0.04,
-                onTap: () =>
-                    ShopCubit.get(context).removeFavoriteProduct(product.id!),
+              Image(
+                image: NetworkImage(product.imageUrl!),
+                width: kWidth * 0.25,
+                height: kHeight * 0.1,
               ),
             ],
           ),
         ),
-        kDivider(factor: 0.02, opacity: 0.3),
+        kVSeparator(),
+        ProductDetailsHelpers.deliveryTime(),
+        kVSeparator(),
+        BlocConsumer<ShopCubit, ShopStates>(
+          listener: (context, state) {},
+          builder: (context, state) => Container(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ConditionalBuilder(
+                  condition: product.numberInStock > 0,
+                  builder: (context) {
+                    return SolidButton(
+                      withIcon: true,
+                      size: 14,
+                      heightFactor: 0.05,
+                      widthFactor: 0.4,
+                      icon: !ShopCubit.get(context).isProductInCart(product.id!)
+                          ? FontAwesomeIcons.cartShopping
+                          : FontAwesomeIcons.check,
+                      radius: 10,
+                      text: !ShopCubit.get(context).isProductInCart(product.id!)
+                          ? "Add to cart"
+                          : "In Cart",
+                      color:
+                          !ShopCubit.get(context).isProductInCart(product.id!)
+                              ? Colors.white
+                              : Colors.black,
+                      splashColor: ColorManager.primary,
+                      backgroundColor:
+                          !ShopCubit.get(context).isProductInCart(product.id!)
+                              ? ColorManager.black
+                              : Colors.white,
+                      borderColor:
+                          !ShopCubit.get(context).isProductInCart(product.id!)
+                              ? Colors.transparent
+                              : ColorManager.dark,
+                      child: state is ShopLoadingAddToCartState &&
+                              state.id == product.id
+                          ? MyLoadingIndicator(
+                              height: kHeight * 0.05,
+                              width: kWidth * 0.1,
+                              indicatorType: Indicator.ballBeat,
+                            )
+                          : null,
+                      onTap: () {
+                        ShopCubit.get(context).addToCart(product);
+                      },
+                    );
+                  },
+                  fallback: (context) => SolidButton(
+                    withIcon: true,
+                    size: 14,
+                    heightFactor: 0.05,
+                    widthFactor: 0.4,
+                    icon: FontAwesomeIcons.cartShopping,
+                    radius: 10,
+                    text: "out of stock",
+                    color: Colors.white,
+                    disabledColor: Colors.black38,
+                  ),
+                ),
+                MyTextButton(
+                  withIcon: true,
+                  icon: FontAwesomeIcons.trash,
+                  widthFactor: 0.2,
+                  text: "Remove",
+                  color: ColorManager.info.withOpacity(0.6),
+                  size: 14,
+                  heightFactor: 0.04,
+                  onTap: () =>
+                      ShopCubit.get(context).removeFavoriteProduct(product.id!),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

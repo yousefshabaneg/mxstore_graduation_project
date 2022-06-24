@@ -119,11 +119,31 @@ class ShopSuccessChangeFavoritesState extends ShopStates {
 class ShopErrorChangeFavoritesState extends ShopStates {}
 
 // Add to Cart States
-class ShopLoadingAddToCartState extends ShopStates {}
+class ShopLoadingAddToCartState extends ShopStates {
+  int? id = 0;
+  ShopLoadingAddToCartState(this.id);
+}
 
 class ShopSuccessAddToCartState extends ShopStates {}
 
 class ShopErrorAddToCartState extends ShopStates {}
+
+// Change Quantity States
+class ShopLoadingChangeQuantityCartState extends ShopStates {}
+
+class ShopSuccessChangeQuantityCartState extends ShopStates {}
+
+class ShopErrorChangeQuantityCartState extends ShopStates {}
+
+// Remove From Cart States
+class ShopLoadingRemoveFromCartState extends ShopStates {
+  int? id = 0;
+  ShopLoadingRemoveFromCartState(this.id);
+}
+
+class ShopSuccessRemoveFromCartState extends ShopStates {}
+
+class ShopErrorRemoveFromCartState extends ShopStates {}
 
 // Basket States
 class ShopLoadingBasketState extends ShopStates {}

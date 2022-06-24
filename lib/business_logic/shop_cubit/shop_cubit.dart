@@ -29,6 +29,8 @@ class ShopCubit extends Cubit<ShopStates> {
   List<ProductItemModel> favoritesProducts = [];
 
   List<BasketProductModel> cartProducts = [];
+  List cartProductsIds = [];
+  int cartQuantities = 0;
   BasketModel? basketModel;
 
   ChangeFavoritesModel? changeFavoritesModel;
@@ -232,6 +234,8 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   void getBasket() {
+    cartProductsIds.clear();
+    cartQuantities = 0;
     emit(ShopLoadingBasketState());
     DioHelper.getData(
         url: "${ConstantsManager.Basket}",
@@ -239,6 +243,10 @@ class ShopCubit extends Cubit<ShopStates> {
       ConstantsManager.basketId = json["id"];
       basketModel = BasketModel.fromJson(json);
       cartProducts = basketModel!.products;
+      cartProducts.forEach((element) {
+        cartProductsIds.add(element.id);
+        cartQuantities += element.quantity;
+      });
       emit(ShopSuccessBasketState());
     }).catchError((error) {
       errorMessage = error;
@@ -246,23 +254,102 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  void addToCart(ProductItemModel product) {
-    final productToAdd = BasketProductModel.mapProductToBasket(product);
-    basketModel?.products.add(productToAdd);
-    final newBasket = basketModel?.toJson();
-    print(newBasket);
-    emit(ShopLoadingAddToCartState());
-    DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket!)
-        .then((json) async {
-      basketModel = BasketModel.fromJson(json);
-      cartProducts = basketModel!.products;
-      emit(ShopSuccessAddToCartState());
-    }).catchError((error) {
-      basketModel?.products.remove(productToAdd);
-      errorMessage = error;
-      emit(ShopErrorAddToCartState());
-    });
+  void addToCart(ProductItemModel product) async {
+    if (!cartProducts.any((item) => item.id == product.id)) {
+      emit(ShopLoadingAddToCartState(product.id));
+      final productToAdd = BasketProductModel.mapProductToBasket(product);
+      basketModel?.products.add(productToAdd);
+      cartQuantities++;
+      final newBasket = basketModel?.toJson();
+      if (newBasket != null) {
+        DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
+            .then((json) {
+          basketModel = BasketModel.fromJson(json);
+          cartProducts = basketModel!.products;
+          cartProductsIds.add(product.id);
+          successMessage = "Product Added to cart";
+          emit(ShopSuccessAddToCartState());
+        }).catchError((error) {
+          basketModel?.products.remove(productToAdd);
+          errorMessage = error;
+          emit(ShopErrorAddToCartState());
+        });
+      } else {
+        errorMessage = "error occurred, try again later.";
+        emit(ShopErrorAddToCartState());
+      }
+    }
   }
+
+  void changeQuantity(BasketProductModel product, int quantity) {
+    emit(ShopLoadingChangeQuantityCartState());
+    int oldQuantity = product.quantity;
+    cartQuantities -= oldQuantity;
+    cartQuantities += quantity;
+    basketModel?.products.firstWhere((p) => p.id == product.id).quantity =
+        quantity;
+    final newBasket = basketModel?.toJson();
+    if (newBasket != null) {
+      DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
+          .then((json) async {
+        basketModel = BasketModel.fromJson(json);
+        cartProducts = basketModel!.products;
+        emit(ShopSuccessChangeQuantityCartState());
+      }).catchError((error) {
+        basketModel?.products.firstWhere((p) => p.id == product.id).quantity =
+            oldQuantity;
+        errorMessage = error;
+        emit(ShopErrorChangeQuantityCartState());
+      });
+    } else {
+      errorMessage = "error occurred, try again later.";
+      emit(ShopErrorChangeQuantityCartState());
+    }
+  }
+
+  Future<void> removeFromCart(BasketProductModel product) async {
+    emit(ShopLoadingRemoveFromCartState(product.id));
+    basketModel?.products.removeWhere((p) => p.id == product.id);
+    cartQuantities -= product.quantity;
+    final newBasket = basketModel?.toJson();
+    if (newBasket != null) {
+      cartProductsIds.remove(product.id);
+      DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
+          .then((json) async {
+        basketModel = BasketModel.fromJson(json);
+        cartProducts = basketModel!.products;
+        successMessage = "Product Removed from cart";
+        emit(ShopSuccessRemoveFromCartState());
+      }).catchError((error) {
+        basketModel?.products.add(product);
+        cartProductsIds.add(product.id);
+        errorMessage = error;
+        emit(ShopErrorRemoveFromCartState());
+      });
+    } else {
+      errorMessage = "error occurred, try again later.";
+      emit(ShopErrorRemoveFromCartState());
+    }
+  }
+
+  int cartTotalQuantity() {
+    int sum = 0;
+    basketModel?.products.forEach((product) {
+      sum += product.quantity * (product.price ?? 0);
+    });
+    return sum;
+  }
+
+  String cartItemQuantity(int? productId) {
+    return productId != null
+        ? cartProducts
+            .firstWhere((element) => element.id == productId)
+            .quantity
+            .toString()
+        : '1';
+  }
+
+  bool isProductInCart(int productId) => cartProductsIds.contains(productId);
 
   List<ProductItemModel> cartProductsInMemory() {
     return products

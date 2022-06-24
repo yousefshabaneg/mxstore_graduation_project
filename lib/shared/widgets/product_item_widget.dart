@@ -1,22 +1,28 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
+import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/presentation/products/product_details_view.dart';
-import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
+import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class ProductItemWidget extends StatelessWidget {
   ProductItemModel? model;
+  bool cartProduct = false;
   ProductItemWidget({
+    Key? key,
     this.model,
-  });
+    this.cartProduct = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -25,8 +31,8 @@ class ProductItemWidget extends StatelessWidget {
         push(context, ProductDetailsView(productId: model!.id!));
       },
       child: Container(
-        padding: EdgeInsets.all(5),
-        width: kWidth * 0.3,
+        padding: EdgeInsets.all(10),
+        width: kWidth * 0.4,
         decoration: new BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border.all(color: ColorManager.gray, width: 0.2),
@@ -86,7 +92,7 @@ class ProductItemWidget extends StatelessWidget {
                 ],
               ),
             ),
-            kVSeparator(factor: 0.001),
+            const SizedBox(height: 5),
             if (model!.discount != 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,7 +112,7 @@ class ProductItemWidget extends StatelessWidget {
                   )
                 ],
               ),
-            Spacer(),
+            const SizedBox(height: 5),
             Row(
               children: [
                 FaIcon(
@@ -129,6 +135,46 @@ class ProductItemWidget extends StatelessWidget {
                 ),
               ],
             ),
+            Spacer(),
+            if (cartProduct)
+              BlocConsumer<ShopCubit, ShopStates>(
+                listener: (context, state) {},
+                builder: (context, state) => ConditionalBuilder(
+                  condition: model!.numberInStock > 0,
+                  builder: (context) {
+                    return SolidButton(
+                      size: 12,
+                      heightFactor: 0.04,
+                      radius: 5,
+                      text: "Add to cart",
+                      color: Colors.black,
+                      splashColor: ColorManager.primary,
+                      backgroundColor: Colors.white,
+                      borderColor: ColorManager.dark,
+                      onTap: () {
+                        ShopCubit.get(context).addToCart(model!);
+                      },
+                      child: state is ShopLoadingAddToCartState &&
+                              state.id == model!.id
+                          ? MyLoadingIndicator(
+                              height: kHeight * 0.05,
+                              width: kWidth * 0.1,
+                              indicatorType: Indicator.ballBeat,
+                            )
+                          : null,
+                    );
+                  },
+                  fallback: (context) => SolidButton(
+                    size: 12,
+                    heightFactor: 0.04,
+                    radius: 5,
+                    icon: FontAwesomeIcons.cartShopping,
+                    text: "out of stock",
+                    color: Colors.white,
+                    disabledColor: Colors.black38,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -141,6 +187,7 @@ class ProductsHorizontalListBuilder extends StatefulWidget {
     Key? key,
     this.title = "",
     this.size = 24,
+    this.cartProduct = false,
     required this.products,
     this.categoryId,
     this.brandId,
@@ -150,6 +197,7 @@ class ProductsHorizontalListBuilder extends StatefulWidget {
   int? categoryId;
   final String title;
   final double size;
+  bool cartProduct = false;
 
   @override
   State<ProductsHorizontalListBuilder> createState() =>
@@ -211,7 +259,7 @@ class _ProductsHorizontalListBuilderState
           ),
           kVSeparator(factor: 0.02),
           Container(
-            height: kHeight * .32,
+            height: kHeight * (widget.cartProduct ? 0.4 : 0.35),
             child: ListView.builder(
               controller: controller,
               physics: BouncingScrollPhysics(),
@@ -220,6 +268,7 @@ class _ProductsHorizontalListBuilderState
                 if (index < widget.products.length)
                   return ProductItemWidget(
                     model: widget.products[index],
+                    cartProduct: this.widget.cartProduct,
                   );
                 else if (widget.products.length < pageSize)
                   return SizedBox.shrink();

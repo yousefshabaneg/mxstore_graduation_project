@@ -117,11 +117,8 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
   void nextPage() {
     if (isLast()) {
-      CashHelper.saveData(key: 'onBoarding', value: true).then((value) {
-        if (value) {
-          pushReplacementNamed(context, Routes.accountRoute);
-        }
-      });
+      pushReplacementNamed(context, Routes.accountRoute);
+      CashHelper.saveData(key: 'onBoarding', value: true);
     } else {
       _controller.nextPage(
           duration: const Duration(milliseconds: 300),

@@ -18,6 +18,7 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
+import 'package:graduation_project/shared/widgets/product_item_widget.dart';
 
 class CartView extends StatelessWidget {
   CartView({Key? key}) : super(key: key);
@@ -119,19 +120,15 @@ class CartView extends StatelessWidget {
                                   ),
                                 ),
                                 kVSeparator(),
-                                Container(
-                                  width: kWidth * 0.9,
-                                  child: SolidButton(
-                                    withIcon: true,
-                                    icon: FontAwesomeIcons.cartShopping,
-                                    radius: 10,
-                                    text: "Start Shopping",
-                                    heightFactor: 0.07,
-                                    backgroundColor: Colors.white,
-                                    color: ColorManager.primary,
-                                    borderColor: ColorManager.primary,
-                                    onTap: () => tabController.index = 0,
-                                  ),
+                                SolidButton(
+                                  radius: 10,
+                                  text: "Start Shopping",
+                                  heightFactor: 0.07,
+                                  backgroundColor: Colors.white,
+                                  color: ColorManager.black,
+                                  widthFactor: 0.9,
+                                  borderColor: ColorManager.black,
+                                  onTap: () => tabController.index = 0,
                                 ),
                               ],
                             ),
@@ -141,112 +138,193 @@ class CartView extends StatelessWidget {
                       ),
                     ),
                     if (ShopCubit.get(context).favoritesProducts.isNotEmpty)
-                      FavoritesView(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child:
-                                FaIcon(FontAwesomeIcons.creditCard, size: 22),
-                          ),
-                          kHSeparator(factor: 0.04),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BodyText(
-                                text: "Pay on delivery",
-                                color: ColorManager.black,
-                              ),
-                              SubtitleText(
-                                text: "For all orders",
-                                color: ColorManager.black,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      color: ColorManager.gray,
-                      indent: kWidth * 0.1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child:
-                                FaIcon(FontAwesomeIcons.arrowsRotate, size: 22),
-                          ),
-                          kHSeparator(factor: 0.04),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BodyText(
-                                text: "Return policy",
-                                color: ColorManager.black,
-                              ),
-                              Container(
-                                width: kWidth * 0.8,
-                                child: SubtitleText(
-                                  text:
-                                      "Most products can be returned within 30 days of delivery",
-                                  color: ColorManager.black,
-                                  size: 14,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      color: ColorManager.gray,
-                      indent: kWidth * 0.1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: FaIcon(FontAwesomeIcons.circleQuestion,
-                                size: 22),
-                          ),
-                          kHSeparator(factor: 0.04),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BodyText(
-                                text: "Need Help?",
-                                color: ColorManager.black,
-                              ),
-                              SubtitleText(
-                                text: "19595",
-                                color: ColorManager.info,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                      FavoritesList(),
                     kGrayDivider(),
+                    if (ShopCubit.get(context).cartProducts.isEmpty) ...[
+                      ProductsHorizontalListBuilder(
+                        title: "Hot Deals",
+                        cartProduct: true,
+                        products: ShopCubit.get(context).products,
+                        categoryId: 1,
+                      ),
+                      kGrayDivider(),
+                    ],
+                    DeliveryServices(),
+                    kGrayDivider(),
+                    if (ShopCubit.get(context).cartProductsIds.isNotEmpty)
+                      kVSeparator(factor: 0.05),
                   ],
                 ),
               ),
             ),
           ),
+          bottomSheet: ShopCubit.get(context).basketModel != null &&
+                  ShopCubit.get(context).cartProducts.isNotEmpty
+              ? Container(
+                  height: kHeight * 0.1,
+                  width: kWidth,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                          top: BorderSide(
+                              color: ColorManager.gray.withOpacity(0.5),
+                              width: 6))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SubtitleText(
+                              text:
+                                  "Subtotal for ${ShopCubit.get(context).cartQuantities} products",
+                              size: 14,
+                              color: Colors.black26,
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "EGP  ",
+                                    style: kTheme.textTheme.caption!.copyWith(
+                                        fontSize: 16, color: Colors.black87),
+                                  ),
+                                  TextSpan(
+                                    text: formatPrice(ShopCubit.get(context)
+                                        .cartTotalQuantity()),
+                                    style: kTheme.textTheme.headline3!.copyWith(
+                                      color: Colors.black,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SolidButton(
+                          radius: 10,
+                          text: "Checkout",
+                          color: Colors.white,
+                          splashColor: ColorManager.primary,
+                          heightFactor: 0.06,
+                          widthFactor: 0.4,
+                          backgroundColor: Colors.black,
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
         );
       },
+    );
+  }
+}
+
+class DeliveryServices extends StatelessWidget {
+  const DeliveryServices({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: FaIcon(FontAwesomeIcons.creditCard, size: 22),
+              ),
+              kHSeparator(factor: 0.04),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BodyText(
+                    text: "Pay on delivery",
+                    color: ColorManager.black,
+                  ),
+                  SubtitleText(
+                    text: "For all orders",
+                    color: ColorManager.black,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+        Divider(
+          color: ColorManager.gray,
+          indent: kWidth * 0.1,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: FaIcon(FontAwesomeIcons.arrowsRotate, size: 22),
+              ),
+              kHSeparator(factor: 0.04),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BodyText(
+                    text: "Return policy",
+                    color: ColorManager.black,
+                  ),
+                  Container(
+                    width: kWidth * 0.8,
+                    child: SubtitleText(
+                      text:
+                          "Most products can be returned within 30 days of delivery",
+                      color: ColorManager.black,
+                      size: 14,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+        Divider(
+          color: ColorManager.gray,
+          indent: kWidth * 0.1,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: FaIcon(FontAwesomeIcons.circleQuestion, size: 22),
+              ),
+              kHSeparator(factor: 0.04),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BodyText(
+                    text: "Need Help?",
+                    color: ColorManager.black,
+                  ),
+                  SubtitleText(
+                    text: "19595",
+                    color: ColorManager.info,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

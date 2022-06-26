@@ -39,7 +39,7 @@ dependencies:
   dropdown_button2: ^1.6.1
   flutter_custom_clippers: ^2.0.0
   uuid: ^3.0.6
-
+  im_stepper: ^1.0.1+1
 
 dev_dependencies:
   flutter_test:

@@ -114,6 +114,7 @@ class _SpecificationExpansionListState
           child: Icon(
             Icons.keyboard_arrow_down,
             size: 30,
+            color: ColorManager.primary,
           ),
         ),
         onExpansionChanged: (isExpansion) =>

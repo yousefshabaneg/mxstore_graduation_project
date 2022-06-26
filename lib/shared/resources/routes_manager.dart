@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/presentation/categories/categories_view.dart';
+import 'package:graduation_project/presentation/checkout/checkout_view.dart';
 import 'package:graduation_project/presentation/login/account_view.dart';
 import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
 import '../../presentation/login/login_view.dart';
@@ -28,6 +29,7 @@ class Routes {
   static const String forgotPasswordRoute = "/forgotPassword";
   static const String categories = "/categories";
   static const String categoryItem = "/categoryItem";
+  static const String checkout = "/checkout";
 }
 
 class RoutesGenerator {
@@ -47,6 +49,8 @@ class RoutesGenerator {
         return CupertinoPageRoute(builder: (_) => MainView());
       case Routes.categories:
         return CupertinoPageRoute(builder: (_) => CategoriesView());
+      case Routes.checkout:
+        return CupertinoPageRoute(builder: (_) => CheckoutView());
       default:
         return undefinedRoute();
     }

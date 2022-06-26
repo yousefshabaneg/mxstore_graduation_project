@@ -106,11 +106,13 @@ class AccountCubit extends Cubit<AccountStates> {
         : null;
   }
 
+  bool isHaveRegionAndCity() =>
+      addressModel?.city != null &&
+      addressModel?.region != null &&
+      addressModel?.zipCode != null;
+
   String deliveryRegionAndCity() {
-    bool isHaveRegionAndCity = addressModel?.city != null &&
-        addressModel?.region != null &&
-        addressModel?.zipCode != null;
-    return isHaveRegionAndCity
+    return isHaveRegionAndCity()
         ? "${addressModel!.region} , ${addressModel!.city} - ${addressModel!.zipCode}"
         : "Cairo, Ain Shams - 35213";
   }

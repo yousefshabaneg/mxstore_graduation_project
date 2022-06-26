@@ -8,6 +8,7 @@ class ImageAssets {
   static const String noImage = "$IMAGE_PATH/no_image.png";
   static const String error = "$IMAGE_PATH/error.svg";
   static const String emptyCart = "$IMAGE_PATH/empty_cart.svg";
+  static const String deliveryMan = "$IMAGE_PATH/delivery_man.svg";
 
   static const String onBoarding1 = "$IMAGE_PATH/onboarding/onboarding1.jpg";
   static const String onBoarding2 = "$IMAGE_PATH/onboarding/onboarding2.jpg";

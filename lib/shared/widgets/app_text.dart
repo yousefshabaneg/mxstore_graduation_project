@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/shared/constants.dart';
 
 class BodyText extends StatelessWidget {
-  double size;
+  final double size;
   final String text;
   final Color color;
   final TextAlign? align;
-  BodyText({
+  const BodyText({
     Key? key,
     required this.text,
     this.size = 16,

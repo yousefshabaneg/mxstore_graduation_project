@@ -64,6 +64,7 @@ class _FavoritesListState extends State<FavoritesList> {
                       child: Icon(
                         Icons.keyboard_arrow_down,
                         size: 30,
+                        color: ColorManager.primary,
                       ),
                     ),
                     onExpansionChanged: (isExpansion) =>

@@ -441,12 +441,12 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                               : ColorManager.dark,
                           child: state is ShopLoadingAddToCartState &&
                                   state.id == widget.productId
-                              ? null
-                              : MyLoadingIndicator(
+                              ? MyLoadingIndicator(
                                   height: kHeight * 0.05,
                                   width: kWidth * 0.1,
                                   indicatorType: Indicator.ballBeat,
-                                ),
+                                )
+                              : null,
                           onTap: () {
                             ShopCubit.get(context).addToCart(widget.product!);
                           },

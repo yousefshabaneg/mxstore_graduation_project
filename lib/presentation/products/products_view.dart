@@ -42,7 +42,7 @@ class ProductsView extends StatelessWidget {
                           child: SizedBox(
                             width: kWidth * 0.7,
                             child: Text(
-                              "${greetingMessage()}, ${nameHandler(userModel!.name!)}",
+                              "${greetingMessage()}, ${nameHandler(userModel?.name ?? "")}",
                               style: kTheme.textTheme.headline3!.copyWith(
                                 color: ColorManager.info,
                               ),

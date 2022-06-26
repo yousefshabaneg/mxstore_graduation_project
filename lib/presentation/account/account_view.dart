@@ -80,11 +80,7 @@ class AccountView extends StatelessWidget {
                               buildAccountRow(
                                   FontAwesomeIcons.locationCrosshairs,
                                   "Addresses",
-                                  onTap: () => push(
-                                      context,
-                                      AddressView(
-                                        user: userModel,
-                                      ))),
+                                  onTap: () => push(context, AddressView())),
                               kVSeparator(factor: 0.03),
                               InkWell(
                                 onTap: () => signOut(context),

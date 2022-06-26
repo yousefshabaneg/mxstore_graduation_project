@@ -11,6 +11,7 @@ import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/presentation/cart/cart_items.dart';
 import 'package:graduation_project/presentation/cart/favorites_item.dart';
+import 'package:graduation_project/presentation/checkout/checkout_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
@@ -55,8 +56,7 @@ class CartView extends StatelessWidget {
                                 builder: (context, state) => InkWell(
                                   onTap: () => showEditInfoSheet(
                                     context,
-                                    child: AddressView(
-                                        user: UserCubit.get(context).userModel),
+                                    child: AddressView(),
                                   ),
                                   child: Row(
                                     children: [
@@ -152,7 +152,7 @@ class CartView extends StatelessWidget {
                     DeliveryServices(),
                     kGrayDivider(),
                     if (ShopCubit.get(context).cartProductsIds.isNotEmpty)
-                      kVSeparator(factor: 0.05),
+                      kVSeparator(factor: 0.08),
                   ],
                 ),
               ),
@@ -213,7 +213,7 @@ class CartView extends StatelessWidget {
                           heightFactor: 0.06,
                           widthFactor: 0.4,
                           backgroundColor: Colors.black,
-                          onTap: () {},
+                          onTap: () => push(context, CheckoutView()),
                         ),
                       ],
                     ),

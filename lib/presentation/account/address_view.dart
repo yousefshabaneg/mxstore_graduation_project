@@ -18,8 +18,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
 class AddressView extends StatefulWidget {
-  AddressView({Key? key, required this.user}) : super(key: key);
-  final UserModel? user;
+  const AddressView({Key? key}) : super(key: key);
 
   @override
   State<AddressView> createState() => _AddressViewState();
@@ -44,6 +43,7 @@ class _AddressViewState extends State<AddressView> {
   }
 
   AddressModel? addressModel;
+  UserModel? userModel;
 
   bool _changed() {
     bool isEmpty = addressNameController.text.isEmpty ||
@@ -67,6 +67,7 @@ class _AddressViewState extends State<AddressView> {
 
   @override
   void initState() {
+    userModel = UserCubit.get(context).userModel;
     addressModel = AccountCubit.get(context).addressModel;
     addressNameController.text =
         addressModel!.name ?? UserCubit.get(context).userModel!.name!;

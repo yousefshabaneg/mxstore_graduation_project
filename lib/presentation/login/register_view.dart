@@ -53,9 +53,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   bool valid() {
     return emailController.text.isNotEmpty &&
-        passwordController.text.length >= 8 &&
         nameController.text.isNotEmpty &&
-        phoneController.text.length == 11;
+        this.isPasswordValid() &&
+        this.isPhoneValid();
   }
 
   bool _isPasswordEightCharacters = false;
@@ -77,6 +77,11 @@ class _RegisterViewState extends State<RegisterView> {
     });
   }
 
+  bool isPasswordValid() =>
+      _isPasswordEightCharacters &&
+      _isPasswordHasSpecialCharacter &&
+      _isPasswordHasUpperAndLower;
+
   bool isEmailCorrect = false;
   onEmailChanged(String email) {
     final emailReg = RegExp(
@@ -87,16 +92,18 @@ class _RegisterViewState extends State<RegisterView> {
     });
   }
 
-  bool isPhoneValid = false;
+  bool isPhoneCorrect = false;
   bool isPhoneElevenDigits = false;
+  bool isPhoneValid() => isPhoneCorrect && isPhoneElevenDigits;
+
   onPhoneChanged(String phone) {
     final phoneReg = RegExp(r"^01[0125]");
     setState(() {
       isPhoneElevenDigits = false;
       if (phoneController.text.length == 11) isPhoneElevenDigits = true;
 
-      isPhoneValid = false;
-      if (phoneReg.hasMatch(phone)) isPhoneValid = true;
+      isPhoneCorrect = false;
+      if (phoneReg.hasMatch(phone)) isPhoneCorrect = true;
     });
   }
 
@@ -236,7 +243,8 @@ class _RegisterViewState extends State<RegisterView> {
                                   }),
                                 ),
                                 phoneController.text.isNotEmpty &&
-                                        (!isPhoneElevenDigits || !isPhoneValid)
+                                        (!isPhoneElevenDigits ||
+                                            !isPhoneCorrect)
                                     ? Container(
                                         decoration: BoxDecoration(
                                           color: ColorManager.primary
@@ -259,7 +267,7 @@ class _RegisterViewState extends State<RegisterView> {
                                               kVSeparator(factor: 0.01),
                                               Container(
                                                 child: validationRow(
-                                                    condition: isPhoneValid,
+                                                    condition: isPhoneCorrect,
                                                     message:
                                                         "phone must start with 010-011-012-015"),
                                               ),

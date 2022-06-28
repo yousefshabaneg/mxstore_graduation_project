@@ -298,7 +298,7 @@ class ProductDetailsHelpers {
         ],
       );
 
-  static Widget deliveryTime() => Row(
+  static Widget deliveryTime({Duration? duration}) => Row(
         children: [
           FaIcon(FontAwesomeIcons.truck),
           const SizedBox(width: 8),
@@ -309,7 +309,7 @@ class ProductDetailsHelpers {
               fontSize: 14,
             ),
           ),
-          Text(shippingDate(),
+          Text(shippingDate(duration ?? Duration(days: 3)),
               style: kTheme.textTheme.headline5!
                   .copyWith(color: ColorManager.success)),
         ],
@@ -337,8 +337,8 @@ class ProductDetailsHelpers {
         ],
       );
 
-  static String shippingDate() =>
-      DateFormat('EEE, d MMM ').format(DateTime.now().add(Duration(days: 3)));
+  static String shippingDate(Duration duration) =>
+      DateFormat('EEE, d MMM ').format(DateTime.now().add(duration));
 
   static dateDuration(String date) => Jiffy(date, "yyyy-MM-dd").fromNow();
 }

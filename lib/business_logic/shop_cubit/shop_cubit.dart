@@ -5,6 +5,7 @@ import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/data/models/brand_model.dart';
 import 'package:graduation_project/data/models/category_model.dart';
 import 'package:graduation_project/data/models/comment_model.dart';
+import 'package:graduation_project/data/models/delivery_model.dart';
 import 'package:graduation_project/data/models/favorites_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -332,7 +333,7 @@ class ShopCubit extends Cubit<ShopStates> {
     }
   }
 
-  int cartTotalQuantity() {
+  int cartTotalPrice() {
     int sum = 0;
     basketModel?.products.forEach((product) {
       sum += product.quantity * (product.price ?? 0);
@@ -355,5 +356,43 @@ class ShopCubit extends Cubit<ShopStates> {
     return products
         .where((product) => favoritesProductsIds.contains(product.id))
         .toList();
+  }
+
+  List<DeliveryModel> deliveryMethods = [];
+  void getDeliveryMethods() {
+    emit(ShopLoadingDeliveryMethodState());
+    DioHelper.getData(url: "${ConstantsManager.DeliveryMethod}", token: token)
+        .then((json) {
+      print(json);
+      deliveryMethods =
+          List.from(json).map((e) => DeliveryModel.fromJson(e)).toList();
+      deliveryMethods.sort((a, b) => a.id!.compareTo(b.id!));
+      emit(ShopSuccessDeliveryMethodState());
+    }).catchError((error) {
+      errorMessage = error;
+      print(error);
+      emit(ShopErrorDeliveryMethodState());
+    });
+  }
+
+  double getDeliveryPrice() {
+    return deliveryMethods
+            .firstWhere((element) => element.id == deliveryId)
+            .price ??
+        0;
+  }
+
+  double getPriceWithDelivery() => cartTotalPrice() + getDeliveryPrice();
+
+  int deliveryId = 1;
+  void changeDeliveryId(int? value) {
+    deliveryId = value ?? 1;
+    emit(ShopChangeDeliveryIdState());
+  }
+
+  int paymentMethodId = 1;
+  void changePaymentMethodId(int? value) {
+    paymentMethodId = value ?? 1;
+    emit(ShopChangeDeliveryIdState());
   }
 }

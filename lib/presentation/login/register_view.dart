@@ -357,9 +357,9 @@ class _RegisterViewState extends State<RegisterView> {
                                   onTap: valid() ? () => _register() : null,
                                   child: state is EmailExistLoadingState ||
                                           state is RegisterLoadingState
-                                      ? MyLoadingIndicator(
-                                          height: kHeight * 0.05,
-                                          width: kWidth * 0.1,
+                                      ? const MyLoadingIndicator(
+                                          height: 20,
+                                          width: 30,
                                           indicatorType: Indicator.ballBeat,
                                         )
                                       : null,

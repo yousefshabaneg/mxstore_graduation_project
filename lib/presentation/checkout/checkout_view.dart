@@ -63,65 +63,41 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       listener: (context, state) {},
       builder: (context, state) => Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            headerText(),
-            style: kTheme.textTheme.bodyText1,
+          leading: BackButton(
+            onPressed: () {
+              if (activeStep > 0) {
+                setState(() {
+                  activeStep--;
+                });
+              } else
+                Navigator.pop(context);
+            },
           ),
+          actions: [
+            IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.clear))
+          ],
+          centerTitle: true,
+          title:
+              BodyText(text: headerText(), color: ColorManager.black, size: 18),
+          elevation: 2,
+          shadowColor: ColorManager.blue,
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              NumberStepper(
-                enableStepTapping: false,
-                enableNextPreviousButtons: false,
-                numbers: [
-                  1,
-                  2,
-                  3,
-                  4,
-                ],
-                activeStep: activeStep,
-                onStepReached: (index) {
-                  setState(() {
-                    activeStep = index;
-                  });
-                },
-                activeStepBorderColor: Colors.transparent,
-                stepColor: ColorManager.subtitle,
-                lineColor: ColorManager.primary,
-                numberStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                activeStepColor: ColorManager.primary,
-              ),
-              Expanded(
-                child: stepsContent(activeStep),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (activeStep != 0)
-                    previousButton()
-                  else if (isHaveAddress())
-                    SolidButton(
-                      text: "Change Address",
-                      color: Colors.white,
-                      backgroundColor: ColorManager.info,
-                      heightFactor: 0.06,
-                      widthFactor: 0.5,
-                      onTap: () {
-                        showEditInfoSheet(context, child: const AddressView());
-                      },
-                    ),
-                  const Spacer(),
-                  if (isHaveAddress()) nextButton(),
-                ],
-              ),
-              kVSeparator(),
-            ],
+          child: stepsContent(activeStep),
+        ),
+        bottomSheet: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isHaveAddress()) nextButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -131,11 +107,11 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   /// Returns the next button.
   Widget nextButton() {
     return SolidButton(
-      text: "Next",
+      text: "Continue",
       color: Colors.white,
-      backgroundColor: ColorManager.info,
       heightFactor: 0.06,
-      widthFactor: 0.3,
+      widthFactor: 0.9,
+      radius: 5,
       onTap: () {
         if (activeStep < upperBound) {
           setState(() {
@@ -151,7 +127,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     return SolidButton(
       text: "Prev",
       color: Colors.white,
-      backgroundColor: ColorManager.info,
+      backgroundColor: ColorManager.blue,
       heightFactor: 0.06,
       widthFactor: 0.3,
       onTap: () {

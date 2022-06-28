@@ -4,14 +4,14 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class MyLoadingIndicator extends StatelessWidget {
-  MyLoadingIndicator({
+  const MyLoadingIndicator({
     Key? key,
     this.indicatorType = Indicator.ballSpinFadeLoader,
     this.height,
     this.width,
     this.color,
   }) : super(key: key);
-  Indicator indicatorType;
+  final Indicator indicatorType;
   final double? width;
   final Color? color;
   final double? height;

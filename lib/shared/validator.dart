@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 String? phoneValidator(String? value) {
   if (value!.isNotEmpty) {
     if (value.length != 11) return 'Mobile Number must be of 11 digit';
@@ -43,10 +41,12 @@ String? nameValidator(String? value) {
   return value!.isEmpty ? 'Please enter your full name.' : null;
 }
 
-String? Function(String?)? intValidator = (String? value) {
+String? zipValidator(String? value) {
   if (value!.isEmpty) {
     return 'Zip code is required';
   } else {
-    return int.tryParse(value) == null ? 'Zip code must be a number' : null;
+    RegExp regex = RegExp(r'^[0-9]{5}$');
+    print(regex.hasMatch(value));
+    return (!regex.hasMatch(value)) ? 'Enter a valid zipCode' : null;
   }
-};
+}

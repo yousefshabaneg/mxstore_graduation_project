@@ -34,4 +34,8 @@ class ConstantsManager {
   //Basket
   static const String Basket = "Basket/";
   static String basketId = "";
+
+  //Order
+  static const String Orders = "Orders/";
+  static const String DeliveryMethod = Orders + "deliveryMethods";
 }

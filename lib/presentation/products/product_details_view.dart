@@ -259,9 +259,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                   : ColorManager.dark,
                               child: state is ShopLoadingAddToCartState &&
                                       state.id == widget.productId
-                                  ? MyLoadingIndicator(
-                                      height: kHeight * 0.05,
-                                      width: kWidth * 0.1,
+                                  ? const MyLoadingIndicator(
+                                      height: 20,
+                                      width: 60,
                                       indicatorType: Indicator.ballBeat,
                                     )
                                   : null,
@@ -441,9 +441,9 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                               : ColorManager.dark,
                           child: state is ShopLoadingAddToCartState &&
                                   state.id == widget.productId
-                              ? MyLoadingIndicator(
-                                  height: kHeight * 0.05,
-                                  width: kWidth * 0.1,
+                              ? const MyLoadingIndicator(
+                                  height: 20,
+                                  width: 60,
                                   indicatorType: Indicator.ballBeat,
                                 )
                               : null,
@@ -519,7 +519,7 @@ class ShimmerProductDetails extends StatelessWidget {
         ),
         SizedBox(
           height: kHeight * 0.35,
-          child: MyLoadingIndicator(),
+          child: const MyLoadingIndicator(),
         ),
         kVSeparator(),
         // Shimmer.fromColors(

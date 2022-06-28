@@ -5,6 +5,7 @@ class ColorManager {
   static Color primaryOpacity70 = HexColor.fromHex("#B3f5a523");
   static Color success = HexColor.fromHex("#009f29");
   static Color info = HexColor.fromHex("#0066be");
+  static Color blue = HexColor.fromHex("#3866df");
   static Color warning = HexColor.fromHex("#f5a523");
   static Color btnBuy = HexColor.fromHex("#a70ecc");
   static Color error = HexColor.fromHex("#dc3545");

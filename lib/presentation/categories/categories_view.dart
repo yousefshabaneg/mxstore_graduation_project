@@ -54,7 +54,7 @@ class CategoriesView extends StatelessWidget {
                                     width: kWidth * 0.3,
                                     height: kHeight * 0.09,
                                     placeholder: (context, url) =>
-                                        MyLoadingIndicator(),
+                                        const MyLoadingIndicator(),
                                   ),
                                   kVSeparator(),
                                   Text(

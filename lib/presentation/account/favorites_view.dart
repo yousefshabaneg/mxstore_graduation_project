@@ -36,7 +36,7 @@ class FavoritesView extends StatelessWidget {
                         ProductsItemsGridBuilder(
                             products: ShopCubit.get(context).favoritesProducts),
                         if (state is ShopLoadingChangeFavoritesState)
-                          MyLoadingIndicator(),
+                          const MyLoadingIndicator(),
                       ],
                     )
                   : Center(

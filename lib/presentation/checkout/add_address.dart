@@ -1,6 +1,8 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
@@ -9,6 +11,7 @@ import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
+import 'package:graduation_project/shared/widgets/indicators.dart';
 
 class AddAddressView extends StatelessWidget {
   const AddAddressView({Key? key}) : super(key: key);
@@ -17,7 +20,6 @@ class AddAddressView extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
               ImageAssets.deliveryMan,
@@ -56,65 +58,117 @@ class AddressInfoView extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         final cubit = AccountCubit.get(context);
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BodyText(text: "My Address", color: ColorManager.primary),
-              kVSeparator(),
-              Row(
-                children: [
-                  SubtitleText(color: ColorManager.info, text: "Name: "),
-                  kHSeparator(),
-                  BodyText(
-                    color: ColorManager.black,
-                    text: cubit.addressModel?.name ?? "",
-                  ),
-                ],
+        return ConditionalBuilder(
+          condition: cubit.addressModel != null,
+          builder: (context) => Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: ColorManager.blue, width: 2),
               ),
-              kVSeparator(),
-              Row(
-                children: [
-                  SubtitleText(color: ColorManager.info, text: "Phone: "),
-                  kHSeparator(),
-                  BodyText(
-                      color: ColorManager.black,
-                      text: cubit.addressModel?.phone ?? ""),
-                ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.locationDot,
+                          color: ColorManager.subtitle,
+                          size: 16,
+                        ),
+                        kHSeparator(),
+                        BodyText(text: "My Address", color: ColorManager.error),
+                        const Spacer(),
+                        MyTextButton(
+                          text: "Edit",
+                          withIcon: true,
+                          icon: Icons.edit,
+                          color: ColorManager.blue,
+                          size: 16,
+                          onTap: () =>
+                              showEditInfoSheet(context, child: AddressView()),
+                        ),
+                      ],
+                    ),
+                    kVSeparator(),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SubtitleText(
+                                color: ColorManager.subtitle, text: "Name"),
+                            kVSeparator(),
+                            SubtitleText(
+                                color: ColorManager.subtitle, text: "Phone"),
+                            kVSeparator(),
+                            SubtitleText(
+                                color: ColorManager.subtitle, text: "Region"),
+                            kVSeparator(),
+                            SubtitleText(
+                                color: ColorManager.subtitle, text: "City"),
+                            kVSeparator(),
+                            SubtitleText(
+                                color: ColorManager.subtitle, text: "ZipCode"),
+                            if (cubit.addressModel!.details!.length > 1) ...[
+                              kVSeparator(),
+                              SubtitleText(
+                                  color: ColorManager.subtitle,
+                                  text: "Details"),
+                            ]
+                          ],
+                        ),
+                        kHSeparator(factor: 0.2),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: kWidth * 0.5,
+                              child: BodyText(
+                                color: ColorManager.black,
+                                text: cubit.addressModel?.name ?? "",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            kVSeparator(),
+                            BodyText(
+                                color: ColorManager.black,
+                                text: cubit.addressModel?.phone ?? ""),
+                            kVSeparator(),
+                            BodyText(
+                                color: ColorManager.black,
+                                text: cubit.addressModel?.region ?? ""),
+                            kVSeparator(),
+                            BodyText(
+                                color: ColorManager.black,
+                                text: cubit.addressModel?.city ?? ""),
+                            kVSeparator(),
+                            BodyText(
+                                color: ColorManager.black,
+                                text: cubit.addressModel?.zipCode ?? ""),
+                            if (cubit.addressModel!.details!.length > 1) ...[
+                              kVSeparator(),
+                              SizedBox(
+                                width: kWidth * 0.5,
+                                child: BodyText(
+                                    color: ColorManager.black,
+                                    text: cubit.addressModel?.details ?? ""),
+                              ),
+                            ]
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              kVSeparator(),
-              Row(
-                children: [
-                  SubtitleText(color: ColorManager.info, text: "Region: "),
-                  kHSeparator(),
-                  BodyText(
-                      color: ColorManager.black,
-                      text: cubit.addressModel?.region ?? ""),
-                ],
-              ),
-              kVSeparator(),
-              Row(
-                children: [
-                  SubtitleText(color: ColorManager.info, text: "City: "),
-                  kHSeparator(),
-                  BodyText(
-                      color: ColorManager.black,
-                      text: cubit.addressModel?.city ?? ""),
-                ],
-              ),
-              kVSeparator(),
-              Row(
-                children: [
-                  SubtitleText(color: ColorManager.info, text: "ZipCode: "),
-                  kHSeparator(),
-                  BodyText(
-                      color: ColorManager.black,
-                      text: cubit.addressModel?.zipCode ?? ""),
-                ],
-              ),
-            ],
+            ),
           ),
+          fallback: (context) => Expanded(child: const MyLoadingIndicator()),
         );
       },
     );

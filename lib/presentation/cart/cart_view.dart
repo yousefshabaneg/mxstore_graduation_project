@@ -134,7 +134,7 @@ class CartView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        fallback: (context) => MyLoadingIndicator(),
+                        fallback: (context) => const MyLoadingIndicator(),
                       ),
                     ),
                     if (ShopCubit.get(context).favoritesProducts.isNotEmpty)
@@ -194,7 +194,7 @@ class CartView extends StatelessWidget {
                                   ),
                                   TextSpan(
                                     text: formatPrice(ShopCubit.get(context)
-                                        .cartTotalQuantity()),
+                                        .cartTotalPrice()),
                                     style: kTheme.textTheme.headline3!.copyWith(
                                       color: Colors.black,
                                       letterSpacing: -1,

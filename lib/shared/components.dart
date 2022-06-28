@@ -75,7 +75,8 @@ Widget lvCategories(context, List<CategoryModel> categories) => Padding(
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: categories[index].image,
-                        placeholder: (context, url) => MyLoadingIndicator(),
+                        placeholder: (context, url) =>
+                            const MyLoadingIndicator(),
                       ),
                     ),
                   ),
@@ -126,7 +127,8 @@ Widget lvBrands(context, List<BrandModel> brands) => Padding(
                         imageUrl: brands[index].image,
                         width: kWidth * 0.15,
                         height: kWidth * 0.15,
-                        placeholder: (context, url) => MyLoadingIndicator(),
+                        placeholder: (context, url) =>
+                            const MyLoadingIndicator(),
                       ),
                       kVSeparator(factor: 0.02),
                       Text(

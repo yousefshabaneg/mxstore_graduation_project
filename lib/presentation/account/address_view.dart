@@ -300,7 +300,7 @@ class _AddressViewState extends State<AddressView> {
                                     )
                                   : const MyLoadingIndicator(
                                       height: 20,
-                                      width: 60,
+                                      width: 30,
                                       indicatorType: Indicator.ballBeat,
                                     ),
                               color: Colors.white,

@@ -158,7 +158,7 @@ class ProductItemWidget extends StatelessWidget {
                               state.id == model!.id
                           ? const MyLoadingIndicator(
                               height: 20,
-                              width: 60,
+                              width: 30,
                               indicatorType: Indicator.ballBeat,
                             )
                           : null,

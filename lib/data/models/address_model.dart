@@ -14,6 +14,16 @@ class AddressModel {
     zipCode = json["zipCode"];
     phone = json["street"];
   }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['city'] = this.city;
+    data['region'] = this.region;
+    data['details'] = this.details;
+    data['zipCode'] = this.zipCode;
+    data['street'] = this.phone;
+    return data;
+  }
 }
 
 class RegionModel {

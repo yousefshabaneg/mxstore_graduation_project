@@ -152,6 +152,13 @@ class ShopSuccessBasketState extends ShopStates {}
 
 class ShopErrorBasketState extends ShopStates {}
 
+// Basket States
+class ShopLoadingClearBasketState extends ShopStates {}
+
+class ShopSuccessClearBasketState extends ShopStates {}
+
+class ShopErrorClearBasketState extends ShopStates {}
+
 // Delivery Method
 class ShopLoadingDeliveryMethodState extends ShopStates {}
 
@@ -160,6 +167,15 @@ class ShopSuccessDeliveryMethodState extends ShopStates {}
 class ShopErrorDeliveryMethodState extends ShopStates {}
 
 class ShopChangeDeliveryIdState extends ShopStates {}
+
+// Payment Method
+class ShopLoadingPaymentMethodState extends ShopStates {}
+
+class ShopSuccessPaymentMethodState extends ShopStates {}
+
+class ShopErrorPaymentMethodState extends ShopStates {}
+
+class ShopChangePaymentIdState extends ShopStates {}
 
 // Order
 class ShopLoadingCreateOrderState extends ShopStates {}

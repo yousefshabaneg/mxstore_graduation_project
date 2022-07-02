@@ -199,7 +199,7 @@ class FavoriteItemWidget extends StatelessWidget {
                               state.id == product.id
                           ? const MyLoadingIndicator(
                               height: 20,
-                              width: 60,
+                              width: 30,
                               indicatorType: Indicator.ballBeat,
                             )
                           : null,

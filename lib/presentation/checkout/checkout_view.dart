@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
+import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
+import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/presentation/checkout/add_address.dart';
 import 'package:graduation_project/presentation/checkout/add_delivery.dart';
+import 'package:graduation_project/presentation/checkout/order_confirmed_view.dart';
 import 'package:graduation_project/presentation/checkout/payment_view.dart';
 import 'package:graduation_project/presentation/checkout/summary.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -45,7 +48,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       case 2:
         return const SummaryView();
       case 3:
-        return const PaymentView();
+        return const CreditCardPage();
       default:
         return isHaveAddress()
             ? const AddressInfoView()
@@ -61,42 +64,45 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   Widget build(BuildContext context) {
     return BlocConsumer<AccountCubit, AccountStates>(
       listener: (context, state) {},
-      builder: (context, state) => Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            onPressed: () {
-              if (activeStep > 0) {
-                setState(() {
-                  activeStep--;
-                });
-              } else
-                Navigator.pop(context);
-            },
+      builder: (context, state) => BlocConsumer<ShopCubit, ShopStates>(
+        listener: (context, state) {},
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(
+            leading: BackButton(
+              onPressed: () {
+                if (activeStep > 0) {
+                  setState(() {
+                    activeStep--;
+                  });
+                } else
+                  Navigator.pop(context);
+              },
+            ),
+            actions: [
+              IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.clear))
+            ],
+            centerTitle: true,
+            title: BodyText(
+                text: headerText(), color: ColorManager.black, size: 18),
+            elevation: 2,
+            shadowColor: ColorManager.blue,
           ),
-          actions: [
-            IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.clear))
-          ],
-          centerTitle: true,
-          title:
-              BodyText(text: headerText(), color: ColorManager.black, size: 18),
-          elevation: 2,
-          shadowColor: ColorManager.blue,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: stepsContent(activeStep),
-        ),
-        bottomSheet: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (isHaveAddress()) nextButton(),
-              ],
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: stepsContent(activeStep),
+          ),
+          bottomSheet: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isHaveAddress()) nextButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -107,33 +113,32 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   /// Returns the next button.
   Widget nextButton() {
     return SolidButton(
-      text: "Continue",
+      text: (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) ||
+              (ShopCubit.get(context).paymentMethodId == 2 && activeStep == 3)
+          ? "Place Order"
+          : "Continue",
       color: Colors.white,
       heightFactor: 0.06,
       widthFactor: 0.9,
       radius: 5,
-      onTap: () {
-        if (activeStep < upperBound) {
+      onTap: () async {
+        if (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) {
+          await ShopCubit.get(context)
+              .placeOrderCash(AccountCubit.get(context).addressModel!)
+              .then((value) {
+            // if(value != null){
+            push(context, OrderConfirmedView(orderId: value));
+            // }
+          });
+        } else if (ShopCubit.get(context).paymentMethodId == 2 &&
+            activeStep == 3) {
+          if (ShopCubit.get(context).cardFormKey.currentState!.validate()) {
+            ShopCubit.get(context).payWithCard();
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        } else if (activeStep < upperBound) {
           setState(() {
             activeStep++;
-          });
-        }
-      },
-    );
-  }
-
-  /// Returns the previous button.
-  Widget previousButton() {
-    return SolidButton(
-      text: "Prev",
-      color: Colors.white,
-      backgroundColor: ColorManager.blue,
-      heightFactor: 0.06,
-      widthFactor: 0.3,
-      onTap: () {
-        if (activeStep > 0) {
-          setState(() {
-            activeStep--;
           });
         }
       },

@@ -28,7 +28,8 @@ class MainView extends StatelessWidget {
           child: BlocProvider.value(
             value: BlocProvider.of<ShopCubit>(context)
               ..getFavorites()
-              ..getDeliveryMethods(),
+              ..getDeliveryMethods()
+              ..getPaymentMethods(),
             child: BlocConsumer<ShopCubit, ShopStates>(
               listener: (context, state) {
                 if (state is ShopSuccessChangeFavoritesState) {

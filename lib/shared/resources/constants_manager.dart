@@ -38,4 +38,5 @@ class ConstantsManager {
   //Order
   static const String Orders = "Orders/";
   static const String DeliveryMethod = Orders + "deliveryMethods";
+  static const String PaymentMethod = Orders + "paymentMethods";
 }

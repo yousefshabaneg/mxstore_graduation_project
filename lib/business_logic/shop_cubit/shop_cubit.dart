@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/data/dio_helper.dart';
+import 'package:graduation_project/data/models/address_model.dart';
 import 'package:graduation_project/data/models/banner_model.dart';
 import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/data/models/brand_model.dart';
@@ -7,6 +9,7 @@ import 'package:graduation_project/data/models/category_model.dart';
 import 'package:graduation_project/data/models/comment_model.dart';
 import 'package:graduation_project/data/models/delivery_model.dart';
 import 'package:graduation_project/data/models/favorites_model.dart';
+import 'package:graduation_project/data/models/payment_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/resources/constants_manager.dart';
@@ -255,7 +258,24 @@ class ShopCubit extends Cubit<ShopStates> {
     });
   }
 
-  void addToCart(ProductItemModel product) async {
+  Future<void> clearBasket() async {
+    cartProductsIds.clear();
+    cartQuantities = 0;
+    basketModel?.products.clear();
+    emit(ShopLoadingClearBasketState());
+    final newBasket = basketModel?.toJson();
+    await DioHelper.postData(
+            url: "${ConstantsManager.Basket}", data: newBasket!)
+        .then((json) {
+      basketModel = BasketModel.fromJson(json);
+      emit(ShopSuccessClearBasketState());
+    }).catchError((error) {
+      errorMessage = error;
+      emit(ShopErrorClearBasketState());
+    });
+  }
+
+  Future<void> addToCart(ProductItemModel product) async {
     if (!cartProducts.any((item) => item.id == product.id)) {
       emit(ShopLoadingAddToCartState(product.id));
       final productToAdd = BasketProductModel.mapProductToBasket(product);
@@ -263,7 +283,8 @@ class ShopCubit extends Cubit<ShopStates> {
       cartQuantities++;
       final newBasket = basketModel?.toJson();
       if (newBasket != null) {
-        DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
+        await DioHelper.postData(
+                url: "${ConstantsManager.Basket}", data: newBasket)
             .then((json) {
           basketModel = BasketModel.fromJson(json);
           cartProducts = basketModel!.products;
@@ -363,7 +384,6 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopLoadingDeliveryMethodState());
     DioHelper.getData(url: "${ConstantsManager.DeliveryMethod}", token: token)
         .then((json) {
-      print(json);
       deliveryMethods =
           List.from(json).map((e) => DeliveryModel.fromJson(e)).toList();
       deliveryMethods.sort((a, b) => a.id!.compareTo(b.id!));
@@ -373,6 +393,29 @@ class ShopCubit extends Cubit<ShopStates> {
       print(error);
       emit(ShopErrorDeliveryMethodState());
     });
+  }
+
+  List<PaymentModel> paymentMethods = [];
+  void getPaymentMethods() {
+    emit(ShopLoadingPaymentMethodState());
+    DioHelper.getData(url: "${ConstantsManager.PaymentMethod}", token: token)
+        .then((json) {
+      paymentMethods =
+          List.from(json).map((e) => PaymentModel.fromJson(e)).toList();
+      paymentMethods.sort((a, b) => a.id!.compareTo(b.id!));
+      emit(ShopSuccessPaymentMethodState());
+    }).catchError((error) {
+      errorMessage = error;
+      print(error);
+      emit(ShopErrorPaymentMethodState());
+    });
+  }
+
+  String getPaymentNameById() {
+    return paymentMethods
+            .firstWhere((element) => element.id == paymentMethodId)
+            .name ??
+        "Cash on Delivery";
   }
 
   double getDeliveryPrice() {
@@ -394,5 +437,52 @@ class ShopCubit extends Cubit<ShopStates> {
   void changePaymentMethodId(int? value) {
     paymentMethodId = value ?? 1;
     emit(ShopChangeDeliveryIdState());
+  }
+
+  Future<String?> placeOrderCash(AddressModel addressModel) async {
+    String? orderId;
+    emit(ShopLoadingCreateOrderState());
+    print("Basket Id : $basketId");
+    await DioHelper.postData(
+        url: "${ConstantsManager.Orders}",
+        token: token,
+        data: {
+          "basketId": basketId,
+          "deliveryMethodId": deliveryId,
+          "paymentMethodId": paymentMethodId,
+          "shipToAddress": addressModel.toJson(),
+        }).then((json) async {
+      await clearBasket();
+      print(json);
+      orderId = "NEG260161";
+      emit(ShopSuccessCreateOrderState());
+    }).catchError((error) {
+      errorMessage = error;
+      print(error);
+      emit(ShopErrorCreateOrderState());
+    });
+    return orderId;
+  }
+
+  String cardNumber = '';
+  String expiryDate = '';
+  String cardHolderName = '';
+  String cvvCode = '';
+  final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
+
+  void setCardInfo({
+    required String cardNumber,
+    required String expiryDate,
+    required String cardHolderName,
+    required String cvvCode,
+  }) {
+    this.cardNumber = cardNumber;
+    this.expiryDate = expiryDate;
+    this.cardHolderName = cardHolderName;
+    this.cvvCode = cvvCode;
+  }
+
+  void payWithCard() {
+    print("$cardNumber $expiryDate $cardHolderName $cvvCode");
   }
 }

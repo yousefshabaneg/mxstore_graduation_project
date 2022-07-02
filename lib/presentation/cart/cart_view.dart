@@ -49,52 +49,7 @@ class CartView extends StatelessWidget {
                           condition: ShopCubit.get(context).basketModel !=
                                   null &&
                               ShopCubit.get(context).cartProducts.isNotEmpty,
-                          builder: (context) => Column(
-                            children: [
-                              BlocConsumer<AccountCubit, AccountStates>(
-                                listener: (context, state) {},
-                                builder: (context, state) => InkWell(
-                                  onTap: () => showEditInfoSheet(
-                                    context,
-                                    child: AddressView(),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      FaIcon(
-                                        FontAwesomeIcons.locationDot,
-                                        size: 15,
-                                        color: ColorManager.subtitle,
-                                      ),
-                                      SizedBox(width: 10),
-                                      SubtitleText(
-                                          text: "Deliver to", size: 14),
-                                      SizedBox(width: 5),
-                                      Container(
-                                        width: kWidth * 0.4,
-                                        child: Text(
-                                          AccountCubit.get(context)
-                                              .deliveryRegionAndCity(),
-                                          style: TextStyle(
-                                            color: ColorManager.dark,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            wordSpacing: -1,
-                                            letterSpacing: -0.5,
-                                          ),
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                      SizedBox(width: 5),
-                                      FaIcon(FontAwesomeIcons.caretDown,
-                                          size: 15)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              kDivider(),
-                              CartList(),
-                            ],
-                          ),
+                          builder: (context) => CartList(),
                           fallback: (context) => Center(
                             child: Column(
                               children: [
@@ -142,10 +97,10 @@ class CartView extends StatelessWidget {
                     kGrayDivider(),
                     if (ShopCubit.get(context).cartProducts.isEmpty) ...[
                       ProductsHorizontalListBuilder(
-                        title: "Hot Deals",
+                        title: "Browse offers",
                         cartProduct: true,
                         products: ShopCubit.get(context).products,
-                        categoryId: 1,
+                        categoryId: 6,
                       ),
                       kGrayDivider(),
                     ],

@@ -37,6 +37,11 @@ Widget kHSeparator({double factor = 0.02}) => SizedBox(
       width: kWidth * factor,
     );
 
+String formatText(String? text) {
+  if (text != null && text.length > 1) return text;
+  return "";
+}
+
 String nameHandler(String name) {
   var split = name.split(" ");
   if (split[0].length > 15) return split[0].substring(0, 15);

@@ -6,7 +6,6 @@ import 'package:graduation_project/business_logic/account_cubit/account_cubit.da
 import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
@@ -14,8 +13,7 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
-import 'package:loading_indicator/loading_indicator.dart';
+import 'package:graduation_project/shared/widgets/order_summary_item.dart';
 
 class SummaryView extends StatelessWidget {
   const SummaryView({Key? key}) : super(key: key);
@@ -34,131 +32,159 @@ class SummaryView extends StatelessWidget {
               builder: (context, state) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          BodyText(
-                              text: "Ship to".toUpperCase(),
-                              color: ColorManager.dark),
-                          MyTextButton(
-                            text: "Change Address",
-                            color: ColorManager.blue,
-                            size: 16,
-                            onTap: () => showEditInfoSheet(context,
-                                child: AddressView()),
-                          ),
-                        ],
-                      ),
-                      kVSeparator(),
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.locationDot,
-                            color: ColorManager.subtitle,
-                            size: 16,
-                          ),
-                          kHSeparator(),
-                          BodyText(text: "Address", color: ColorManager.dark),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.lightGreenAccent.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SubtitleText(
-                              text: formatText(cubit.addressModel?.name),
-                              color: ColorManager.dark,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            BodyText(
+                                text: "Ship to".toUpperCase(),
+                                color: ColorManager.dark),
+                            MyTextButton(
+                              text: "Change Address",
+                              color: ColorManager.blue,
+                              size: 16,
+                              onTap: () => showEditInfoSheet(context,
+                                  child: AddressView()),
                             ),
-                            RichText(
-                              text: TextSpan(
+                          ],
+                        ),
+                        kVSeparator(),
+                        Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.locationDot,
+                              color: ColorManager.subtitle,
+                              size: 16,
+                            ),
+                            kHSeparator(),
+                            BodyText(text: "Address", color: ColorManager.dark),
+                          ],
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SubtitleText(
+                                text: formatText(cubit.addressModel?.name),
+                                color: ColorManager.dark,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          '${formatText(cubit.addressModel?.region)} - ',
+                                      style: kTheme.textTheme.caption,
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${formatText(cubit.addressModel?.city)} - ',
+                                      style: kTheme.textTheme.caption,
+                                    ),
+                                    TextSpan(
+                                      text: formatText(
+                                          cubit.addressModel?.zipCode),
+                                      style: kTheme.textTheme.caption,
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '${cubit.addressModel!.details!.length > 1 ? " - " : ""} ${formatText(cubit.addressModel?.details)}',
+                                      style:
+                                          kTheme.textTheme.caption!.copyWith(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SubtitleText(
+                                text: formatText(cubit.addressModel?.phone),
+                                color: ColorManager.dark,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  kGrayDivider(),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BodyText(
+                            text: "PAYMENT METHOD", color: ColorManager.black),
+                        kVSeparator(),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: ShopCubit.get(context).paymentMethodId ==
+                                      ShopCubit.get(context)
+                                          .paymentMethods[index]
+                                          .id
+                                  ? Colors.blue.withOpacity(0.2)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color:
+                                      ShopCubit.get(context).paymentMethodId ==
+                                              ShopCubit.get(context)
+                                                  .paymentMethods[index]
+                                                  .id
+                                          ? ColorManager.blue
+                                          : Colors.grey.shade600,
+                                  width: 1),
+                            ),
+                            child: RadioListTile<int>(
+                              value: ShopCubit.get(context)
+                                      .paymentMethods[index]
+                                      .id ??
+                                  1,
+                              groupValue:
+                                  ShopCubit.get(context).paymentMethodId,
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextSpan(
-                                    text:
-                                        '${formatText(cubit.addressModel?.region)} - ',
-                                    style: kTheme.textTheme.caption,
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${formatText(cubit.addressModel?.city)} - ',
-                                    style: kTheme.textTheme.caption,
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        formatText(cubit.addressModel?.zipCode),
-                                    style: kTheme.textTheme.caption,
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${cubit.addressModel!.details!.length > 1 ? " - " : ""} ${formatText(cubit.addressModel?.details)}',
-                                    style: kTheme.textTheme.caption!.copyWith(),
+                                  BodyText(
+                                      text: ShopCubit.get(context)
+                                          .paymentMethods[index]
+                                          .name!,
+                                      color: ColorManager.dark),
+                                  FaIcon(
+                                    FontAwesomeIcons.sackDollar,
+                                    color: ColorManager.subtitle,
                                   ),
                                 ],
                               ),
+                              onChanged: (int? value) {
+                                ShopCubit.get(context)
+                                    .changePaymentMethodId(value);
+                              },
+                              contentPadding: EdgeInsets.zero,
                             ),
-                            SubtitleText(
-                              text: formatText(cubit.addressModel?.phone),
-                              color: ColorManager.dark,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  kGrayDivider(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BodyText(
-                          text: "PAYMENT METHOD", color: ColorManager.black),
-                      kVSeparator(),
-                      RadioListTile<int>(
-                        value: 1,
-                        groupValue: ShopCubit.get(context).paymentMethodId,
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            BodyText(
-                                text: "Pay with Cash",
-                                color: ColorManager.dark),
-                            FaIcon(
-                              FontAwesomeIcons.sackDollar,
-                              color: ColorManager.subtitle,
-                            ),
-                          ],
-                        ),
-                        onChanged: (int? value) {
-                          ShopCubit.get(context).changePaymentMethodId(value);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      kDivider(factor: 0.001),
-                      RadioListTile<int>(
-                        value: 2,
-                        groupValue: ShopCubit.get(context).paymentMethodId,
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            BodyText(
-                                text: "Pay with Card",
-                                color: ColorManager.dark),
-                            FaIcon(
-                              FontAwesomeIcons.creditCard,
-                              color: ColorManager.subtitle,
-                            ),
-                          ],
-                        ),
-                        onChanged: (int? value) {
-                          ShopCubit.get(context).changePaymentMethodId(value);
-                        },
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ],
+                          ),
+                          separatorBuilder: (context, state) => kVSeparator(),
+                          itemCount:
+                              ShopCubit.get(context).paymentMethods.length,
+                        )
+                      ],
+                    ),
                   ),
                   kGrayDivider(),
                   Container(
@@ -259,64 +285,6 @@ class SummaryView extends StatelessWidget {
           fallback: (context) => Center(child: const MyLoadingIndicator()),
         );
       },
-    );
-  }
-
-  String formatText(String? text) {
-    if (text != null && text.length > 1) return text;
-    return "";
-  }
-}
-
-class OrderSummaryItem extends StatelessWidget {
-  OrderSummaryItem({Key? key, required this.product}) : super(key: key);
-  final BasketProductModel product;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: kWidth * 0.6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SubtitleText(
-                    text: product.brandName!,
-                    color: ColorManager.subtitle,
-                    size: 14,
-                  ),
-                  SizedBox(height: 5),
-                  BodyText(
-                    text: product.name!,
-                    color: ColorManager.dark,
-                    size: 14,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "EGP ${formatPrice(product.price!)}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: ColorManager.dark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SubtitleText(text: "QTY ${this.product.quantity}"),
-                ],
-              ),
-            ),
-            Image(
-              image: NetworkImage(product.imageUrl!),
-              width: kWidth * 0.25,
-              height: kHeight * 0.1,
-            ),
-          ],
-        ),
-        kVSeparator(),
-        ProductDetailsHelpers.deliveryTime(),
-      ],
     );
   }
 }

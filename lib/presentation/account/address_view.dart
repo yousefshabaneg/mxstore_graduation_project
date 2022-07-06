@@ -299,10 +299,7 @@ class _AddressViewState extends State<AddressView> {
                                       "Update your Address".toUpperCase(),
                                     )
                                   : const MyLoadingIndicator(
-                                      height: 20,
-                                      width: 30,
-                                      indicatorType: Indicator.ballBeat,
-                                    ),
+                                      height: 20, width: 30),
                               color: Colors.white,
                               radius: 20,
                               size: 12,
@@ -320,7 +317,9 @@ class _AddressViewState extends State<AddressView> {
                 ),
               ),
             ),
-            fallback: (context) => Center(child: const MyLoadingIndicator()),
+            fallback: (context) => Center(
+                child: const MyLoadingIndicator(
+                    indicatorType: Indicator.ballSpinFadeLoader)),
           ),
         );
       },

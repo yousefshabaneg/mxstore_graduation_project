@@ -205,10 +205,7 @@ class _EditPersonalInfoWidgetState extends State<EditPersonalInfoWidget> {
                         child: state is! UpdateUserDataLoadingState
                             ? Text("Save")
                             : MyLoadingIndicator(
-                                height: kHeight * 0.05,
-                                width: kWidth * 0.1,
-                                indicatorType: Indicator.ballBeat,
-                              ),
+                                height: kHeight * 0.05, width: kWidth * 0.1),
                         color: Colors.white,
                         radius: 20,
                         heightFactor: 0.06,

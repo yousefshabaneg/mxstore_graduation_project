@@ -197,11 +197,7 @@ class FavoriteItemWidget extends StatelessWidget {
                               : ColorManager.dark,
                       child: state is ShopLoadingAddToCartState &&
                               state.id == product.id
-                          ? const MyLoadingIndicator(
-                              height: 20,
-                              width: 30,
-                              indicatorType: Indicator.ballBeat,
-                            )
+                          ? const MyLoadingIndicator(height: 20, width: 30)
                           : null,
                       onTap: () {
                         ShopCubit.get(context).addToCart(product);

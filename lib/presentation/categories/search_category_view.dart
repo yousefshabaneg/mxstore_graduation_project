@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/business_logic/search_cubit/search_cubit.dart';
 import 'package:graduation_project/business_logic/search_cubit/search_states.dart';
 import 'package:graduation_project/shared/widgets/grid_product_item_widget.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+import 'package:graduation_project/shared/widgets/search_not_found_widget.dart';
 import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
 
 class SearchCategoryView extends StatelessWidget {
@@ -17,8 +17,12 @@ class SearchCategoryView extends StatelessWidget {
         return Scaffold(
           body: ConditionalBuilder(
             condition: state is! LoadingSearchedProductsState,
-            builder: (context) => ProductsItemsGridBuilder(
-                products: cubit.searchedCategoryProducts),
+            builder: (context) => ConditionalBuilder(
+              condition: !cubit.notCategoryFound,
+              builder: (context) => ProductsItemsGridBuilder(
+                  products: cubit.searchedCategoryProducts),
+              fallback: (context) => SearchNotFoundWidget(),
+            ),
             fallback: (context) => ShimmerGridViewLoading(),
           ),
         );

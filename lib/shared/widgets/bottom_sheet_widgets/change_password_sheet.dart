@@ -247,9 +247,7 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                                       )
                                     : MyLoadingIndicator(
                                         height: kHeight * 0.05,
-                                        width: kWidth * 0.1,
-                                        indicatorType: Indicator.ballBeat,
-                                      ),
+                                        width: kWidth * 0.1),
                                 color: Colors.white,
                                 radius: 20,
                                 size: 12,

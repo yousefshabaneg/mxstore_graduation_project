@@ -6,13 +6,15 @@ class BasketModel {
   int deliveryMethodId = 1;
   int shippingPrice = 0;
   String? clientSecret;
-  int? paymentIntentId;
+  String? paymentIntentId;
 
   BasketModel.fromJson(Map<String, dynamic> json) {
     basketId = json["id"];
     products = List.from(json["items"])
         .map((e) => BasketProductModel.fromJson(e))
         .toList();
+    clientSecret = json["clientSecret"];
+    paymentIntentId = json["paymentIntentId"];
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -73,17 +75,3 @@ class BasketProductModel {
     return data;
   }
 }
-
-// static Map<String, dynamic> mapProductToBasket(ProductItemModel product,
-//     {int quantity = 1}) {
-//   return {
-//     "id": product.id,
-//     "productName": product.name,
-//     "pictureUrl": product.imageUrl?.replaceFirst("10.0.2.2", "localhost"),
-//     "price": product.price,
-//     "brand": product.brandName,
-//     "type": product.typeName,
-//     "catgeory": product.categoryName,
-//     "quantity": quantity,
-//   };
-// }

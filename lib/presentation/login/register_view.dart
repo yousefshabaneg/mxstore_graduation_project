@@ -358,10 +358,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   child: state is EmailExistLoadingState ||
                                           state is RegisterLoadingState
                                       ? const MyLoadingIndicator(
-                                          height: 20,
-                                          width: 30,
-                                          indicatorType: Indicator.ballBeat,
-                                        )
+                                          height: 20, width: 30)
                                       : null,
                                   text: "Create Account",
                                 ),

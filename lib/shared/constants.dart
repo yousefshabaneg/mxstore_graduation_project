@@ -141,7 +141,10 @@ CupertinoNavigationBar homeAppBar(context) => CupertinoNavigationBar(
                 color: ColorManager.dark,
                 size: 20,
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+                SearchCubit.get(context).clearSearch();
+              },
             )
           : null,
       middle: SearchCubit.get(context).isSearching

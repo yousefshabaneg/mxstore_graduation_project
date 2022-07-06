@@ -315,6 +315,21 @@ class ProductDetailsHelpers {
         ],
       );
 
+  static Widget deliverBy({Duration? duration}) => Row(
+        children: [
+          Text(
+            "Delivery by ",
+            style: TextStyle(
+              color: ColorManager.dark,
+              fontSize: 14,
+            ),
+          ),
+          Text(shippingDate(duration ?? Duration(days: 3)),
+              style: kTheme.textTheme.headline5!
+                  .copyWith(color: ColorManager.success)),
+        ],
+      );
+
   static Widget specificationItem({title, value}) => Column(
         children: [
           Padding(

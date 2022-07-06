@@ -128,6 +128,13 @@ class ShopSuccessAddToCartState extends ShopStates {}
 
 class ShopErrorAddToCartState extends ShopStates {}
 
+// Update Basket States
+class ShopLoadingUpdateBasketState extends ShopStates {}
+
+class ShopSuccessUpdateBasketState extends ShopStates {}
+
+class ShopErrorUpdateBasketState extends ShopStates {}
+
 // Change Quantity States
 class ShopLoadingChangeQuantityCartState extends ShopStates {}
 
@@ -177,7 +184,21 @@ class ShopErrorPaymentMethodState extends ShopStates {}
 
 class ShopChangePaymentIdState extends ShopStates {}
 
-// Order
+// Payment Intent
+class ShopLoadingPaymentIntentState extends ShopStates {}
+
+class ShopSuccessPaymentIntentState extends ShopStates {}
+
+class ShopErrorPaymentIntentState extends ShopStates {}
+
+// Payment Cash
+class ShopLoadingPaymentCashState extends ShopStates {}
+
+class ShopSuccessPaymentCashState extends ShopStates {}
+
+class ShopErrorPaymentCashState extends ShopStates {}
+
+// Create Order
 class ShopLoadingCreateOrderState extends ShopStates {}
 
 class ShopSuccessCreateOrderState extends ShopStates {}
@@ -185,3 +206,14 @@ class ShopSuccessCreateOrderState extends ShopStates {}
 class ShopErrorCreateOrderState extends ShopStates {}
 
 class ShopChangePaymentMethodIdState extends ShopStates {}
+
+// Get Orders
+class ShopLoadingGetOrdersState extends ShopStates {}
+
+class ShopSuccessGetOrdersState extends ShopStates {}
+
+class ShopErrorGetOrdersState extends ShopStates {
+  final String error;
+
+  ShopErrorGetOrdersState(this.error);
+}

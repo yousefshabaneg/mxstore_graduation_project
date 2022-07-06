@@ -265,10 +265,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                         state is ShopLoadingAddToCartState &&
                                         state.id == widget.productId
                                     ? const MyLoadingIndicator(
-                                        height: 20,
-                                        width: 30,
-                                        indicatorType: Indicator.ballBeat,
-                                      )
+                                        height: 20, width: 30)
                                     : null,
                                 onTap: () {
                                   ShopCubit.get(context)
@@ -297,10 +294,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                 splashColor: ColorManager.dark,
                                 child: isCartLoading
                                     ? const MyLoadingIndicator(
-                                        height: 20,
-                                        width: 30,
-                                        indicatorType: Indicator.ballBeat,
-                                      )
+                                        height: 20, width: 30)
                                     : null,
                                 onTap: () async {
                                   setState(() => isCartLoading = true);
@@ -458,10 +452,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                               child: state is ShopLoadingAddToCartState &&
                                       state.id == widget.productId
                                   ? const MyLoadingIndicator(
-                                      height: 20,
-                                      width: 30,
-                                      indicatorType: Indicator.ballBeat,
-                                    )
+                                      height: 20, width: 30)
                                   : null,
                               onTap: () {
                                 ShopCubit.get(context)
@@ -541,7 +532,8 @@ class ShimmerProductDetails extends StatelessWidget {
           ),
           SizedBox(
             height: kHeight * 0.35,
-            child: const MyLoadingIndicator(),
+            child: const MyLoadingIndicator(
+                indicatorType: Indicator.ballSpinFadeLoader),
           ),
           kVSeparator(),
         ],

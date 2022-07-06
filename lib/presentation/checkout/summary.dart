@@ -14,6 +14,7 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/order_summary_item.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class SummaryView extends StatelessWidget {
   const SummaryView({Key? key}) : super(key: key);
@@ -282,7 +283,9 @@ class SummaryView extends StatelessWidget {
               ),
             ),
           ),
-          fallback: (context) => Center(child: const MyLoadingIndicator()),
+          fallback: (context) => Center(
+              child: const MyLoadingIndicator(
+                  indicatorType: Indicator.ballSpinFadeLoader)),
         );
       },
     );

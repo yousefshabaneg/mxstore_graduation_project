@@ -18,6 +18,7 @@ CupertinoNavigationBar categoryAppBar(context) => CupertinoNavigationBar(
               ),
               onPressed: () {
                 Navigator.pop(context);
+                SearchCubit.get(context).clearCategorySearch();
               },
             )
           : null,

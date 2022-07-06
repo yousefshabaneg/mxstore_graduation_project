@@ -8,17 +8,20 @@ import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
+import 'package:graduation_project/data/models/create_order_model.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/order_summary_item.dart';
+import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class OrderConfirmedView extends StatelessWidget {
-  const OrderConfirmedView({Key? key, required this.orderId}) : super(key: key);
-  final String? orderId;
+  const OrderConfirmedView({Key? key, required this.orderModel})
+      : super(key: key);
+  final CreateOrderModel? orderModel;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +99,8 @@ class OrderConfirmedView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BodyText(
-                                    text: "Order ${orderId ?? " Success"}",
+                                    text:
+                                        "Order ${orderModel?.id ?? " Success"}",
                                     color: ColorManager.dark,
                                   ),
                                   kVSeparator(factor: 0.01),
@@ -240,7 +244,7 @@ class OrderConfirmedView extends StatelessWidget {
                                         children: [
                                           SubtitleText(
                                               text:
-                                                  "${formatPrice(ShopCubit.get(context).cartTotalPrice())} EGP"),
+                                                  "${formatPrice(orderModel?.subtotal ?? 0)} EGP"),
                                           const SizedBox(height: 10),
                                           SubtitleText(
                                               text:
@@ -259,7 +263,7 @@ class OrderConfirmedView extends StatelessWidget {
                                           color: ColorManager.black),
                                       BodyText(
                                           text:
-                                              "${ShopCubit.get(context).getPriceWithDelivery()} EGP",
+                                              "${formatPrice((orderModel?.subtotal ?? 0) + ShopCubit.get(context).getDeliveryPrice().toInt())} EGP",
                                           color: ColorManager.black),
                                     ],
                                   ),
@@ -271,20 +275,16 @@ class OrderConfirmedView extends StatelessWidget {
                                 text: "PRODUCTS ORDERED",
                                 color: ColorManager.black,
                               ),
-                              kVSeparator(factor: 0.01),
+                              kVSeparator(),
                               ...List.generate(
-                                ShopCubit.get(context).cartProducts.length,
+                                orderModel!.orderItems!.length,
                                 (index) => Column(
                                   children: [
-                                    OrderSummaryItem(
-                                      product: ShopCubit.get(context)
-                                          .cartProducts[index],
+                                    CreateOrderSummaryItem(
+                                      product: orderModel!.orderItems![index],
                                     ),
                                     if (index !=
-                                        ShopCubit.get(context)
-                                                .cartProducts
-                                                .length -
-                                            1)
+                                        orderModel!.orderItems!.length - 1)
                                       kDivider(factor: 0.02, opacity: 0.3),
                                   ],
                                 ),
@@ -295,7 +295,9 @@ class OrderConfirmedView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    fallback: (context) => Center(child: MyLoadingIndicator()),
+                    fallback: (context) => Center(
+                        child: MyLoadingIndicator(
+                            indicatorType: Indicator.ballSpinFadeLoader)),
                   );
                 },
               );
@@ -303,6 +305,53 @@ class OrderConfirmedView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class CreateOrderSummaryItem extends StatelessWidget {
+  CreateOrderSummaryItem({Key? key, required this.product}) : super(key: key);
+  final CreateOrderItem product;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: kWidth * 0.6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BodyText(
+                    text: product.itemOrdered?.productName ?? "",
+                    color: ColorManager.dark,
+                    size: 14,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    "EGP ${formatPrice(product.price!)}",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: ColorManager.dark,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SubtitleText(text: "QTY ${this.product.quantity}"),
+                ],
+              ),
+            ),
+            Image(
+              image: NetworkImage(product.itemOrdered?.pictureUrl ?? ""),
+              width: kWidth * 0.25,
+              height: kHeight * 0.1,
+            ),
+          ],
+        ),
+        kVSeparator(),
+        ProductDetailsHelpers.deliverBy(),
+      ],
     );
   }
 }

@@ -31,13 +31,13 @@ class BodyText extends StatelessWidget {
 }
 
 class SubtitleText extends StatelessWidget {
-  double size;
+  final double size;
   final String text;
   final Color color;
   final TextAlign? align;
   final int? maxLines;
   final TextOverflow? overflow;
-  SubtitleText({
+  const SubtitleText({
     Key? key,
     required this.text,
     this.size = 16,

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:graduation_project/data/dio_helper.dart';
 import 'package:graduation_project/data/models/address_model.dart';
 import 'package:graduation_project/data/models/banner_model.dart';
@@ -7,8 +7,11 @@ import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/data/models/brand_model.dart';
 import 'package:graduation_project/data/models/category_model.dart';
 import 'package:graduation_project/data/models/comment_model.dart';
+import 'package:graduation_project/data/models/create_order_model.dart';
 import 'package:graduation_project/data/models/delivery_model.dart';
 import 'package:graduation_project/data/models/favorites_model.dart';
+import 'package:graduation_project/data/models/identity/user_model.dart';
+import 'package:graduation_project/data/models/order_model.dart';
 import 'package:graduation_project/data/models/payment_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -261,11 +264,15 @@ class ShopCubit extends Cubit<ShopStates> {
   Future<void> clearBasket() async {
     cartProductsIds.clear();
     cartQuantities = 0;
+    cartProducts.clear();
     basketModel?.products.clear();
+    basketModel?.clientSecret = null;
+    basketModel?.paymentIntentId = null;
+
     emit(ShopLoadingClearBasketState());
-    final newBasket = basketModel?.toJson();
+    final resetBasket = basketModel?.toJson();
     await DioHelper.postData(
-            url: "${ConstantsManager.Basket}", data: newBasket!)
+            url: "${ConstantsManager.Basket}", data: resetBasket!)
         .then((json) {
       basketModel = BasketModel.fromJson(json);
       emit(ShopSuccessClearBasketState());
@@ -300,6 +307,26 @@ class ShopCubit extends Cubit<ShopStates> {
         errorMessage = "error occurred, try again later.";
         emit(ShopErrorAddToCartState());
       }
+    }
+  }
+
+  Future<void> updateBasket() async {
+    emit(ShopLoadingUpdateBasketState());
+    basketModel?.deliveryMethodId = deliveryId;
+    final newBasket = basketModel?.toJson();
+    if (newBasket != null) {
+      await DioHelper.postData(
+              url: "${ConstantsManager.Basket}", data: newBasket)
+          .then((json) {
+        basketModel = BasketModel.fromJson(json);
+        emit(ShopSuccessUpdateBasketState());
+      }).catchError((error) {
+        errorMessage = error;
+        emit(ShopErrorUpdateBasketState());
+      });
+    } else {
+      errorMessage = "error occurred, try again later.";
+      emit(ShopErrorAddToCartState());
     }
   }
 
@@ -439,10 +466,9 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopChangeDeliveryIdState());
   }
 
-  Future<String?> placeOrderCash(AddressModel addressModel) async {
-    String? orderId;
+  Future<CreateOrderModel?> createOrder(AddressModel addressModel) async {
     emit(ShopLoadingCreateOrderState());
-    print("Basket Id : $basketId");
+    CreateOrderModel? createOrderModel;
     await DioHelper.postData(
         url: "${ConstantsManager.Orders}",
         token: token,
@@ -454,35 +480,71 @@ class ShopCubit extends Cubit<ShopStates> {
         }).then((json) async {
       await clearBasket();
       print(json);
-      orderId = "NEG260161";
+      createOrderModel = CreateOrderModel.fromJson(json);
       emit(ShopSuccessCreateOrderState());
     }).catchError((error) {
       errorMessage = error;
       print(error);
       emit(ShopErrorCreateOrderState());
     });
-    return orderId;
+    return createOrderModel;
   }
 
-  String cardNumber = '';
-  String expiryDate = '';
-  String cardHolderName = '';
-  String cvvCode = '';
-  final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
-
-  void setCardInfo({
-    required String cardNumber,
-    required String expiryDate,
-    required String cardHolderName,
-    required String cvvCode,
-  }) {
-    this.cardNumber = cardNumber;
-    this.expiryDate = expiryDate;
-    this.cardHolderName = cardHolderName;
-    this.cvvCode = cvvCode;
+  Future<CreateOrderModel?> placeOrderCash(AddressModel addressModel) async {
+    await updateBasket();
+    emit(ShopLoadingPaymentCashState());
+    await createOrder(addressModel).then((value) {
+      print("Pay With Cash Success");
+      print(value?.orderItems?.length);
+      return value;
+    });
+    return null;
   }
 
-  void payWithCard() {
-    print("$cardNumber $expiryDate $cardHolderName $cvvCode");
+  Future<CreateOrderModel?> initPayment(
+      UserModel userModel, AddressModel addressModel) async {
+    await updateBasket();
+    CreateOrderModel? createOrderModel;
+    emit(ShopLoadingPaymentIntentState());
+    await DioHelper.postData(
+            url: "${ConstantsManager.Payment}$basketId", token: token)
+        .then((json) async {
+      print(json);
+      basketModel = BasketModel.fromJson(json);
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+        paymentIntentClientSecret: basketModel!.clientSecret,
+        testEnv: true,
+        merchantDisplayName: "Ecommerce",
+        merchantCountryCode: "US",
+      ));
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        print("Payment Success value: ");
+        createOrderModel = await createOrder(addressModel);
+      }).catchError(
+        (error) {
+          print("Error Payment Stripe $error");
+          emit(ShopErrorPaymentIntentState());
+        },
+      );
+    }).catchError((error) {
+      errorMessage = error;
+      print(error);
+      emit(ShopErrorPaymentIntentState());
+    });
+    return createOrderModel;
+  }
+
+  List<OrderModel> userOrders = [];
+  void getUserOrders() {
+    emit(ShopLoadingGetOrdersState());
+    DioHelper.getData(url: ConstantsManager.Categories).then((json) {
+      userOrders = List.from(json).map((e) => OrderModel.fromJson(e)).toList();
+      emit(ShopSuccessGetOrdersState());
+    }).catchError((error) {
+      print('GET Orders ERROR');
+      emit(ShopErrorGetOrdersState(error));
+      print(error.toString());
+    });
   }
 }

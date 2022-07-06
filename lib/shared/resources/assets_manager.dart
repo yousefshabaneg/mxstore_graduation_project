@@ -2,6 +2,7 @@ const String IMAGE_PATH = "assets/images";
 const String MODELS_PATH = "assets/models";
 
 class ImageAssets {
+  static const String search = "$IMAGE_PATH/search.svg";
   static const String logo = "$IMAGE_PATH/logo.png";
   static const String loading = "$IMAGE_PATH/loading.gif";
   static const String loadingFull = "$IMAGE_PATH/loading_full.gif";

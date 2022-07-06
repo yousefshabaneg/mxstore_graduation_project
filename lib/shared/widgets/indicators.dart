@@ -6,7 +6,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 class MyLoadingIndicator extends StatefulWidget {
   const MyLoadingIndicator({
     Key? key,
-    this.indicatorType = Indicator.ballSpinFadeLoader,
+    this.indicatorType = Indicator.ballBeat,
     this.height,
     this.width,
     this.color,

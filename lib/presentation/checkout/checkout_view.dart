@@ -5,18 +5,16 @@ import 'package:graduation_project/business_logic/account_cubit/account_cubit.da
 import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/presentation/account/address_view.dart';
+import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
+import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/presentation/checkout/add_address.dart';
 import 'package:graduation_project/presentation/checkout/add_delivery.dart';
 import 'package:graduation_project/presentation/checkout/order_confirmed_view.dart';
-import 'package:graduation_project/presentation/checkout/payment_view.dart';
 import 'package:graduation_project/presentation/checkout/summary.dart';
-import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:im_stepper/stepper.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({Key? key}) : super(key: key);
@@ -47,8 +45,6 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         return const DeliveryMethodView();
       case 2:
         return const SummaryView();
-      case 3:
-        return const CreditCardPage();
       default:
         return isHaveAddress()
             ? const AddressInfoView()
@@ -112,36 +108,45 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
   /// Returns the next button.
   Widget nextButton() {
-    return SolidButton(
-      text: (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) ||
-              (ShopCubit.get(context).paymentMethodId == 2 && activeStep == 3)
-          ? "Place Order"
-          : "Continue",
-      color: Colors.white,
-      heightFactor: 0.06,
-      widthFactor: 0.9,
-      radius: 5,
-      onTap: () async {
-        if (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) {
-          await ShopCubit.get(context)
-              .placeOrderCash(AccountCubit.get(context).addressModel!)
-              .then((value) {
-            // if(value != null){
-            push(context, OrderConfirmedView(orderId: value));
-            // }
-          });
-        } else if (ShopCubit.get(context).paymentMethodId == 2 &&
-            activeStep == 3) {
-          if (ShopCubit.get(context).cardFormKey.currentState!.validate()) {
-            ShopCubit.get(context).payWithCard();
+    return BlocConsumer<ShopCubit, ShopStates>(
+      listener: (context, state) {},
+      builder: (context, state) => SolidButton(
+        text: (activeStep == 2) ? "Place Order" : "Continue",
+        color: Colors.white,
+        heightFactor: 0.06,
+        widthFactor: 0.9,
+        radius: 5,
+        child: state is ShopLoadingPaymentIntentState
+            ? const MyLoadingIndicator(height: 20, width: 30)
+            : null,
+        onTap: () async {
+          if (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) {
+            await ShopCubit.get(context)
+                .placeOrderCash(AccountCubit.get(context).addressModel!)
+                .then((value) {
+              push(context, OrderConfirmedView(orderModel: value));
+            });
+          } else if (ShopCubit.get(context).paymentMethodId == 2 &&
+              activeStep == 2) {
+            await ShopCubit.get(context)
+                .initPayment(UserCubit.get(context).userModel!,
+                    AccountCubit.get(context).addressModel!)
+                .then((value) {
+              print("value $value");
+              print("length ${value?.orderItems?.length}");
+              print("id ${value?.id}");
+              print("subtotal ${value?.subtotal}");
+              print("price ${value?.orderItems?[0].price}");
+              push(context, OrderConfirmedView(orderModel: value));
+            });
             FocusManager.instance.primaryFocus?.unfocus();
+          } else if (activeStep < upperBound) {
+            setState(() {
+              activeStep++;
+            });
           }
-        } else if (activeStep < upperBound) {
-          setState(() {
-            activeStep++;
-          });
-        }
-      },
+        },
+      ),
     );
   }
 

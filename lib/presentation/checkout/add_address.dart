@@ -12,6 +12,7 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class AddAddressView extends StatelessWidget {
   const AddAddressView({Key? key}) : super(key: key);
@@ -168,7 +169,9 @@ class AddressInfoView extends StatelessWidget {
               ),
             ),
           ),
-          fallback: (context) => Expanded(child: const MyLoadingIndicator()),
+          fallback: (context) => Expanded(
+              child: const MyLoadingIndicator(
+                  indicatorType: Indicator.ballSpinFadeLoader)),
         );
       },
     );

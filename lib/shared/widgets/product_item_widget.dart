@@ -156,11 +156,7 @@ class ProductItemWidget extends StatelessWidget {
                       },
                       child: state is ShopLoadingAddToCartState &&
                               state.id == model!.id
-                          ? const MyLoadingIndicator(
-                              height: 20,
-                              width: 30,
-                              indicatorType: Indicator.ballBeat,
-                            )
+                          ? const MyLoadingIndicator(height: 20, width: 30)
                           : null,
                     );
                   },

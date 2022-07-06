@@ -13,6 +13,7 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/grid_product_item_widget.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class FavoritesView extends StatelessWidget {
   FavoritesView({Key? key}) : super(key: key);
@@ -36,7 +37,8 @@ class FavoritesView extends StatelessWidget {
                         ProductsItemsGridBuilder(
                             products: ShopCubit.get(context).favoritesProducts),
                         if (state is ShopLoadingChangeFavoritesState)
-                          const MyLoadingIndicator(),
+                          const MyLoadingIndicator(
+                              indicatorType: Indicator.ballSpinFadeLoader),
                       ],
                     )
                   : Center(

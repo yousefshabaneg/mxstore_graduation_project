@@ -20,6 +20,7 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_item_widget.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class CartView extends StatelessWidget {
   CartView({Key? key}) : super(key: key);
@@ -89,7 +90,8 @@ class CartView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        fallback: (context) => const MyLoadingIndicator(),
+                        fallback: (context) => const MyLoadingIndicator(
+                            indicatorType: Indicator.ballSpinFadeLoader),
                       ),
                     ),
                     if (ShopCubit.get(context).favoritesProducts.isNotEmpty)

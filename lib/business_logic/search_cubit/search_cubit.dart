@@ -30,9 +30,11 @@ class SearchCubit extends Cubit<SearchStates> {
   void clearSearch() {
     searchController.clear();
     searchedProducts.clear();
+    notProductsFound = false;
     emit(ClearSearchedState());
   }
 
+  bool notProductsFound = false;
   List<ProductItemModel> searchedProducts = [];
   void getSearchedProducts(
       {String searchWord = "", int? brandId, int? categoryId}) {
@@ -47,6 +49,7 @@ class SearchCubit extends Cubit<SearchStates> {
       },
     ).then((json) {
       searchedProducts = ProductsModel.fromJson(json).products!;
+      if (searchedProducts.isEmpty) notProductsFound = true;
       emit(SuccessSearchedProductsState());
     }).catchError((error) {
       print('GET Searched Products Products ERROR');
@@ -76,9 +79,11 @@ class SearchCubit extends Cubit<SearchStates> {
   void clearCategorySearch() {
     searchCategoryController.clear();
     searchedCategoryProducts.clear();
+    notCategoryFound = false;
     emit(ClearSearchedState());
   }
 
+  bool notCategoryFound = false;
   List<ProductItemModel> searchedCategoryProducts = [];
   void getSearchedCategoryProducts(
       {String searchWord = "", int? brandId, int? categoryId}) {
@@ -93,6 +98,7 @@ class SearchCubit extends Cubit<SearchStates> {
       },
     ).then((json) {
       searchedCategoryProducts = ProductsModel.fromJson(json).products!;
+      if (searchedCategoryProducts.isEmpty) notCategoryFound = true;
       emit(SuccessSearchedProductsState());
     }).catchError((error) {
       print('GET Searched Products Products ERROR');

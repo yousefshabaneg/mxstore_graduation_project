@@ -154,10 +154,7 @@ class _LoginViewState extends State<LoginView> {
                               child: state is! LoginLoadingState
                                   ? null
                                   : const MyLoadingIndicator(
-                                      height: 20,
-                                      width: 30,
-                                      indicatorType: Indicator.ballBeat,
-                                    ),
+                                      height: 20, width: 30),
                               text: "Log in",
                             ),
                             kVSeparator(factor: 0.01),

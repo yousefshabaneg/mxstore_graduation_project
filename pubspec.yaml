@@ -40,8 +40,8 @@ dependencies:
   flutter_custom_clippers: ^2.0.0
   uuid: ^3.0.6
   im_stepper: ^1.0.1+1
-  flutter_credit_card: ^3.0.1
   flutter_stripe: ^3.2.0
+  flutter_offline: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +64,6 @@ flutter:
     - assets/models/
     - assets/images/
     - assets/images/onboarding/
-    - assets/images/banners/
 
   fonts:
     - family: Cairo

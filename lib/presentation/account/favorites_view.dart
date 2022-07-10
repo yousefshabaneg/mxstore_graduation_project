@@ -64,22 +64,18 @@ class FavoritesView extends StatelessWidget {
                             align: TextAlign.center,
                           ),
                           kVSeparator(),
-                          Container(
-                            width: kWidth * 0.9,
-                            child: SolidButton(
-                              withIcon: true,
-                              icon: FontAwesomeIcons.cartShopping,
-                              radius: 10,
-                              heightFactor: 0.07,
-                              backgroundColor: Colors.white,
-                              color: ColorManager.primary,
-                              borderColor: ColorManager.primary,
-                              text: "Start Shopping",
-                              onTap: () {
-                                tabController.index = 0;
-                                Navigator.pop(context);
-                              },
-                            ),
+                          SolidButton(
+                            radius: 10,
+                            text: "Start Shopping",
+                            heightFactor: 0.07,
+                            backgroundColor: Colors.white,
+                            color: ColorManager.black,
+                            widthFactor: 0.9,
+                            borderColor: ColorManager.black,
+                            onTap: () {
+                              tabController.index = 0;
+                              Navigator.pop(context);
+                            },
                           ),
                         ],
                       ),

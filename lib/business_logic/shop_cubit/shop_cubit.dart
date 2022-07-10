@@ -28,8 +28,10 @@ class ShopCubit extends Cubit<ShopStates> {
   Map<int, String> brandsMap = {};
   List<BrandModel> brands = [];
   List<BannerModel> banners = [];
-  List<ProductItemModel> products = [];
+  List<ProductItemModel> allProducts = [];
+  late ProductsModel allProductsModel;
   List<ProductItemModel> offeredProducts = [];
+  List<ProductItemModel> products = [];
   late ProductsModel productsModel;
 
   List favoritesProductsIds = [];
@@ -42,11 +44,37 @@ class ShopCubit extends Cubit<ShopStates> {
 
   ChangeFavoritesModel? changeFavoritesModel;
 
+  Future<void>? getEverything() async {
+    if (products.isEmpty &&
+        categories.isEmpty &&
+        banners.isEmpty &&
+        brands.isEmpty) {
+      getCategories();
+      getBrands();
+      getBanners();
+      getAllProducts();
+      getProducts();
+      getOfferedProducts();
+    }
+  }
+
   bool everythingIsLoaded() =>
       categories.isNotEmpty &&
       brands.isNotEmpty &&
       products.isNotEmpty &&
       offeredProducts.isNotEmpty;
+
+  void logout() {
+    favoritesProductsIds.clear();
+    favoritesProducts.clear();
+    cartProductsIds.clear();
+    cartQuantities = 0;
+    basketModel = null;
+    cartProducts.clear();
+    deliveryId = 1;
+    paymentMethodId = 1;
+    userOrders.clear();
+  }
 
   void getCategories() {
     emit(ShopLoadingCategoriesState());
@@ -100,6 +128,43 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorProductsState(error));
       print(error.toString());
     });
+  }
+
+  void getAllProducts() {
+    emit(ShopLoadingAllProductsState());
+    DioHelper.getData(url: ConstantsManager.Products, query: {"PageSize": 100})
+        .then((json) {
+      allProductsModel = ProductsModel.fromJson(json);
+      allProducts = allProductsModel.products!;
+      emit(ShopSuccessAllProductsState());
+    }).catchError((error) {
+      print('GET All Products ERROR');
+      emit(ShopErrorAllProductsState(error));
+      print(error.toString());
+    });
+  }
+
+  List<ProductItemModel> similarBrand(
+      {required int productId, required int brandId}) {
+    return allProducts
+        .where(
+            (element) => element.id != productId && element.brandId == brandId)
+        .toList();
+  }
+
+  List<ProductItemModel> similarCategory(
+      {required int productId, required int categoryId}) {
+    return allProducts
+        .where((element) =>
+            element.id != productId && element.categoryId == categoryId)
+        .toList();
+  }
+
+  List<ProductItemModel> productsInStock() {
+    return allProducts
+        .where((element) => element.numberInStock > 0)
+        .take(20)
+        .toList();
   }
 
   Future<List<ProductItemModel>> getOfferedProducts({
@@ -481,9 +546,10 @@ class ShopCubit extends Cubit<ShopStates> {
       await clearBasket();
       print(json);
       createOrderModel = CreateOrderModel.fromJson(json);
+      successMessage = "Order Created Successfully";
       emit(ShopSuccessCreateOrderState());
     }).catchError((error) {
-      errorMessage = error;
+      errorMessage = "Error while creating your order";
       print(error);
       emit(ShopErrorCreateOrderState());
     });
@@ -492,13 +558,21 @@ class ShopCubit extends Cubit<ShopStates> {
 
   Future<CreateOrderModel?> placeOrderCash(AddressModel addressModel) async {
     await updateBasket();
+    CreateOrderModel? createOrderModel;
     emit(ShopLoadingPaymentCashState());
     await createOrder(addressModel).then((value) {
-      print("Pay With Cash Success");
-      print(value?.orderItems?.length);
-      return value;
+      if (value != null) {
+        print("Pay With Cash Success");
+        createOrderModel = value;
+        emit(ShopSuccessPaymentCashState());
+      } else {
+        emit(ShopErrorPaymentCashState());
+      }
+    }).catchError((error) {
+      print(error);
+      emit(ShopErrorPaymentCashState());
     });
-    return null;
+    return createOrderModel;
   }
 
   Future<CreateOrderModel?> initPayment(

@@ -374,19 +374,20 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                         ],
                       ),
                     ProductsHorizontalListBuilder(
-                      title: "Customers also viewed",
+                      title: "From Same Brand",
                       size: 18,
-                      products: ShopCubit.get(context)
-                          .products
-                          .sublist(0, 8)
-                          .where((element) => element.id != widget.product!.id)
-                          .toList(),
+                      products: ShopCubit.get(context).similarBrand(
+                          brandId: widget.product!.brandId!,
+                          productId: widget.productId),
                     ),
                     kGrayDivider(),
                     ProductsHorizontalListBuilder(
-                      title: "Similar Products",
+                      title: "Customers also viewed",
                       size: 18,
-                      products: ShopCubit.get(context).products,
+                      products: ShopCubit.get(context).similarCategory(
+                        categoryId: widget.product!.categoryId!,
+                        productId: widget.productId,
+                      ),
                     ),
                     kVSeparator(factor: 0.1),
                   ],

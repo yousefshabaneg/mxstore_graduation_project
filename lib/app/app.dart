@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
                 ..getCategories()
                 ..getBrands()
                 ..getBanners()
+                ..getAllProducts()
                 ..getProducts()
                 ..getOfferedProducts()),
           BlocProvider(

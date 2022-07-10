@@ -19,6 +19,17 @@ class ShopErrorProductsState extends ShopStates {
   ShopErrorProductsState(this.error);
 }
 
+// Get All Products States
+class ShopLoadingAllProductsState extends ShopStates {}
+
+class ShopSuccessAllProductsState extends ShopStates {}
+
+class ShopErrorAllProductsState extends ShopStates {
+  final String error;
+
+  ShopErrorAllProductsState(this.error);
+}
+
 // Get Filtered Products States
 class ShopLoadingFilteredProductsState extends ShopStates {}
 

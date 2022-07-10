@@ -1,4 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:dialogs/dialogs/choice_dialog.dart';
+import 'package:dialogs/dialogs/message_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,11 +81,22 @@ class AccountView extends StatelessWidget {
                                       ))),
                               buildAccountRow(
                                   FontAwesomeIcons.locationCrosshairs,
-                                  "Addresses",
+                                  "Address",
                                   onTap: () => push(context, AddressView())),
                               kVSeparator(factor: 0.03),
                               InkWell(
-                                onTap: () => signOut(context),
+                                onTap: () {
+                                  ChoiceDialog(
+                                    dialogBackgroundColor: Colors.white,
+                                    title: "Confirm Logout",
+                                    message:
+                                        'Are you sure you want to log out?',
+                                    buttonOkColor: ColorManager.primary,
+                                    buttonOkText: 'OK',
+                                    buttonCancelText: "Cancel",
+                                    buttonOkOnPressed: () => signOut(context),
+                                  ).show(context, barrierColor: Colors.black12);
+                                },
                                 child: Container(
                                   height: kHeight * 0.08,
                                   color: ColorManager.white,
@@ -95,7 +108,7 @@ class AccountView extends StatelessWidget {
                                           color: ColorManager.primary),
                                       kHSeparator(factor: 0.08),
                                       Text(
-                                        "Log out",
+                                        "Logout",
                                         style: TextStyle(
                                           color: ColorManager.primary,
                                           fontSize: 16,

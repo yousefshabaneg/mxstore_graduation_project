@@ -29,7 +29,7 @@ void signOut(context) async {
           .pushReplacementNamed(Routes.accountRoute);
     }
     UserCubit.get(context).userModel = null;
-    ShopCubit.get(context).favoritesProductsIds = [];
+    ShopCubit.get(context).logout();
     AccountCubit.get(context).clearAddressData();
   });
 }

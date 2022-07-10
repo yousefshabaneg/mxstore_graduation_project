@@ -101,7 +101,7 @@ class CartView extends StatelessWidget {
                       ProductsHorizontalListBuilder(
                         title: "Browse offers",
                         cartProduct: true,
-                        products: ShopCubit.get(context).products,
+                        products: ShopCubit.get(context).productsInStock(),
                         categoryId: 6,
                       ),
                       kGrayDivider(),
@@ -273,7 +273,7 @@ class DeliveryServices extends StatelessWidget {
                     color: ColorManager.black,
                   ),
                   SubtitleText(
-                    text: "19595",
+                    text: "www.mx-store.com",
                     color: ColorManager.info,
                   ),
                 ],

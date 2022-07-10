@@ -6,6 +6,7 @@ import 'package:graduation_project/business_logic/account_cubit/account_states.d
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
+import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/presentation/checkout/add_address.dart';
 import 'package:graduation_project/presentation/checkout/add_delivery.dart';
@@ -61,7 +62,18 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     return BlocConsumer<AccountCubit, AccountStates>(
       listener: (context, state) {},
       builder: (context, state) => BlocConsumer<ShopCubit, ShopStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is ShopSuccessCreateOrderState) {
+            showToast(
+                msg: ShopCubit.get(context).successMessage,
+                state: ToastStates.SUCCESS);
+          }
+          if (state is ShopErrorCreateOrderState) {
+            showToast(
+                msg: ShopCubit.get(context).errorMessage,
+                state: ToastStates.ERROR);
+          }
+        },
         builder: (context, state) => Scaffold(
           appBar: AppBar(
             leading: BackButton(
@@ -116,7 +128,9 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         heightFactor: 0.06,
         widthFactor: 0.9,
         radius: 5,
-        child: state is ShopLoadingPaymentIntentState
+        child: state is ShopLoadingUpdateBasketState ||
+                state is ShopLoadingPaymentIntentState ||
+                state is ShopLoadingCreateOrderState
             ? const MyLoadingIndicator(height: 20, width: 30)
             : null,
         onTap: () async {
@@ -124,7 +138,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             await ShopCubit.get(context)
                 .placeOrderCash(AccountCubit.get(context).addressModel!)
                 .then((value) {
-              push(context, OrderConfirmedView(orderModel: value));
+              if (value != null)
+                push(context, OrderConfirmedView(orderModel: value));
             });
           } else if (ShopCubit.get(context).paymentMethodId == 2 &&
               activeStep == 2) {
@@ -132,12 +147,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                 .initPayment(UserCubit.get(context).userModel!,
                     AccountCubit.get(context).addressModel!)
                 .then((value) {
-              print("value $value");
-              print("length ${value?.orderItems?.length}");
-              print("id ${value?.id}");
-              print("subtotal ${value?.subtotal}");
-              print("price ${value?.orderItems?[0].price}");
-              push(context, OrderConfirmedView(orderModel: value));
+              if (value != null)
+                push(context, OrderConfirmedView(orderModel: value));
             });
             FocusManager.instance.primaryFocus?.unfocus();
           } else if (activeStep < upperBound) {

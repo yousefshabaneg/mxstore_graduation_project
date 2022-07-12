@@ -25,9 +25,10 @@ List<PageController> imageControllers = [PageController()];
 void signOut(context) async {
   await CashHelper.removeData(key: 'token').then((value) {
     if (value) {
-      Navigator.of(context, rootNavigator: true)
-          .pushReplacementNamed(Routes.accountRoute);
+      Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+          Routes.accountRoute, (Route<dynamic> route) => false);
     }
+  }).then((value) {
     UserCubit.get(context).userModel = null;
     ShopCubit.get(context).logout();
     AccountCubit.get(context).clearAddressData();

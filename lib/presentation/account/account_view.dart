@@ -10,6 +10,7 @@ import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/presentation/account/favorites_view.dart';
+import 'package:graduation_project/presentation/account/my_orders_view.dart';
 import 'package:graduation_project/presentation/account/settings_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
@@ -66,7 +67,8 @@ class AccountView extends StatelessWidget {
                               ),
                               kVSeparator(factor: 0.03),
                               buildAccountRow(
-                                  FontAwesomeIcons.cube, "My Orders"),
+                                  FontAwesomeIcons.cube, "My Orders",
+                                  onTap: () => push(context, MyOrdersView())),
                               buildAccountRow(
                                 FontAwesomeIcons.gratipay,
                                 "Saved items",

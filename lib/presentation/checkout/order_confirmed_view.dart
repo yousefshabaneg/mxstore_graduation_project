@@ -8,7 +8,7 @@ import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
-import 'package:graduation_project/data/models/create_order_model.dart';
+import 'package:graduation_project/data/models/order_model.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
@@ -21,7 +21,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 class OrderConfirmedView extends StatelessWidget {
   const OrderConfirmedView({Key? key, required this.orderModel})
       : super(key: key);
-  final CreateOrderModel? orderModel;
+  final OrderModel? orderModel;
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +99,7 @@ class OrderConfirmedView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BodyText(
-                                    text:
-                                        "Order ${orderModel?.id ?? " Success"}",
+                                    text: "Order #${orderModel?.orderId}",
                                     color: ColorManager.dark,
                                   ),
                                   kVSeparator(factor: 0.01),
@@ -120,7 +119,11 @@ class OrderConfirmedView extends StatelessWidget {
                                     ],
                                   ),
                                   kVSeparator(factor: 0.01),
-                                  const BodyText(text: "ORDERED", size: 12),
+                                  BodyText(
+                                      text:
+                                          orderModel?.shipping?.toUpperCase() ??
+                                              "",
+                                      size: 14),
                                 ],
                               ),
                               kVSeparator(),
@@ -248,7 +251,7 @@ class OrderConfirmedView extends StatelessWidget {
                                           const SizedBox(height: 10),
                                           SubtitleText(
                                               text:
-                                                  "${ShopCubit.get(context).getDeliveryPrice()} EGP"),
+                                                  "${orderModel?.shippingPrice ?? 0} EGP"),
                                         ],
                                       ),
                                     ],
@@ -311,7 +314,7 @@ class OrderConfirmedView extends StatelessWidget {
 
 class CreateOrderSummaryItem extends StatelessWidget {
   CreateOrderSummaryItem({Key? key, required this.product}) : super(key: key);
-  final CreateOrderItem product;
+  final OrderItems product;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -325,13 +328,13 @@ class CreateOrderSummaryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BodyText(
-                    text: product.itemOrdered?.productName ?? "",
+                    text: product.productName ?? "",
                     color: ColorManager.dark,
                     size: 14,
                   ),
                   SizedBox(height: 5),
                   Text(
-                    "EGP ${formatPrice(product.price!)}",
+                    "EGP ${formatPrice(product.price)}",
                     style: TextStyle(
                       fontSize: 20,
                       color: ColorManager.dark,
@@ -343,7 +346,7 @@ class CreateOrderSummaryItem extends StatelessWidget {
               ),
             ),
             Image(
-              image: NetworkImage(product.itemOrdered?.pictureUrl ?? ""),
+              image: NetworkImage(product.pictureUrl ?? ""),
               width: kWidth * 0.25,
               height: kHeight * 0.1,
             ),

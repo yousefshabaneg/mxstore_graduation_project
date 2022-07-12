@@ -48,8 +48,15 @@ String nameHandler(String name) {
   return split.length > 2 ? split.getRange(0, 2).join(" ") : split.join(" ");
 }
 
-String formatPrice(int price) =>
+String formatPrice(dynamic price) =>
     NumberFormat.simpleCurrency().format(price).replaceFirst("\$", "");
+
+String parseDateTime(String date, {bool withTime = false}) {
+  DateTime dateTime = DateTime.parse(date);
+  return withTime
+      ? DateFormat('MMM d, yyy, ').add_jm().format(dateTime)
+      : DateFormat('MMM d, yyy').format(dateTime);
+}
 
 String greetingMessage() {
   var hour = DateTime.now().hour;

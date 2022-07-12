@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_cubit.dart';
 import 'package:graduation_project/business_logic/app_cubit/app_states.dart';
@@ -12,9 +10,6 @@ import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
 import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/no_connection_widget.dart';
 
@@ -45,7 +40,8 @@ class MainView extends StatelessWidget {
                     ..getEverything()
                     ..getFavorites()
                     ..getDeliveryMethods()
-                    ..getPaymentMethods(),
+                    ..getPaymentMethods()
+                    ..getUserOrders(),
                   child: BlocConsumer<ShopCubit, ShopStates>(
                     listener: (context, state) {
                       if (state is ShopSuccessChangeFavoritesState) {

@@ -14,7 +14,7 @@ class AccountCubit extends Cubit<AccountStates> {
 
   static AccountCubit get(context) => BlocProvider.of(context);
 
-  void clearAddressData() {
+  Future<void> clearAddressData() async {
     selectedRegion = null;
     selectedCity = null;
     regionCities.clear();
@@ -23,6 +23,12 @@ class AccountCubit extends Cubit<AccountStates> {
     cities.clear();
     citiesModels = [];
     regionsModels = [];
+  }
+
+  bool isAddressLoaded() {
+    return addressModel != null &&
+        citiesModels.isNotEmpty &&
+        regionsModels.isNotEmpty;
   }
 
   String successMessage = "Success";
@@ -44,8 +50,10 @@ class AccountCubit extends Cubit<AccountStates> {
       List response = json.decode(data);
       regionsModels =
           List.from(response).map((e) => RegionModel.fromJson(e)).toList();
+      List<dynamic> loadedRegions = [];
       regionsModels.forEach((element) =>
-          regions.add({"id": element.id, "name": element.regionNameEn}));
+          loadedRegions.add({"id": element.id, "name": element.regionNameEn}));
+      regions = loadedRegions;
     }).catchError((error) {
       print("Load Regions Error :$error");
     });
@@ -58,11 +66,13 @@ class AccountCubit extends Cubit<AccountStates> {
       List response = json.decode(data);
       citiesModels =
           List.from(response).map((e) => CityModel.fromJson(e)).toList();
-      citiesModels.forEach((element) => cities.add({
+      List<dynamic> loadedCities = [];
+      citiesModels.forEach((element) => loadedCities.add({
             "ID": element.id,
             "Name": element.cityNameEn,
             "ParentId": element.regionId
           }));
+      cities = loadedCities;
     }).catchError((error) {
       print("Load Cities Error :$error");
     });
@@ -119,19 +129,20 @@ class AccountCubit extends Cubit<AccountStates> {
 
   AddressModel? addressModel;
   void getUserAddress(context) async {
-    clearAddressData();
+    await clearAddressData();
     loadRegions(context).then((value) {
       loadCities(context).then((value) {
         emit(ShopLoadingGetAddressState());
         DioHelper.getData(url: ConstantsManager.Address, token: token)
             .then((json) {
           addressModel = AddressModel.fromJson(json);
-          print(addressModel);
-          if (addressModel!.city != null && addressModel!.region != null) {
+          if (addressModel?.city != null && addressModel?.region != null) {
             getSelectedRegionId();
             getSelectedCityId();
             getRegionCities();
           }
+          print("regions: ${regions.length}");
+          print("cities: ${cities.length}");
           emit(ShopSuccessGetAddressState());
         }).catchError((error) {
           print('GET Address ERROR');

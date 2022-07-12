@@ -19,7 +19,6 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/textfield.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -51,6 +50,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
     AppCubit.get(context).resetVisibilityPassword();
+    print("login key: $formKey");
   }
 
   @override

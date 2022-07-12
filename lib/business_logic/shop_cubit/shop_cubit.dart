@@ -7,7 +7,6 @@ import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/data/models/brand_model.dart';
 import 'package:graduation_project/data/models/category_model.dart';
 import 'package:graduation_project/data/models/comment_model.dart';
-import 'package:graduation_project/data/models/create_order_model.dart';
 import 'package:graduation_project/data/models/delivery_model.dart';
 import 'package:graduation_project/data/models/favorites_model.dart';
 import 'package:graduation_project/data/models/identity/user_model.dart';
@@ -268,7 +267,6 @@ class ShopCubit extends Cubit<ShopStates> {
         token: token,
         data: {"id": productId}).then((json) {
       changeFavoritesModel = ChangeFavoritesModel.fromJson(json);
-      print(changeFavoritesModel!.status!);
       changeFavoritesModel!.status!
           ? favoritesProducts.add(changeFavoritesModel!.product!)
           : favoritesProducts.removeWhere((e) => e.id == productId);
@@ -308,6 +306,7 @@ class ShopCubit extends Cubit<ShopStates> {
   void getBasket() {
     cartProductsIds.clear();
     cartQuantities = 0;
+    cartProducts.clear();
     emit(ShopLoadingBasketState());
     DioHelper.getData(
         url: "${ConstantsManager.Basket}",
@@ -315,10 +314,16 @@ class ShopCubit extends Cubit<ShopStates> {
       ConstantsManager.basketId = json["id"];
       basketModel = BasketModel.fromJson(json);
       cartProducts = basketModel!.products;
+      List cartIds = [];
+      int quantities = 0;
       cartProducts.forEach((element) {
         cartProductsIds.add(element.id);
+        cartIds.add(element.id);
         cartQuantities += element.quantity;
+        quantities += element.quantity;
       });
+      cartProductsIds.addAll(cartIds);
+      cartQuantities = quantities;
       emit(ShopSuccessBasketState());
     }).catchError((error) {
       errorMessage = error;
@@ -427,7 +432,7 @@ class ShopCubit extends Cubit<ShopStates> {
     cartQuantities -= product.quantity;
     final newBasket = basketModel?.toJson();
     if (newBasket != null) {
-      cartProductsIds.remove(product.id);
+      cartProductsIds.removeWhere((id) => id == product.id);
       DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
           .then((json) async {
         basketModel = BasketModel.fromJson(json);
@@ -531,9 +536,9 @@ class ShopCubit extends Cubit<ShopStates> {
     emit(ShopChangeDeliveryIdState());
   }
 
-  Future<CreateOrderModel?> createOrder(AddressModel addressModel) async {
+  Future<OrderModel?> createOrder(AddressModel addressModel) async {
     emit(ShopLoadingCreateOrderState());
-    CreateOrderModel? createOrderModel;
+    OrderModel? createOrderModel;
     await DioHelper.postData(
         url: "${ConstantsManager.Orders}",
         token: token,
@@ -543,9 +548,7 @@ class ShopCubit extends Cubit<ShopStates> {
           "paymentMethodId": paymentMethodId,
           "shipToAddress": addressModel.toJson(),
         }).then((json) async {
-      await clearBasket();
-      print(json);
-      createOrderModel = CreateOrderModel.fromJson(json);
+      createOrderModel = OrderModel.fromJson(json);
       successMessage = "Order Created Successfully";
       emit(ShopSuccessCreateOrderState());
     }).catchError((error) {
@@ -556,15 +559,17 @@ class ShopCubit extends Cubit<ShopStates> {
     return createOrderModel;
   }
 
-  Future<CreateOrderModel?> placeOrderCash(AddressModel addressModel) async {
+  Future<OrderModel?> placeOrderCash(AddressModel addressModel) async {
     await updateBasket();
-    CreateOrderModel? createOrderModel;
+    OrderModel? createOrderModel;
     emit(ShopLoadingPaymentCashState());
     await createOrder(addressModel).then((value) {
       if (value != null) {
         print("Pay With Cash Success");
         createOrderModel = value;
         emit(ShopSuccessPaymentCashState());
+        clearBasket();
+        getUserOrders();
       } else {
         emit(ShopErrorPaymentCashState());
       }
@@ -575,15 +580,14 @@ class ShopCubit extends Cubit<ShopStates> {
     return createOrderModel;
   }
 
-  Future<CreateOrderModel?> initPayment(
+  Future<OrderModel?> initPayment(
       UserModel userModel, AddressModel addressModel) async {
     await updateBasket();
-    CreateOrderModel? createOrderModel;
+    OrderModel? createOrderModel;
     emit(ShopLoadingPaymentIntentState());
     await DioHelper.postData(
             url: "${ConstantsManager.Payment}$basketId", token: token)
         .then((json) async {
-      print(json);
       basketModel = BasketModel.fromJson(json);
       await Stripe.instance.initPaymentSheet(
           paymentSheetParameters: SetupPaymentSheetParameters(
@@ -595,6 +599,9 @@ class ShopCubit extends Cubit<ShopStates> {
       await Stripe.instance.presentPaymentSheet().then((value) async {
         print("Payment Success value: ");
         createOrderModel = await createOrder(addressModel);
+        emit(ShopSuccessPaymentIntentState());
+        clearBasket();
+        getUserOrders();
       }).catchError(
         (error) {
           print("Error Payment Stripe $error");
@@ -612,8 +619,9 @@ class ShopCubit extends Cubit<ShopStates> {
   List<OrderModel> userOrders = [];
   void getUserOrders() {
     emit(ShopLoadingGetOrdersState());
-    DioHelper.getData(url: ConstantsManager.Categories).then((json) {
+    DioHelper.getData(url: ConstantsManager.Orders, token: token).then((json) {
       userOrders = List.from(json).map((e) => OrderModel.fromJson(e)).toList();
+      userOrders.sort((a, b) => b.id!.compareTo(a.id!));
       emit(ShopSuccessGetOrdersState());
     }).catchError((error) {
       print('GET Orders ERROR');

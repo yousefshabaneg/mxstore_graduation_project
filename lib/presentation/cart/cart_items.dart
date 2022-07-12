@@ -13,7 +13,6 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CartList extends StatelessWidget {

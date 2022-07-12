@@ -65,7 +65,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
           widthFactor: 0.9,
           color: ColorManager.white,
           backgroundColor: ColorManager.primary,
-          splashColor: ColorManager.white,
+          splashColor: ColorManager.primary,
           text: isLast() ? "Get Started" : "Next",
           size: 20,
           onTap: nextPage,

@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/presentation/cart/cart_items.dart';
 import 'package:graduation_project/presentation/cart/favorites_item.dart';
 import 'package:graduation_project/presentation/checkout/checkout_view.dart';
@@ -84,7 +80,14 @@ class CartView extends StatelessWidget {
                                   color: ColorManager.black,
                                   widthFactor: 0.9,
                                   borderColor: ColorManager.black,
-                                  onTap: () => tabController.index = 0,
+                                  onTap: () {
+                                    ShopCubit.get(context)
+                                        .cartProductsIds
+                                        .forEach((element) {
+                                      print("Product: #$element");
+                                    });
+                                    tabController.index = 0;
+                                  },
                                 ),
                               ],
                             ),

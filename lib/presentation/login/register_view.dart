@@ -107,6 +107,7 @@ class _RegisterViewState extends State<RegisterView> {
   void initState() {
     super.initState();
     AppCubit.get(context).resetVisibilityPassword();
+    print("Register key: $formKey");
   }
 
   @override

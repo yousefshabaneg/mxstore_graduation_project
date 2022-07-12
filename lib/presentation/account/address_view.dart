@@ -109,7 +109,9 @@ class _AddressViewState extends State<AddressView> {
             }
           }),
           child: ConditionalBuilder(
-            condition: cubit.addressModel != null,
+            condition: cubit.isAddressLoaded() &&
+                state is! ShopLoadingGetAddressState &&
+                userModel != null,
             builder: (context) => SafeArea(
               child: GestureDetector(
                 onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

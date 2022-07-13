@@ -50,7 +50,6 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
     AppCubit.get(context).resetVisibilityPassword();
-    print("login key: $formKey");
   }
 
   @override

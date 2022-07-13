@@ -534,7 +534,8 @@ class ShimmerProductDetails extends StatelessWidget {
           SizedBox(
             height: kHeight * 0.35,
             child: const MyLoadingIndicator(
-                indicatorType: Indicator.ballSpinFadeLoader),
+              circular: true,
+            ),
           ),
           kVSeparator(),
         ],

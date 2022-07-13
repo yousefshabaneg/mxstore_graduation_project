@@ -321,7 +321,8 @@ class _AddressViewState extends State<AddressView> {
             ),
             fallback: (context) => Center(
                 child: const MyLoadingIndicator(
-                    indicatorType: Indicator.ballSpinFadeLoader)),
+              circular: true,
+            )),
           ),
         );
       },

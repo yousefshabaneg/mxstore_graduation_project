@@ -133,30 +133,35 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                 state is ShopLoadingCreateOrderState
             ? const MyLoadingIndicator(height: 20, width: 30)
             : null,
-        onTap: () async {
-          if (ShopCubit.get(context).paymentMethodId == 1 && activeStep == 2) {
-            await ShopCubit.get(context)
-                .placeOrderCash(AccountCubit.get(context).addressModel!)
-                .then((value) {
-              if (value != null)
-                push(context, OrderConfirmedView(orderModel: value));
-            });
-          } else if (ShopCubit.get(context).paymentMethodId == 2 &&
-              activeStep == 2) {
-            await ShopCubit.get(context)
-                .initPayment(UserCubit.get(context).userModel!,
-                    AccountCubit.get(context).addressModel!)
-                .then((value) {
-              if (value != null)
-                push(context, OrderConfirmedView(orderModel: value));
-            });
-            FocusManager.instance.primaryFocus?.unfocus();
-          } else if (activeStep < upperBound) {
-            setState(() {
-              activeStep++;
-            });
-          }
-        },
+        onTap: state is ShopLoadingUpdateBasketState ||
+                state is ShopLoadingPaymentIntentState ||
+                state is ShopLoadingCreateOrderState
+            ? null
+            : () async {
+                if (ShopCubit.get(context).paymentMethodId == 1 &&
+                    activeStep == 2) {
+                  await ShopCubit.get(context)
+                      .placeOrderCash(AccountCubit.get(context).addressModel!)
+                      .then((value) {
+                    if (value != null)
+                      push(context, OrderConfirmedView(orderModel: value));
+                  });
+                } else if (ShopCubit.get(context).paymentMethodId == 2 &&
+                    activeStep == 2) {
+                  await ShopCubit.get(context)
+                      .initPayment(UserCubit.get(context).userModel!,
+                          AccountCubit.get(context).addressModel!)
+                      .then((value) {
+                    if (value != null)
+                      push(context, OrderConfirmedView(orderModel: value));
+                  });
+                  FocusManager.instance.primaryFocus?.unfocus();
+                } else if (activeStep < upperBound) {
+                  setState(() {
+                    activeStep++;
+                  });
+                }
+              },
       ),
     );
   }

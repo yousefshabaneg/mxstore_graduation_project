@@ -58,6 +58,13 @@ String parseDateTime(String date, {bool withTime = false}) {
       : DateFormat('MMM d, yyy').format(dateTime);
 }
 
+String delivery(String date, {bool withTime = false}) {
+  DateTime dateTime = DateTime.parse(date);
+  return withTime
+      ? DateFormat('MMM d, yyy, ').add_jm().format(dateTime)
+      : DateFormat('MMM d, yyy').format(dateTime);
+}
+
 String greetingMessage() {
   var hour = DateTime.now().hour;
   if (hour < 12) {
@@ -184,3 +191,26 @@ showEditInfoSheet(context, {required Widget child}) =>
       barrierColor: Colors.white,
       builder: (context) => child,
     );
+
+OrderStatus getOrderStatus(String? shipping) {
+  switch (shipping?.toLowerCase()) {
+    case "cancelled":
+      return OrderStatus.Cancelled;
+    case "processing":
+      return OrderStatus.Processing;
+    case "shipped":
+      return OrderStatus.Shipped;
+    case "delivered":
+      return OrderStatus.Delivered;
+    default:
+      return OrderStatus.Ordered;
+  }
+}
+
+enum OrderStatus {
+  Ordered,
+  Processing,
+  Shipped,
+  Delivered,
+  Cancelled,
+}

@@ -110,7 +110,10 @@ class OrderConfirmedView extends StatelessWidget {
                                         Container(
                                           height: 3,
                                           width: kWidth * 0.22,
-                                          color: i == 0
+                                          color: i <=
+                                                  (orderModel?.orderStatus
+                                                          ?.index ??
+                                                      0)
                                               ? ColorManager.success
                                               : ColorManager.gray,
                                         ),
@@ -120,10 +123,10 @@ class OrderConfirmedView extends StatelessWidget {
                                   ),
                                   kVSeparator(factor: 0.01),
                                   BodyText(
-                                      text:
-                                          orderModel?.shipping?.toUpperCase() ??
-                                              "",
-                                      size: 14),
+                                    text: orderModel?.shipping ?? "",
+                                    size: 14,
+                                    color: ColorManager.success,
+                                  ),
                                 ],
                               ),
                               kVSeparator(),
@@ -300,7 +303,8 @@ class OrderConfirmedView extends StatelessWidget {
                     ),
                     fallback: (context) => Center(
                         child: MyLoadingIndicator(
-                            indicatorType: Indicator.ballSpinFadeLoader)),
+                      circular: true,
+                    )),
                   );
                 },
               );

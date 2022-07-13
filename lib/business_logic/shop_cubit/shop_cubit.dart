@@ -14,6 +14,7 @@ import 'package:graduation_project/data/models/order_model.dart';
 import 'package:graduation_project/data/models/payment_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/constants.dart';
+import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/constants_manager.dart';
 import 'shop_states.dart';
 
@@ -63,7 +64,9 @@ class ShopCubit extends Cubit<ShopStates> {
       products.isNotEmpty &&
       offeredProducts.isNotEmpty;
 
-  void logout() {
+  Future<void> logout(context) async {
+    emit(ShopLoadingLogoutState());
+    await signOut(context);
     favoritesProductsIds.clear();
     favoritesProducts.clear();
     cartProductsIds.clear();
@@ -73,6 +76,7 @@ class ShopCubit extends Cubit<ShopStates> {
     deliveryId = 1;
     paymentMethodId = 1;
     userOrders.clear();
+    emit(ShopSuccessLogoutState());
   }
 
   void getCategories() {
@@ -356,9 +360,9 @@ class ShopCubit extends Cubit<ShopStates> {
     if (!cartProducts.any((item) => item.id == product.id)) {
       emit(ShopLoadingAddToCartState(product.id));
       final productToAdd = BasketProductModel.mapProductToBasket(product);
-      basketModel?.products.add(productToAdd);
-      cartQuantities++;
-      final newBasket = basketModel?.toJson();
+      final oldBasket = basketModel?.copyWith();
+      oldBasket?.products.add(productToAdd);
+      final newBasket = oldBasket?.toJson();
       if (newBasket != null) {
         await DioHelper.postData(
                 url: "${ConstantsManager.Basket}", data: newBasket)
@@ -366,10 +370,10 @@ class ShopCubit extends Cubit<ShopStates> {
           basketModel = BasketModel.fromJson(json);
           cartProducts = basketModel!.products;
           cartProductsIds.add(product.id);
+          cartQuantities++;
           successMessage = "Product Added to cart";
           emit(ShopSuccessAddToCartState());
         }).catchError((error) {
-          basketModel?.products.remove(productToAdd);
           errorMessage = error;
           emit(ShopErrorAddToCartState());
         });
@@ -383,7 +387,8 @@ class ShopCubit extends Cubit<ShopStates> {
   Future<void> updateBasket() async {
     emit(ShopLoadingUpdateBasketState());
     basketModel?.deliveryMethodId = deliveryId;
-    final newBasket = basketModel?.toJson();
+    final oldBasket = basketModel?.copyWith();
+    final newBasket = oldBasket?.toJson();
     if (newBasket != null) {
       await DioHelper.postData(
               url: "${ConstantsManager.Basket}", data: newBasket)
@@ -403,20 +408,19 @@ class ShopCubit extends Cubit<ShopStates> {
   void changeQuantity(BasketProductModel product, int quantity) {
     emit(ShopLoadingChangeQuantityCartState());
     int oldQuantity = product.quantity;
-    cartQuantities -= oldQuantity;
-    cartQuantities += quantity;
-    basketModel?.products.firstWhere((p) => p.id == product.id).quantity =
+    final oldBasket = basketModel?.copyWith();
+    oldBasket?.products.firstWhere((p) => p.id == product.id).quantity =
         quantity;
-    final newBasket = basketModel?.toJson();
+    final newBasket = oldBasket?.toJson();
     if (newBasket != null) {
       DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
           .then((json) async {
         basketModel = BasketModel.fromJson(json);
         cartProducts = basketModel!.products;
+        cartQuantities -= oldQuantity;
+        cartQuantities += quantity;
         emit(ShopSuccessChangeQuantityCartState());
       }).catchError((error) {
-        basketModel?.products.firstWhere((p) => p.id == product.id).quantity =
-            oldQuantity;
         errorMessage = error;
         emit(ShopErrorChangeQuantityCartState());
       });
@@ -428,20 +432,19 @@ class ShopCubit extends Cubit<ShopStates> {
 
   Future<void> removeFromCart(BasketProductModel product) async {
     emit(ShopLoadingRemoveFromCartState(product.id));
-    basketModel?.products.removeWhere((p) => p.id == product.id);
-    cartQuantities -= product.quantity;
-    final newBasket = basketModel?.toJson();
+    final oldBasket = basketModel?.copyWith();
+    oldBasket?.products.removeWhere((p) => p.id == product.id);
+    final newBasket = oldBasket?.toJson();
     if (newBasket != null) {
-      cartProductsIds.removeWhere((id) => id == product.id);
       DioHelper.postData(url: "${ConstantsManager.Basket}", data: newBasket)
           .then((json) async {
         basketModel = BasketModel.fromJson(json);
+        cartProductsIds.removeWhere((id) => id == product.id);
+        cartQuantities -= product.quantity;
         cartProducts = basketModel!.products;
         successMessage = "Product Removed from cart";
         emit(ShopSuccessRemoveFromCartState());
       }).catchError((error) {
-        basketModel?.products.add(product);
-        cartProductsIds.add(product.id);
         errorMessage = error;
         emit(ShopErrorRemoveFromCartState());
       });
@@ -454,6 +457,7 @@ class ShopCubit extends Cubit<ShopStates> {
   int cartTotalPrice() {
     int sum = 0;
     basketModel?.products.forEach((product) {
+      print("product quantity: ${product.quantity}");
       sum += product.quantity * (product.price ?? 0);
     });
     return sum;
@@ -461,7 +465,7 @@ class ShopCubit extends Cubit<ShopStates> {
 
   String cartItemQuantity(int? productId) {
     return productId != null
-        ? cartProducts
+        ? basketModel!.products
             .firstWhere((element) => element.id == productId)
             .quantity
             .toString()
@@ -617,9 +621,10 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   List<OrderModel> userOrders = [];
-  void getUserOrders() {
+  Future<void> getUserOrders() async {
     emit(ShopLoadingGetOrdersState());
-    DioHelper.getData(url: ConstantsManager.Orders, token: token).then((json) {
+    await DioHelper.getData(url: ConstantsManager.Orders, token: token)
+        .then((json) {
       userOrders = List.from(json).map((e) => OrderModel.fromJson(e)).toList();
       userOrders.sort((a, b) => b.id!.compareTo(a.id!));
       emit(ShopSuccessGetOrdersState());
@@ -628,5 +633,50 @@ class ShopCubit extends Cubit<ShopStates> {
       emit(ShopErrorGetOrdersState(error));
       print(error.toString());
     });
+  }
+
+  Future<void> cancelOrder(OrderModel orderModel) async {
+    if (orderModel.orderStatus != OrderStatus.Cancelled) {
+      emit(ShopLoadingCancelOrderState());
+      await DioHelper.getData(
+              url: "${ConstantsManager.CancelOrder}/${orderModel.id}",
+              token: token)
+          .then((json) async {
+        await getUserOrders();
+        successMessage = "Order cancelled successfully";
+        emit(ShopSuccessCancelOrderState());
+      }).catchError((error) {
+        print('Cancel Order ERROR');
+        errorMessage = "Error occurred while cancellation this order";
+        emit(ShopErrorCancelOrderState(error));
+        print(error.toString());
+      });
+    }
+  }
+
+  Future<bool> rateProduct({
+    required int productId,
+    String? commentDescription,
+    required String name,
+    required int rating,
+  }) async {
+    bool value = false;
+    emit(ShopLoadingRateProductState());
+    await DioHelper.postData(
+        url: ConstantsManager.PostComment,
+        token: token,
+        data: {
+          "commentDescription": commentDescription,
+          "productId": productId,
+          "rating": rating,
+          "userName": name
+        }).then((json) {
+      value = true;
+      emit(ShopSuccessRateProductState());
+    }).catchError((error) {
+      errorMessage = error;
+      emit(ShopErrorRateProductState(error));
+    });
+    return value;
   }
 }

@@ -1,5 +1,4 @@
 import 'package:graduation_project/data/models/favorites_model.dart';
-import 'package:graduation_project/data/models/identity/user_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
 
 abstract class ShopStates {}
@@ -129,6 +128,11 @@ class ShopSuccessChangeFavoritesState extends ShopStates {
 
 class ShopErrorChangeFavoritesState extends ShopStates {}
 
+// Logout states
+class ShopLoadingLogoutState extends ShopStates {}
+
+class ShopSuccessLogoutState extends ShopStates {}
+
 // Add to Cart States
 class ShopLoadingAddToCartState extends ShopStates {
   int? id = 0;
@@ -227,4 +231,27 @@ class ShopErrorGetOrdersState extends ShopStates {
   final String error;
 
   ShopErrorGetOrdersState(this.error);
+}
+
+// Cancel Order
+class ShopLoadingCancelOrderState extends ShopStates {}
+
+class ShopSuccessCancelOrderState extends ShopStates {}
+
+class ShopErrorCancelOrderState extends ShopStates {
+  final String error;
+
+  ShopErrorCancelOrderState(this.error);
+}
+
+// Make comment and rating states
+
+class ShopLoadingRateProductState extends ShopStates {}
+
+class ShopSuccessRateProductState extends ShopStates {}
+
+class ShopErrorRateProductState extends ShopStates {
+  final String error;
+
+  ShopErrorRateProductState(this.error);
 }

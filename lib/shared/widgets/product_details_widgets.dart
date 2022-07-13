@@ -352,8 +352,11 @@ class ProductDetailsHelpers {
         ],
       );
 
-  static String shippingDate(Duration duration) =>
-      DateFormat('EEE, d MMM ').format(DateTime.now().add(duration));
+  static String shippingDate(Duration duration, {DateTime? dateTime}) {
+    if (dateTime == null)
+      return DateFormat('EEE, d MMM ').format(DateTime.now().add(duration));
+    return DateFormat('EEE, d MMM ').format(dateTime.add(duration));
+  }
 
   static dateDuration(String date) => Jiffy(date, "yyyy-MM-dd").fromNow();
 }

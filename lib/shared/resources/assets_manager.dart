@@ -7,6 +7,7 @@ class ImageAssets {
   static const String loading = "$IMAGE_PATH/loading.gif";
   static const String noConnection = "$IMAGE_PATH/no-connection.svg";
   static const String orderEmpty = "$IMAGE_PATH/order-empty.svg";
+  static const String SuccessReview = "$IMAGE_PATH/review.svg";
   static const String loadingFull = "$IMAGE_PATH/loading_full.gif";
   static const String noImage = "$IMAGE_PATH/no_image.png";
   static const String error = "$IMAGE_PATH/error.svg";

@@ -47,6 +47,7 @@ class DioHelper {
           await dio.post(url, queryParameters: query, data: data);
       return response.data;
     } on DioError catch (ex) {
+      print(ex);
       throw DioExceptions.fromDioError(ex).toString();
     }
   }

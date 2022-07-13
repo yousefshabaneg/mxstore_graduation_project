@@ -72,7 +72,8 @@ class DeliveryMethodView extends StatelessWidget {
         ),
         fallback: (context) => Expanded(
             child: const MyLoadingIndicator(
-                indicatorType: Indicator.ballSpinFadeLoader)),
+          circular: true,
+        )),
       ),
     );
   }

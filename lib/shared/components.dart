@@ -76,7 +76,8 @@ Widget lvCategories(context, List<CategoryModel> categories) => Padding(
                       child: CachedNetworkImage(
                         imageUrl: categories[index].image,
                         placeholder: (context, url) => const MyLoadingIndicator(
-                            indicatorType: Indicator.ballSpinFadeLoader),
+                          circular: true,
+                        ),
                       ),
                     ),
                   ),
@@ -128,7 +129,8 @@ Widget lvBrands(context, List<BrandModel> brands) => Padding(
                         width: kWidth * 0.15,
                         height: kWidth * 0.15,
                         placeholder: (context, url) => const MyLoadingIndicator(
-                            indicatorType: Indicator.ballSpinFadeLoader),
+                          circular: true,
+                        ),
                       ),
                       kVSeparator(factor: 0.02),
                       Text(

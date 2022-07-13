@@ -38,7 +38,8 @@ class FavoritesView extends StatelessWidget {
                             products: ShopCubit.get(context).favoritesProducts),
                         if (state is ShopLoadingChangeFavoritesState)
                           const MyLoadingIndicator(
-                              indicatorType: Indicator.ballSpinFadeLoader),
+                            circular: true,
+                          ),
                       ],
                     )
                   : Center(

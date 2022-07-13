@@ -1,4 +1,5 @@
 import 'package:graduation_project/data/models/address_model.dart';
+import 'package:graduation_project/shared/helpers.dart';
 
 class OrderModel {
   int? id;
@@ -13,6 +14,7 @@ class OrderModel {
   String? status;
   String? shipping;
   int? total;
+  OrderStatus? orderStatus;
 
   OrderModel(
       {this.id,
@@ -24,6 +26,7 @@ class OrderModel {
       this.orderId,
       this.subtotal,
       this.shipping,
+      this.orderStatus,
       this.status,
       this.total});
 
@@ -31,7 +34,7 @@ class OrderModel {
     id = json['id'];
     orderId = json['orderId'];
     buyerEmail = json['buyerEmail'];
-    shipping = json['shipping'];
+    shipping = json['shipping'].toUpperCase();
     orderDate = json['orderDate'];
     deliveryMethod = json['deliveryMethod'];
     shippingPrice = json['shippingPrice'].toInt();
@@ -47,6 +50,7 @@ class OrderModel {
     subtotal = json['subtotal'].toInt();
     status = json['status'];
     total = json['total'].toInt();
+    orderStatus = getOrderStatus(shipping);
   }
 }
 

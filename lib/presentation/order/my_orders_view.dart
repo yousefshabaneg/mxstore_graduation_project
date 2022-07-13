@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/presentation/account/order_details_view.dart';
+import 'package:graduation_project/presentation/order/order_details_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
@@ -15,7 +15,6 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class MyOrdersView extends StatelessWidget {
   const MyOrdersView({Key? key}) : super(key: key);
@@ -113,7 +112,7 @@ class MyOrdersView extends StatelessWidget {
   }
 
   buildOrderItem(OrderModel order, context) => Container(
-        height: kHeight * 0.25,
+        height: kHeight * 0.28,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -126,7 +125,7 @@ class MyOrdersView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       BodyText(
-                          text: "Order #${order.orderId}",
+                          text: "Order ${order.orderId?.toUpperCase()}",
                           color: ColorManager.dark),
                       Row(
                         children: [
@@ -166,7 +165,8 @@ class MyOrdersView extends StatelessWidget {
                           height: kHeight * 0.1,
                           placeholder: (context, url) =>
                               const MyLoadingIndicator(
-                                  indicatorType: Indicator.ballSpinFadeLoader),
+                            circular: true,
+                          ),
                         ),
                         const SizedBox(width: 15),
                         Column(
@@ -181,11 +181,6 @@ class MyOrdersView extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(height: 5),
-                            BodyText(
-                              text: order.shipping!.toUpperCase(),
-                              color: ColorManager.success,
-                            )
                           ],
                         )
                       ],
@@ -194,6 +189,18 @@ class MyOrdersView extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       const SizedBox(width: 15),
                   itemCount: order.orderItems!.length,
+                ),
+              ),
+              kVSeparator(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                child: BodyText(
+                  text: order.shipping!,
+                  size: 14,
+                  color: order.orderStatus == OrderStatus.Cancelled
+                      ? ColorManager.error
+                      : ColorManager.success,
                 ),
               ),
             ],

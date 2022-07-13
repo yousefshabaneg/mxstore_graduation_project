@@ -285,7 +285,8 @@ class SummaryView extends StatelessWidget {
           ),
           fallback: (context) => Center(
               child: const MyLoadingIndicator(
-                  indicatorType: Indicator.ballSpinFadeLoader)),
+            circular: true,
+          )),
         );
       },
     );

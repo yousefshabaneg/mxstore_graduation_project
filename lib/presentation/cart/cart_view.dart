@@ -16,7 +16,6 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_item_widget.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class CartView extends StatelessWidget {
   CartView({Key? key}) : super(key: key);
@@ -27,96 +26,107 @@ class CartView extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: new BoxConstraints(
-                  minHeight: kHeight,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ConditionalBuilder(
-                        condition: state is! ShopLoadingBasketState ||
-                            state is! ShopLoadingAddToCartState,
-                        builder: (context) => ConditionalBuilder(
-                          condition: ShopCubit.get(context).basketModel !=
-                                  null &&
-                              ShopCubit.get(context).cartProducts.isNotEmpty,
-                          builder: (context) => CartList(),
-                          fallback: (context) => Center(
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(
-                                  ImageAssets.emptyCart,
-                                  width: kWidth * 0.2,
-                                  height: kHeight * 0.2,
+          body: Stack(
+            children: [
+              if (state is ShopLoadingChangeQuantityCartState ||
+                  state is ShopLoadingUpdateBasketState ||
+                  state is ShopLoadingRemoveFromCartState)
+                MyLoadingIndicator(circular: true, color: Colors.amber),
+              SafeArea(
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: new BoxConstraints(
+                      minHeight: kHeight,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ConditionalBuilder(
+                            condition: state is! ShopLoadingBasketState ||
+                                state is! ShopLoadingAddToCartState,
+                            builder: (context) => ConditionalBuilder(
+                              condition:
+                                  ShopCubit.get(context).basketModel != null &&
+                                      ShopCubit.get(context)
+                                          .cartProducts
+                                          .isNotEmpty,
+                              builder: (context) => CartList(),
+                              fallback: (context) => Center(
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageAssets.emptyCart,
+                                      width: kWidth * 0.2,
+                                      height: kHeight * 0.2,
+                                    ),
+                                    kVSeparator(),
+                                    BodyText(
+                                        text: "Your cart is empty!",
+                                        size: 24,
+                                        align: TextAlign.center,
+                                        color: ColorManager.black),
+                                    kVSeparator(factor: 0.01),
+                                    Container(
+                                      width: kWidth * 0.7,
+                                      child: SubtitleText(
+                                        text:
+                                            "it's the perfect time to start shopping",
+                                        color: ColorManager.subtitle,
+                                        align: TextAlign.center,
+                                      ),
+                                    ),
+                                    kVSeparator(),
+                                    SolidButton(
+                                      radius: 10,
+                                      text: "Start Shopping",
+                                      heightFactor: 0.07,
+                                      backgroundColor: Colors.white,
+                                      color: ColorManager.black,
+                                      widthFactor: 0.9,
+                                      borderColor: ColorManager.black,
+                                      onTap: () {
+                                        ShopCubit.get(context)
+                                            .cartProductsIds
+                                            .forEach((element) {
+                                          print("Product: #$element");
+                                        });
+                                        tabController.index = 0;
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                kVSeparator(),
-                                BodyText(
-                                    text: "Your cart is empty!",
-                                    size: 24,
-                                    align: TextAlign.center,
-                                    color: ColorManager.black),
-                                kVSeparator(factor: 0.01),
-                                Container(
-                                  width: kWidth * 0.7,
-                                  child: SubtitleText(
-                                    text:
-                                        "it's the perfect time to start shopping",
-                                    color: ColorManager.subtitle,
-                                    align: TextAlign.center,
-                                  ),
-                                ),
-                                kVSeparator(),
-                                SolidButton(
-                                  radius: 10,
-                                  text: "Start Shopping",
-                                  heightFactor: 0.07,
-                                  backgroundColor: Colors.white,
-                                  color: ColorManager.black,
-                                  widthFactor: 0.9,
-                                  borderColor: ColorManager.black,
-                                  onTap: () {
-                                    ShopCubit.get(context)
-                                        .cartProductsIds
-                                        .forEach((element) {
-                                      print("Product: #$element");
-                                    });
-                                    tabController.index = 0;
-                                  },
-                                ),
-                              ],
+                              ),
+                            ),
+                            fallback: (context) => const MyLoadingIndicator(
+                              circular: true,
                             ),
                           ),
                         ),
-                        fallback: (context) => const MyLoadingIndicator(
-                            indicatorType: Indicator.ballSpinFadeLoader),
-                      ),
+                        if (ShopCubit.get(context).favoritesProducts.isNotEmpty)
+                          FavoritesList(),
+                        kGrayDivider(),
+                        if (ShopCubit.get(context).cartProducts.isEmpty) ...[
+                          ProductsHorizontalListBuilder(
+                            title: "Browse offers",
+                            cartProduct: true,
+                            products: ShopCubit.get(context).productsInStock(),
+                            categoryId: 6,
+                          ),
+                          kGrayDivider(),
+                        ],
+                        DeliveryServices(),
+                        kGrayDivider(),
+                        if (ShopCubit.get(context).cartProductsIds.isNotEmpty)
+                          kVSeparator(factor: 0.08),
+                      ],
                     ),
-                    if (ShopCubit.get(context).favoritesProducts.isNotEmpty)
-                      FavoritesList(),
-                    kGrayDivider(),
-                    if (ShopCubit.get(context).cartProducts.isEmpty) ...[
-                      ProductsHorizontalListBuilder(
-                        title: "Browse offers",
-                        cartProduct: true,
-                        products: ShopCubit.get(context).productsInStock(),
-                        categoryId: 6,
-                      ),
-                      kGrayDivider(),
-                    ],
-                    DeliveryServices(),
-                    kGrayDivider(),
-                    if (ShopCubit.get(context).cartProductsIds.isNotEmpty)
-                      kVSeparator(factor: 0.08),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
           bottomSheet: ShopCubit.get(context).basketModel != null &&
                   ShopCubit.get(context).cartProducts.isNotEmpty

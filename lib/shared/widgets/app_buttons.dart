@@ -22,10 +22,12 @@ class SolidButton extends StatelessWidget {
     this.onTap,
     this.withIcon = false,
     this.isDisabled = false,
+    this.isBold = true,
     this.icon,
   }) : super(key: key);
   final Color color;
   final Color splashColor;
+  final bool isBold;
   final String text;
   final Color? backgroundColor;
   final Color? disabledColor;
@@ -49,10 +51,11 @@ class SolidButton extends StatelessWidget {
       child: MaterialButton(
         splashColor: splashColor,
         clipBehavior: Clip.antiAlias,
+        elevation: 0,
         shape: shape ??
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius),
-              side: BorderSide(color: borderColor, width: 1),
+              side: BorderSide(color: borderColor, width: 0.7),
             ),
         color: backgroundColor ?? ColorManager.primary,
         textColor: Colors.white,
@@ -72,7 +75,10 @@ class SolidButton extends StatelessWidget {
                   ),
                 Text(
                   text,
-                  style: TextStyle(fontSize: size, color: color),
+                  style: TextStyle(
+                      fontSize: size,
+                      color: color,
+                      fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
                 ),
               ],
             ),

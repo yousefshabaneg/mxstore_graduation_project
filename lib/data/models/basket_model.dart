@@ -8,6 +8,15 @@ class BasketModel {
   String? clientSecret;
   String? paymentIntentId;
 
+  BasketModel({
+    this.basketId,
+    required this.products,
+    required this.deliveryMethodId,
+    this.clientSecret,
+    this.paymentIntentId,
+    required this.shippingPrice,
+  });
+
   BasketModel.fromJson(Map<String, dynamic> json) {
     basketId = json["id"];
     products = List.from(json["items"])
@@ -28,6 +37,21 @@ class BasketModel {
     data['shippingPrice'] = this.shippingPrice;
     return data;
   }
+
+  BasketModel copyWith() {
+    final List<BasketProductModel> newProducts = [];
+    products.forEach((p) {
+      newProducts.add(p.copyWith());
+    });
+    return new BasketModel(
+      products: newProducts,
+      deliveryMethodId: deliveryMethodId,
+      basketId: basketId,
+      shippingPrice: shippingPrice,
+      paymentIntentId: paymentIntentId,
+      clientSecret: clientSecret,
+    );
+  }
 }
 
 class BasketProductModel {
@@ -39,6 +63,16 @@ class BasketProductModel {
   String? imageUrl;
   int quantity = 1;
   int? price;
+
+  BasketProductModel(
+      {this.id,
+      this.name,
+      this.price,
+      this.quantity = 1,
+      this.imageUrl,
+      this.brandName,
+      this.typeName,
+      this.categoryName});
 
   BasketProductModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -73,5 +107,18 @@ class BasketProductModel {
     data['type'] = this.typeName;
     data['catgeory'] = this.categoryName;
     return data;
+  }
+
+  BasketProductModel copyWith() {
+    return new BasketProductModel(
+      id: id,
+      name: name,
+      price: price,
+      quantity: quantity,
+      imageUrl: imageUrl,
+      brandName: brandName,
+      typeName: typeName,
+      categoryName: categoryName,
+    );
   }
 }

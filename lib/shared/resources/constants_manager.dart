@@ -29,7 +29,7 @@ class ConstantsManager {
   //Comments
   static const String Comments = "Comments/";
   static const String GetComment = Comments + "product/";
-  static const String PostComment = Comments + "Comments/comment";
+  static const String PostComment = Comments + "comment";
 
   //Basket
   static const String Basket = "Basket/";
@@ -39,6 +39,7 @@ class ConstantsManager {
   static const String Orders = "Orders/";
   static const String DeliveryMethod = Orders + "deliveryMethods";
   static const String PaymentMethod = Orders + "paymentMethods";
+  static const String CancelOrder = Orders + "CancelOrder";
 
   //Payment
   static const String Payment = "Payments/";

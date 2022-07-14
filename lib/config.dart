@@ -1,0 +1,2 @@
+const String stripeKey =
+    "pk_test_51Kxv7PFwdR57oThPuTlzfDKHdroSs3XNDo1eoixZjiQj7NcR1i6USD5TCleEksgVIOanMhUdcVmmgIMdMipSpCWQ00XC6KrNeI";

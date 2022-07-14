@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:graduation_project/config.dart';
 import 'package:graduation_project/data/cashe_helper.dart';
 import 'package:graduation_project/data/dio_helper.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -22,8 +22,7 @@ void chooseStartupWidget({required bool onBoarding, required String token}) {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey =
-      "pk_test_51Kxv7PFwdR57oThPuTlzfDKHdroSs3XNDo1eoixZjiQj7NcR1i6USD5TCleEksgVIOanMhUdcVmmgIMdMipSpCWQ00XC6KrNeI";
+  Stripe.publishableKey = stripeKey;
   await Stripe.instance.applySettings();
   HttpOverrides.global = MyHttpOverrides();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

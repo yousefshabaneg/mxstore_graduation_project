@@ -234,6 +234,10 @@ class ShopCubit extends Cubit<ShopStates> {
         productModel!.comments = List.from(
             comments.map((comment) => CommentModel.fromJson(comment)));
         productModel!.reviews = productModel!.comments.length;
+        productModel!.comments.sort((b, a) => a.date!.compareTo(b.date!));
+        productModel!.comments.forEach((element) {
+          print(element.date ?? "");
+        });
         productModel!.comments.forEach((element) {
           int rating = element.rating?.toInt() ?? 0;
           if (productModel!.ratingPercent[rating] != null) {
@@ -241,7 +245,6 @@ class ShopCubit extends Cubit<ShopStates> {
                 productModel!.ratingPercent[rating]! + 1;
           }
         });
-        print(productModel!.ratingPercent);
         productModel!.comments = productModel!.comments
             .where((element) => element.comment!.isNotEmpty)
             .toList();

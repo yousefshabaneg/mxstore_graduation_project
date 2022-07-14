@@ -112,28 +112,23 @@ class ProductItemWidget extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: 5),
-            Row(
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.solidStar,
-                  color: ColorManager.warning,
-                  size: 10,
-                ),
-                Text(
-                  "${model!.rating} ",
-                  style: kTheme.textTheme.headline5!.copyWith(
-                    fontSize: 8,
+            if (model!.rating > 0)
+              Row(
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.solidStar,
                     color: ColorManager.warning,
+                    size: 10,
                   ),
-                ),
-                Text(
-                  "(51)",
-                  style: kTheme.textTheme.subtitle2!.copyWith(
-                    fontSize: 8,
+                  Text(
+                    "${model!.rating} ",
+                    style: kTheme.textTheme.headline5!.copyWith(
+                      fontSize: 8,
+                      color: ColorManager.warning,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             Spacer(),
             if (cartProduct)
               BlocConsumer<ShopCubit, ShopStates>(

@@ -2,7 +2,7 @@ class CommentModel {
   int? productId;
   String? name;
   double? rating;
-  String? date;
+  DateTime? date;
   String? userId;
   String? comment;
 
@@ -10,7 +10,7 @@ class CommentModel {
     productId = json["productId"];
     rating = json["rating"].toDouble();
     name = json["userName"];
-    date = json["commentDate"];
+    date = DateTime.parse(json["commentDate"]);
     userId = json["userId"];
     comment = json["commentDescription"].trim();
   }

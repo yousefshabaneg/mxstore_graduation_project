@@ -255,11 +255,13 @@ class AllReviewView extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                kHSeparator(),
                 Image(
                   image: NetworkImage(product.imageUrl ?? ""),
-                  width: kWidth * 0.2,
+                  width: kWidth * 0.17,
                   height: kHeight * 0.08,
                 ),
+                kHSeparator(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -374,6 +376,7 @@ class AllReviewView extends StatelessWidget {
               ),
               itemCount: product.comments.length,
             ),
+            kVSeparator(factor: 0.05),
           ],
         ),
       ),
@@ -411,14 +414,14 @@ class UserComment extends StatelessWidget {
       {Key? key,
       this.name = "Anonymous",
       required this.comment,
-      this.date = "2022-4-1",
+      required this.date,
       required this.rating})
       : super(key: key);
 
   final String name;
   final String comment;
   final double rating;
-  final String date;
+  final DateTime date;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -548,5 +551,5 @@ class ProductDetailsHelpers {
     return DateFormat('EEE, d MMM ').format(dateTime.add(duration));
   }
 
-  static dateDuration(String date) => Jiffy(date, "yyyy-MM-dd").fromNow();
+  static dateDuration(DateTime date) => Jiffy(date, "yyyy-MM-dd").fromNow();
 }

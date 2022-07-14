@@ -15,7 +15,7 @@ class ProductItemModel {
   int? brandId;
   int? categoryId;
   int? typeId;
-  double rating = 5.0;
+  double rating = 0.0;
   int numberInStock = 0;
   List<CommentModel> comments = [];
   Map<int, int> ratingPercent = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0};

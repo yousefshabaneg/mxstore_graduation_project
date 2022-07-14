@@ -2,11 +2,9 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/search_cubit/search_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/data/models/product_model.dart';
-import 'package:graduation_project/presentation/search/search_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/grid_product_item_widget.dart';
@@ -31,6 +29,7 @@ class FilteredProductView extends StatefulWidget {
 class _FilteredProductViewState extends State<FilteredProductView> {
   List<ProductItemModel> products = [];
   loadData() async {
+    print("Filtered item cat id: ${widget.categoryId}");
     products = await ShopCubit.get(context).getFilteredProducts(
         categoryId: widget.categoryId, brandId: widget.brandId);
   }

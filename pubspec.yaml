@@ -42,6 +42,7 @@ dependencies:
   im_stepper: ^1.0.1+1
   flutter_stripe: ^3.2.0
   flutter_offline: ^2.1.0
+  percent_indicator: ^4.2.2
 
 dev_dependencies:
   flutter_test:

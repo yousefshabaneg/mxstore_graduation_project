@@ -8,6 +8,7 @@ import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/data/models/order_model.dart';
 import 'package:graduation_project/presentation/order/order_details_view.dart';
+import 'package:graduation_project/presentation/order/review_order_sheet.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
@@ -15,6 +16,7 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class MyOrdersView extends StatelessWidget {
   const MyOrdersView({Key? key}) : super(key: key);
@@ -112,7 +114,9 @@ class MyOrdersView extends StatelessWidget {
   }
 
   buildOrderItem(OrderModel order, context) => Container(
-        height: kHeight * 0.28,
+        height: order.orderStatus == OrderStatus.Delivered
+            ? kHeight * 0.35
+            : kHeight * 0.28,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -203,6 +207,33 @@ class MyOrdersView extends StatelessWidget {
                       : ColorManager.success,
                 ),
               ),
+              if (order.orderStatus == OrderStatus.Delivered) ...[
+                kVSeparator(),
+                SolidButton(
+                  color: ColorManager.blue,
+                  backgroundColor: Colors.white,
+                  borderColor: ColorManager.blue,
+                  text: "Review this order",
+                  isBold: false,
+                  withIcon: true,
+                  icon: FontAwesomeIcons.thumbsUp,
+                  heightFactor: 0.04,
+                  widthFactor: 0.4,
+                  size: 12,
+                  radius: 5,
+                  onTap: () {
+                    showMaterialModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      useRootNavigator: true,
+                      builder: (context) =>
+                          ReviewOrderMaterialSheet(orderModel: order),
+                    ).then((value) {
+                      // Navigator.pop(context);
+                    });
+                  },
+                ),
+              ]
             ],
           ),
         ),

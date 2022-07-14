@@ -3,16 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/data/models/brand_model.dart';
 import 'package:graduation_project/data/models/category_model.dart';
-import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
 import 'package:graduation_project/shared/constants.dart';
+import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
+import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 void showToast({
   required String msg,

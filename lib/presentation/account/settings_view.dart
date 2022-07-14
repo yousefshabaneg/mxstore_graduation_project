@@ -10,7 +10,6 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/change_password_sheet.dart';
 import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/edit_personal_info_sheet.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 var emailController = TextEditingController();
 var passwordController = TextEditingController();

@@ -256,45 +256,50 @@ class _SubmitReviewWidgetState extends State<SubmitReviewWidget> {
                           context: context,
                           isScrollControlled: true,
                           builder: (_) {
-                            return SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0) +
-                                    MediaQuery.of(context).viewInsets,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SubtitleText(text: "Your display name"),
-                                    AppFormField(
-                                      hint: "Type display name..",
-                                      type: TextInputType.emailAddress,
-                                      autoFill: [AutofillHints.email],
-                                      inputAction: TextInputAction.next,
-                                      padding: kHeight * 0.015,
-                                      controller: usernameController,
-                                      onChanged: (value) =>
-                                          setState(() => userName = value),
-                                    ),
-                                    kVSeparator(),
-                                    SubtitleText(
-                                      text:
-                                          "This name will appear on this review",
-                                      size: 12,
-                                    ),
-                                    kVSeparator(),
-                                    SolidButton(
-                                      radius: 5,
-                                      text: "SAVE DISPLAY NAME",
-                                      color: Colors.white,
-                                      splashColor: Colors.white,
-                                      heightFactor: 0.06,
-                                      size: 12,
-                                      backgroundColor: ColorManager.blue,
-                                      onTap: () {
-                                        this.userName = usernameController.text;
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
+                            return Container(
+                              color: Colors.white,
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0) +
+                                      MediaQuery.of(context).viewInsets,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SubtitleText(text: "Your display name"),
+                                      AppFormField(
+                                        hint: "Type display name..",
+                                        type: TextInputType.emailAddress,
+                                        autoFill: [AutofillHints.email],
+                                        inputAction: TextInputAction.next,
+                                        padding: kHeight * 0.015,
+                                        controller: usernameController,
+                                        onChanged: (value) =>
+                                            setState(() => userName = value),
+                                      ),
+                                      kVSeparator(),
+                                      SubtitleText(
+                                        text:
+                                            "This name will appear on this review",
+                                        size: 12,
+                                      ),
+                                      kVSeparator(),
+                                      SolidButton(
+                                        radius: 5,
+                                        text: "SAVE DISPLAY NAME",
+                                        color: Colors.white,
+                                        splashColor: Colors.white,
+                                        heightFactor: 0.06,
+                                        size: 12,
+                                        backgroundColor: ColorManager.blue,
+                                        onTap: () {
+                                          this.userName =
+                                              usernameController.text;
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graduation_project/data/cashe_helper.dart';
 import 'package:graduation_project/data/models/boarding_model.dart';
-import 'package:graduation_project/presentation/login/login_view.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';

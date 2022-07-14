@@ -6,8 +6,8 @@ import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/presentation/categories/search_category_view.dart';
 import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
+import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 
 class CategoriesView extends StatelessWidget {

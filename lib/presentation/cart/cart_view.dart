@@ -2,7 +2,6 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/presentation/cart/cart_items.dart';
@@ -14,6 +13,7 @@ import 'package:graduation_project/shared/resources/assets_manager.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
+import 'package:graduation_project/shared/widgets/delivery_services_widget.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/product_item_widget.dart';
 
@@ -45,78 +45,67 @@ class CartView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: ConditionalBuilder(
-                            condition: state is! ShopLoadingBasketState ||
-                                state is! ShopLoadingAddToCartState,
-                            builder: (context) => ConditionalBuilder(
-                              condition:
-                                  ShopCubit.get(context).basketModel != null &&
+                            condition: ShopCubit.get(context).basketModel !=
+                                    null &&
+                                ShopCubit.get(context).cartProducts.isNotEmpty,
+                            builder: (context) => CartList(),
+                            fallback: (context) => Center(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    ImageAssets.emptyCart,
+                                    width: kWidth * 0.2,
+                                    height: kHeight * 0.2,
+                                  ),
+                                  kVSeparator(),
+                                  BodyText(
+                                      text: "Your cart is empty!",
+                                      size: 24,
+                                      align: TextAlign.center,
+                                      color: ColorManager.black),
+                                  kVSeparator(factor: 0.01),
+                                  Container(
+                                    width: kWidth * 0.7,
+                                    child: SubtitleText(
+                                      text:
+                                          "it's the perfect time to start shopping",
+                                      color: ColorManager.subtitle,
+                                      align: TextAlign.center,
+                                    ),
+                                  ),
+                                  kVSeparator(),
+                                  SolidButton(
+                                    radius: 10,
+                                    text: "Start Shopping",
+                                    heightFactor: 0.07,
+                                    backgroundColor: Colors.white,
+                                    color: ColorManager.black,
+                                    widthFactor: 0.9,
+                                    borderColor: ColorManager.black,
+                                    onTap: () {
                                       ShopCubit.get(context)
-                                          .cartProducts
-                                          .isNotEmpty,
-                              builder: (context) => CartList(),
-                              fallback: (context) => Center(
-                                child: Column(
-                                  children: [
-                                    SvgPicture.asset(
-                                      ImageAssets.emptyCart,
-                                      width: kWidth * 0.2,
-                                      height: kHeight * 0.2,
-                                    ),
-                                    kVSeparator(),
-                                    BodyText(
-                                        text: "Your cart is empty!",
-                                        size: 24,
-                                        align: TextAlign.center,
-                                        color: ColorManager.black),
-                                    kVSeparator(factor: 0.01),
-                                    Container(
-                                      width: kWidth * 0.7,
-                                      child: SubtitleText(
-                                        text:
-                                            "it's the perfect time to start shopping",
-                                        color: ColorManager.subtitle,
-                                        align: TextAlign.center,
-                                      ),
-                                    ),
-                                    kVSeparator(),
-                                    SolidButton(
-                                      radius: 10,
-                                      text: "Start Shopping",
-                                      heightFactor: 0.07,
-                                      backgroundColor: Colors.white,
-                                      color: ColorManager.black,
-                                      widthFactor: 0.9,
-                                      borderColor: ColorManager.black,
-                                      onTap: () {
-                                        ShopCubit.get(context)
-                                            .cartProductsIds
-                                            .forEach((element) {
-                                          print("Product: #$element");
-                                        });
-                                        tabController.index = 0;
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                          .cartProductsIds
+                                          .forEach((element) {
+                                        print("Product: #$element");
+                                      });
+                                      tabController.index = 0;
+                                    },
+                                  ),
+                                ],
                               ),
-                            ),
-                            fallback: (context) => const MyLoadingIndicator(
-                              circular: true,
                             ),
                           ),
                         ),
                         if (ShopCubit.get(context).favoritesProducts.isNotEmpty)
                           FavoritesList(),
                         kGrayDivider(),
-                        if (ShopCubit.get(context).cartProducts.isEmpty) ...[
-                          ProductsHorizontalListBuilder(
-                            title: "Browse offers",
-                            cartProduct: true,
-                            products: ShopCubit.get(context).productsInStock(),
-                            categoryId: 6,
-                          ),
-                          kGrayDivider(),
-                        ],
+                        ProductsHorizontalListBuilder(
+                          title: "Browse offers",
+                          cartProduct: true,
+                          products: ShopCubit.get(context).productsInStock(),
+                          categoryId: 6,
+                        ),
+                        kGrayDivider(),
                         DeliveryServices(),
                         kGrayDivider(),
                         if (ShopCubit.get(context).cartProductsIds.isNotEmpty)
@@ -192,109 +181,6 @@ class CartView extends StatelessWidget {
               : null,
         );
       },
-    );
-  }
-}
-
-class DeliveryServices extends StatelessWidget {
-  const DeliveryServices({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: FaIcon(FontAwesomeIcons.creditCard, size: 22),
-              ),
-              kHSeparator(factor: 0.04),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BodyText(
-                    text: "Pay on delivery",
-                    color: ColorManager.black,
-                  ),
-                  SubtitleText(
-                    text: "For all orders",
-                    color: ColorManager.black,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        Divider(
-          color: ColorManager.gray,
-          indent: kWidth * 0.1,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: FaIcon(FontAwesomeIcons.arrowsRotate, size: 22),
-              ),
-              kHSeparator(factor: 0.04),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BodyText(
-                    text: "Return policy",
-                    color: ColorManager.black,
-                  ),
-                  Container(
-                    width: kWidth * 0.8,
-                    child: SubtitleText(
-                      text:
-                          "Most products can be returned within 30 days of delivery",
-                      color: ColorManager.black,
-                      size: 14,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-        Divider(
-          color: ColorManager.gray,
-          indent: kWidth * 0.1,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: FaIcon(FontAwesomeIcons.circleQuestion, size: 22),
-              ),
-              kHSeparator(factor: 0.04),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BodyText(
-                    text: "Need Help?",
-                    color: ColorManager.black,
-                  ),
-                  SubtitleText(
-                    text: "www.mx-store.com",
-                    color: ColorManager.info,
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

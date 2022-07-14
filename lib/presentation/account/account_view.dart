@@ -1,6 +1,4 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:dialogs/dialogs/choice_dialog.dart';
-import 'package:dialogs/dialogs/message_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,14 +10,13 @@ import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
 import 'package:graduation_project/presentation/account/address_view.dart';
 import 'package:graduation_project/presentation/account/favorites_view.dart';
-import 'package:graduation_project/presentation/order/my_orders_view.dart';
 import 'package:graduation_project/presentation/account/settings_view.dart';
+import 'package:graduation_project/presentation/order/my_orders_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/error_page.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 

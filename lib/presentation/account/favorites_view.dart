@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
 import 'package:graduation_project/shared/constants.dart';
@@ -13,7 +11,6 @@ import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
 import 'package:graduation_project/shared/widgets/grid_product_item_widget.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class FavoritesView extends StatelessWidget {
   FavoritesView({Key? key}) : super(key: key);

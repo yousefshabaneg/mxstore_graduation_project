@@ -18,6 +18,8 @@ class ProductItemModel {
   double rating = 5.0;
   int numberInStock = 0;
   List<CommentModel> comments = [];
+  Map<int, int> ratingPercent = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+  int reviews = 0;
   Map<String, dynamic> specifications = {};
 
   ProductItemModel.fromJson(Map<String, dynamic> jsons) {

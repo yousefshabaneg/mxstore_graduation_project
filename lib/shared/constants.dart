@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
 import 'package:graduation_project/business_logic/search_cubit/search_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
 import 'package:graduation_project/data/cashe_helper.dart';
 import 'package:graduation_project/presentation/account/account_view.dart';

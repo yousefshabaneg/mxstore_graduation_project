@@ -13,7 +13,6 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class ProductItemWidget extends StatelessWidget {
   ProductItemModel? model;

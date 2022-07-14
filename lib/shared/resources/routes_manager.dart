@@ -1,19 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation_project/presentation/categories/categories_view.dart';
 import 'package:graduation_project/presentation/checkout/checkout_view.dart';
 import 'package:graduation_project/presentation/login/account_view.dart';
-import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
+
 import '../../presentation/login/login_view.dart';
+import '../../presentation/login/register_view.dart';
 import '../../presentation/main/main_view.dart';
 import '../../presentation/onboarding/onboarding.dart';
-import '../../presentation/login/register_view.dart';
 import '../../presentation/splash/splash.dart';
 import 'color_manager.dart';
 import 'strings_manager.dart';

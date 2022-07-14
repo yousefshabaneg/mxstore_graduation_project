@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/data/models/comment_model.dart';
+import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/components.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/color_manager.dart';
+import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/app_text.dart';
+import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/scroll_top_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class WarrantyWidget extends StatelessWidget {
   const WarrantyWidget({Key? key}) : super(key: key);
@@ -130,10 +133,8 @@ class _SpecificationExpansionListState
 }
 
 class UserReviews extends StatelessWidget {
-  UserReviews({Key? key, required this.comments, this.rating = 5})
-      : super(key: key);
-  List<CommentModel> comments = [];
-  double rating;
+  UserReviews({Key? key, required this.product}) : super(key: key);
+  final ProductItemModel product;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -150,7 +151,7 @@ class UserReviews extends StatelessWidget {
               Row(
                 children: [
                   BodyText(
-                    text: rating.toString(),
+                    text: product.rating.toString(),
                     size: 45,
                     color: ColorManager.dark,
                   ),
@@ -158,9 +159,9 @@ class UserReviews extends StatelessWidget {
                     width: kWidth * 0.4,
                     child: Column(
                       children: [
-                        kRatingIndicator(rating: rating),
+                        kRatingIndicator(rating: product.rating),
                         SubtitleText(
-                            text: "Based on ${comments.length} ratings",
+                            text: "Based on ${product.reviews} ratings",
                             size: 14),
                       ],
                     ),
@@ -181,7 +182,7 @@ class UserReviews extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: SubtitleText(
                 text:
-                    "There are ${comments.length} customer ratings and reviews",
+                    "There are ${product.reviews} customer ratings and ${product.comments.length} customer reviews",
                 size: 14,
               ),
             ),
@@ -196,22 +197,211 @@ class UserReviews extends StatelessWidget {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => UserComment(
-            name: comments[index].name!,
-            comment: comments[index].comment!,
-            rating: comments[index].rating!,
-            date: comments[index].date!,
+            name: product.comments[index].name!,
+            comment: product.comments[index].comment!,
+            rating: product.comments[index].rating!,
+            date: product.comments[index].date!,
           ),
           separatorBuilder: (context, index) => Divider(
             color: ColorManager.gray,
             thickness: 0.4,
           ),
-          itemCount: comments.length,
+          itemCount: product.comments.length > 4 ? 4 : product.comments.length,
         ),
         Divider(
           color: ColorManager.gray,
           thickness: 0.4,
         ),
+        if (product.comments.length > 4) ...[
+          const SizedBox(height: 5),
+          SolidButton(
+            color: ColorManager.info,
+            backgroundColor: Colors.white,
+            borderColor: ColorManager.info,
+            heightFactor: 0.04,
+            widthFactor: 0.95,
+            size: 12,
+            radius: 4,
+            text: "VIEW MORE",
+            onTap: () {
+              push(
+                  context,
+                  AllReviewView(
+                    product: product,
+                  ),
+                  root: true);
+            },
+          ),
+        ]
       ],
+    );
+  }
+}
+
+class AllReviewView extends StatelessWidget {
+  AllReviewView({Key? key, required this.product}) : super(key: key);
+
+  final ProductItemModel product;
+  final scrollController = ScrollController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image(
+                  image: NetworkImage(product.imageUrl ?? ""),
+                  width: kWidth * 0.2,
+                  height: kHeight * 0.08,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SubtitleText(
+                      text: product.brandName ?? "",
+                      size: 14,
+                    ),
+                    SizedBox(
+                      width: kWidth * 0.7,
+                      child: BodyText(
+                        text: product.name ?? "",
+                        color: ColorManager.dark,
+                        size: 14,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            kDivider(factor: 0.01),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BodyText(
+                    text: "User Reviews",
+                    color: ColorManager.black,
+                  ),
+                  Row(
+                    children: [
+                      BodyText(
+                        text: product.rating.toString(),
+                        size: 45,
+                        color: ColorManager.black,
+                      ),
+                      Container(
+                        width: kWidth * 0.4,
+                        child: Column(
+                          children: [
+                            kRatingIndicator(rating: product.rating),
+                            SubtitleText(
+                                text: "Based on ${product.reviews} ratings",
+                                size: 14),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  kVSeparator(),
+                  Column(
+                    children: [
+                      for (var i = 5; i >= 1; i--)
+                        Row(
+                          children: [
+                            BodyText(text: "$i", color: ColorManager.black),
+                            const SizedBox(width: 5),
+                            Icon(Icons.star, color: Colors.amber),
+                            const SizedBox(width: 5),
+                            LinearPercentIndicator(
+                              width: kWidth * 0.5,
+                              lineHeight: 5.0,
+                              percent: (product.ratingPercent[i] ?? 0) /
+                                  product.reviews,
+                              backgroundColor: ColorManager.gray,
+                              progressColor: Colors.amber,
+                            ),
+                            const SizedBox(width: 5),
+                            SubtitleText(
+                                text: "(${product.ratingPercent[i] ?? 0})",
+                                size: 12,
+                                color: ColorManager.dark)
+                          ],
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            kDivider(factor: 0.01),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: SubtitleText(
+                text:
+                    "There are ${product.reviews} customer ratings and ${product.comments.length} customer reviews",
+                size: 12,
+              ),
+            ),
+            kGrayDivider(),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+              child: BodyText(
+                  text: "${product.comments.length} customer reviews",
+                  color: ColorManager.black),
+            ),
+            kVSeparator(),
+            ListView.separated(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) => UserComment(
+                name: product.comments[index].name!,
+                comment: product.comments[index].comment!,
+                rating: product.comments[index].rating!,
+                date: product.comments[index].date!,
+              ),
+              separatorBuilder: (context, index) => Divider(
+                color: ColorManager.gray,
+                thickness: 0.4,
+              ),
+              itemCount: product.comments.length,
+            ),
+          ],
+        ),
+      ),
+      bottomSheet: ScrollToTopBottomSheet(
+        controller: scrollController,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SolidButton(
+              color: Colors.white,
+              backgroundColor: Colors.black.withOpacity(0.4),
+              text: "Back To Top",
+              widthFactor: 0.35,
+              heightFactor: 0.04,
+              size: 12,
+              isBold: false,
+              withIcon: true,
+              icon: FontAwesomeIcons.arrowUp,
+              radius: 20,
+              onTap: () {
+                scrollController.animateTo(0,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInCubic);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

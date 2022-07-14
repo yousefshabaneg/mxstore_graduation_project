@@ -15,7 +15,6 @@ import 'package:graduation_project/shared/validator.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/textfield.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
 class AddressView extends StatefulWidget {

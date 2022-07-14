@@ -16,6 +16,7 @@ import 'package:graduation_project/data/models/product_model.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
 import 'package:graduation_project/shared/resources/constants_manager.dart';
+
 import 'shop_states.dart';
 
 class ShopCubit extends Cubit<ShopStates> {
@@ -232,6 +233,18 @@ class ShopCubit extends Cubit<ShopStates> {
           .then((comments) {
         productModel!.comments = List.from(
             comments.map((comment) => CommentModel.fromJson(comment)));
+        productModel!.reviews = productModel!.comments.length;
+        productModel!.comments.forEach((element) {
+          int rating = element.rating?.toInt() ?? 0;
+          if (productModel!.ratingPercent[rating] != null) {
+            productModel!.ratingPercent[rating] =
+                productModel!.ratingPercent[rating]! + 1;
+          }
+        });
+        print(productModel!.ratingPercent);
+        productModel!.comments = productModel!.comments
+            .where((element) => element.comment!.isNotEmpty)
+            .toList();
         emit(ShopSuccessGetProductItemState(product: productModel!));
       });
     }).catchError((error) {
@@ -457,7 +470,6 @@ class ShopCubit extends Cubit<ShopStates> {
   int cartTotalPrice() {
     int sum = 0;
     basketModel?.products.forEach((product) {
-      print("product quantity: ${product.quantity}");
       sum += product.quantity * (product.price ?? 0);
     });
     return sum;

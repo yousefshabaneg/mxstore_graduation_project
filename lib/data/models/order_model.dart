@@ -7,6 +7,7 @@ class OrderModel {
   String? buyerEmail;
   String? orderDate;
   String? deliveryMethod;
+  String? paymentMethod;
   int? shippingPrice;
   AddressModel? shipToAddress;
   List<OrderItems>? orderItems;
@@ -25,6 +26,7 @@ class OrderModel {
       this.orderItems,
       this.orderId,
       this.subtotal,
+      this.paymentMethod,
       this.shipping,
       this.orderStatus,
       this.status,
@@ -37,6 +39,7 @@ class OrderModel {
     shipping = json['shipping'].toUpperCase();
     orderDate = json['orderDate'];
     deliveryMethod = json['deliveryMethod'];
+    paymentMethod = json['paymentMethod'];
     shippingPrice = json['shippingPrice'].toInt();
     shipToAddress = json['shipToAddress'] != null
         ? new AddressModel.fromJson(json['shipToAddress'])

@@ -175,7 +175,7 @@ class OrderDetailsView extends StatelessWidget {
                               ),
                               kHSeparator(),
                               SubtitleText(
-                                text: orderModel!.status!,
+                                text: orderModel!.paymentMethod!,
                                 color: ColorManager.dark,
                               )
                             ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'color_manager.dart';
 import 'font_manager.dart';
 import 'styles_manager.dart';
@@ -12,6 +12,9 @@ ThemeData getApplicationTheme() {
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: ColorManager.primaryColor,
     ),
+
+    bottomSheetTheme:
+        BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
     // main colors of the app
     primaryColor: ColorManager.primary,
     // primaryColorDark: ColorManager.darkPrimary,

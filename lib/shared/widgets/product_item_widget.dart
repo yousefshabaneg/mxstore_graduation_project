@@ -1,10 +1,11 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
 import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
+import 'package:graduation_project/data/models/basket_model.dart';
 import 'package:graduation_project/data/models/product_model.dart';
+import 'package:graduation_project/presentation/cart/cart_items.dart';
 import 'package:graduation_project/presentation/products/product_details_view.dart';
 import 'package:graduation_project/shared/constants.dart';
 import 'package:graduation_project/shared/helpers.dart';
@@ -13,6 +14,7 @@ import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:graduation_project/shared/widgets/app_buttons.dart';
 import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ProductItemWidget extends StatelessWidget {
   ProductItemModel? model;
@@ -31,7 +33,7 @@ class ProductItemWidget extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.all(10),
-        width: kWidth * 0.4,
+        width: kWidth * (cartProduct ? 0.45 : 0.38),
         decoration: new BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border.all(color: ColorManager.gray, width: 0.2),
@@ -133,37 +135,44 @@ class ProductItemWidget extends StatelessWidget {
             if (cartProduct)
               BlocConsumer<ShopCubit, ShopStates>(
                 listener: (context, state) {},
-                builder: (context, state) => ConditionalBuilder(
-                  condition: model!.numberInStock > 0,
-                  builder: (context) {
-                    return SolidButton(
-                      size: 12,
-                      heightFactor: 0.04,
-                      radius: 5,
-                      text: "Add to cart",
-                      color: Colors.black,
-                      splashColor: ColorManager.primary,
-                      backgroundColor: Colors.white,
-                      borderColor: ColorManager.dark,
-                      onTap: () {
-                        ShopCubit.get(context).addToCart(model!);
-                      },
-                      child: state is ShopLoadingAddToCartState &&
-                              state.id == model!.id
-                          ? const MyLoadingIndicator(height: 20, width: 30)
-                          : null,
-                    );
-                  },
-                  fallback: (context) => SolidButton(
+                builder: (context, state) {
+                  bool inCart = ShopCubit.get(context)
+                      .cartProductsIds
+                      .contains(model!.id!);
+                  return SolidButton(
                     size: 12,
                     heightFactor: 0.04,
                     radius: 5,
-                    icon: FontAwesomeIcons.cartShopping,
-                    text: "out of stock",
-                    color: Colors.white,
-                    disabledColor: Colors.black38,
-                  ),
-                ),
+                    text: inCart ? "Remove from cart" : "Add to cart",
+                    color: !inCart ? Colors.black : ColorManager.error,
+                    withIcon: true,
+                    icon: !inCart
+                        ? FontAwesomeIcons.cartShopping
+                        : FontAwesomeIcons.trash,
+                    splashColor: Colors.white54,
+                    backgroundColor: Colors.white,
+                    borderColor:
+                        !inCart ? ColorManager.dark : ColorManager.error,
+                    onTap: () {
+                      if (!inCart) {
+                        ShopCubit.get(context).addToCart(model!);
+                      } else {
+                        showMaterialModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          useRootNavigator: true,
+                          builder: (context) => RemoveProductMaterialSheet(
+                              product: BasketProductModel.mapProductToBasket(
+                                  model!)),
+                        );
+                      }
+                    },
+                    child: state is ShopLoadingAddToCartState &&
+                            state.id == model!.id
+                        ? const MyLoadingIndicator(height: 20, width: 30)
+                        : null,
+                  );
+                },
               ),
           ],
         ),
@@ -206,7 +215,7 @@ class _ProductsHorizontalListBuilderState
   void initState() {
     super.initState();
     controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
+      if (controller.position.maxScrollExtent < (controller.offset - 60)) {
         fetch();
       }
     });
@@ -263,7 +272,11 @@ class _ProductsHorizontalListBuilderState
                 else if (widget.products.length < pageSize)
                   return SizedBox.shrink();
                 else
-                  return hasMore ? ShimmerListProducts() : SizedBox.shrink();
+                  return (hasMore &&
+                          (controller.position.maxScrollExtent <
+                              (controller.offset - 60)))
+                      ? ShimmerListProducts()
+                      : SizedBox.shrink();
               },
               itemCount: widget.products.length + 1,
             ),

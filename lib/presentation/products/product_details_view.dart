@@ -266,8 +266,11 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
                                         height: 20, width: 30)
                                     : null,
                                 onTap: () {
-                                  ShopCubit.get(context)
-                                      .addToCart(widget.product!);
+                                  if (inCart) {
+                                  } else {
+                                    ShopCubit.get(context)
+                                        .addToCart(widget.product!);
+                                  }
                                 },
                               );
                             },

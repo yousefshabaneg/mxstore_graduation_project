@@ -186,10 +186,7 @@ class UserReviews extends StatelessWidget {
                 size: 14,
               ),
             ),
-            Divider(
-              color: ColorManager.gray,
-              thickness: 0.4,
-            ),
+            kDivider(),
           ],
         ),
         ListView.separated(
@@ -528,7 +525,6 @@ class ProductDetailsHelpers {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   title,
@@ -537,7 +533,15 @@ class ProductDetailsHelpers {
                     fontSize: 15,
                   ),
                 ),
-                Text(value, style: kTheme.textTheme.headline5),
+                Spacer(),
+                SizedBox(
+                    width: kWidth * 0.3,
+                    child: Text(
+                      value,
+                      style: kTheme.textTheme.headline5,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    )),
               ],
             ),
           ),

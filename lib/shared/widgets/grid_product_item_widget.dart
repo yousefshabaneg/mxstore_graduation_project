@@ -11,12 +11,8 @@ import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
 
 class GridProductItem extends StatelessWidget {
   ProductItemModel? model;
-  late double rating;
-  late int buyers;
   GridProductItem({
     this.model,
-    this.rating = 5.0,
-    this.buyers = 1,
   });
   @override
   Widget build(BuildContext context) {
@@ -117,29 +113,24 @@ class GridProductItem extends StatelessWidget {
                 ],
               ),
             Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.solidStar,
-                  color: ColorManager.warning,
-                  size: 10,
-                ),
-                Text(
-                  "$rating ",
-                  style: kTheme.textTheme.headline5!.copyWith(
-                    fontSize: 10,
+            if (model!.rating > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.solidStar,
                     color: ColorManager.warning,
+                    size: 10,
                   ),
-                ),
-                Text(
-                  "($buyers)",
-                  style: kTheme.textTheme.subtitle2!.copyWith(
-                    fontSize: 10,
+                  Text(
+                    "${model!.rating} ",
+                    style: kTheme.textTheme.headline5!.copyWith(
+                      fontSize: 10,
+                      color: ColorManager.warning,
+                    ),
                   ),
-                ),
-              ],
-            )
+                ],
+              )
           ],
         ),
       ),
@@ -174,7 +165,7 @@ class _ProductsItemsGridBuilderState extends State<ProductsItemsGridBuilder> {
   void initState() {
     super.initState();
     controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
+      if (controller.position.maxScrollExtent < controller.offset - 120) {
         fetch();
       }
     });
@@ -217,6 +208,13 @@ class _ProductsItemsGridBuilderState extends State<ProductsItemsGridBuilder> {
     super.dispose();
   }
 
+  bool loadMore() {
+    if (controller.hasClients)
+      return hasMore &&
+          controller.position.maxScrollExtent < controller.offset - 120;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -238,23 +236,19 @@ class _ProductsItemsGridBuilderState extends State<ProductsItemsGridBuilder> {
           if (index < widget.products.length)
             return Container(
                 color: Colors.white,
-                child: GridProductItem(
-                  model: widget.products[index],
-                ));
+                child: GridProductItem(model: widget.products[index]));
           else if (widget.products.length < pageSize)
             return SizedBox.shrink();
           else
-            return hasMore ? ShimmerGridItemLoading() : SizedBox.shrink();
+            return loadMore() ? ShimmerGridItemLoading() : SizedBox.shrink();
         },
-        itemCount: itemCount(),
+        itemCount:
+            loadMore() ? widget.products.length + 2 : widget.products.length,
       ),
     );
   }
 
   int itemCount() {
-    return widget.products.length +
-        (widget.products.length >= pageSize
-            ? (widget.products.length % 2 == 0 ? 2 : 1)
-            : 0);
+    return loadMore() ? widget.products.length + 2 : widget.products.length;
   }
 }

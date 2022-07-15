@@ -39,6 +39,8 @@ class _RegisterViewState extends State<RegisterView> {
   var phoneController = TextEditingController();
 
   _register() {
+    scrollController.animateTo(0,
+        duration: Duration(milliseconds: 200), curve: Curves.easeInCubic);
     UserCubit.get(context).userRegister(
       email: emailController.text,
       name: nameController.text,
@@ -78,7 +80,7 @@ class _RegisterViewState extends State<RegisterView> {
       _isPasswordEightCharacters &&
       _isPasswordHasSpecialCharacter &&
       _isPasswordHasUpperAndLower;
-
+  var scrollController = ScrollController();
   bool isEmailCorrect = false;
   onEmailChanged(String email) {
     final emailReg = RegExp(
@@ -135,276 +137,291 @@ class _RegisterViewState extends State<RegisterView> {
                     state: ToastStates.error);
               }
             },
-            builder: (context, state) => SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: kHeight * 0.1),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        ImageAssets.register,
-                        height: kHeight * 0.2,
-                        width: kWidth * 0.2,
-                      ),
-                      ConstrainedBox(
-                        constraints: new BoxConstraints(
-                          minHeight: kHeight * 0.75,
+            builder: (context, state) => GestureDetector(
+              onTap: () {
+                scrollController.animateTo(0,
+                    duration: Duration(milliseconds: 200),
+                    curve: Curves.easeInCubic);
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: SingleChildScrollView(
+                controller: scrollController,
+                physics: BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: kHeight * 0.1),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          ImageAssets.register,
+                          height: kHeight * 0.2,
+                          width: kWidth * 0.2,
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  "Create new account",
-                                  style: kTheme.textTheme.headline1!
-                                      .copyWith(color: ColorManager.black),
-                                ),
-                                kVSeparator(),
-                                SubtitleText(
-                                  text:
-                                      "Register now, and enjoy with our products.",
-                                  size: 18,
-                                  color: ColorManager.subtitle.withOpacity(0.7),
-                                  align: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                AppFormField(
-                                  hint: "Email ID",
-                                  type: TextInputType.emailAddress,
-                                  inputAction: TextInputAction.next,
-                                  autoFill: [AutofillHints.email],
-                                  padding: kHeight * 0.015,
-                                  controller: emailController,
-                                  prefixIcon: FontAwesomeIcons.atlassian,
-                                  validate: emailValidator,
-                                  onChanged: (email) => setState(() {
-                                    valid();
-                                    onEmailChanged(email);
-                                  }),
-                                ),
-                                emailController.text.isNotEmpty &&
-                                        !isEmailCorrect
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.primary
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(15),
-                                              bottomRight: Radius.circular(15)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                child: validationRow(
-                                                    condition: isEmailCorrect,
-                                                    message:
-                                                        "Email must contain '@' and '.'"),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink(),
-                                kVSeparator(factor: 0.015),
-                                AppFormField(
-                                  hint: "Full Name",
-                                  type: TextInputType.name,
-                                  inputAction: TextInputAction.next,
-                                  autoFill: [AutofillHints.name],
-                                  padding: kHeight * 0.015,
-                                  controller: nameController,
-                                  prefixIcon: FontAwesomeIcons.solidIdBadge,
-                                  onChanged: (name) => setState(() => valid()),
-                                ),
-                                kVSeparator(factor: 0.015),
-                                AppFormField(
-                                  hint: "Phone Number",
-                                  autoFill: [AutofillHints.telephoneNumber],
-                                  inputAction: TextInputAction.next,
-                                  type: TextInputType.number,
-                                  padding: kHeight * 0.015,
-                                  controller: phoneController,
-                                  prefixIcon: FontAwesomeIcons.squarePhone,
-                                  onChanged: (phone) => setState(() {
-                                    onPhoneChanged(phone);
-                                    valid();
-                                  }),
-                                ),
-                                phoneController.text.isNotEmpty &&
-                                        (!isPhoneElevenDigits ||
-                                            !isPhoneCorrect)
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.primary
-                                              .withOpacity(.2),
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(5),
-                                              bottomRight: Radius.circular(5)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                child: validationRow(
-                                                    condition:
-                                                        isPhoneElevenDigits,
-                                                    message:
-                                                        "Phone must be exactly 11 digits."),
-                                              ),
-                                              kVSeparator(factor: 0.01),
-                                              Container(
-                                                child: validationRow(
-                                                    condition: isPhoneCorrect,
-                                                    message:
-                                                        "phone must start with 010-011-012-015"),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink(),
-                                kVSeparator(factor: 0.015),
-                                AppFormField(
-                                  hint: "Password",
-                                  type: TextInputType.visiblePassword,
-                                  autoFill: [AutofillHints.password],
-                                  padding: kHeight * 0.015,
-                                  controller: passwordController,
-                                  prefixIcon: FontAwesomeIcons.lock,
-                                  inputAction: TextInputAction.done,
-                                  suffixIcon: AppCubit.get(context).suffix,
-                                  isPassword: AppCubit.get(context).isPassword,
-                                  onPressed: () {
-                                    AppCubit.get(context)
-                                        .changePasswordVisibility();
-                                  },
-                                  onChanged: (password) => setState(
-                                    () {
-                                      onPasswordChanged(password);
+                        ConstrainedBox(
+                          constraints: new BoxConstraints(
+                            minHeight: kHeight * 0.75,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    "Create new account",
+                                    style: kTheme.textTheme.headline1!
+                                        .copyWith(color: ColorManager.black),
+                                  ),
+                                  kVSeparator(),
+                                  SubtitleText(
+                                    text:
+                                        "Register now, and enjoy with our products.",
+                                    size: 18,
+                                    color:
+                                        ColorManager.subtitle.withOpacity(0.7),
+                                    align: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  AppFormField(
+                                    hint: "Email ID",
+                                    type: TextInputType.emailAddress,
+                                    inputAction: TextInputAction.next,
+                                    autoFill: [AutofillHints.email],
+                                    padding: kHeight * 0.015,
+                                    controller: emailController,
+                                    prefixIcon: FontAwesomeIcons.atlassian,
+                                    validate: emailValidator,
+                                    onChanged: (email) => setState(() {
                                       valid();
-                                    },
+                                      onEmailChanged(email);
+                                    }),
                                   ),
-                                  onSubmit: (value) =>
-                                      TextInput.finishAutofillContext(),
-                                ),
-                                passwordController.text.length > 0 &&
-                                        (!_isPasswordHasSpecialCharacter ||
-                                            !_isPasswordHasUpperAndLower ||
-                                            !_isPasswordEightCharacters)
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.primary
-                                              .withOpacity(0.2),
-                                          borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(15),
-                                              bottomRight: Radius.circular(15)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              kVSeparator(factor: 0.01),
-                                              Container(
-                                                child: validationRow(
-                                                    condition:
-                                                        _isPasswordHasUpperAndLower,
-                                                    message:
-                                                        "Contains upper and lower case"),
-                                              ),
-                                              kVSeparator(factor: 0.01),
-                                              Container(
-                                                child: validationRow(
-                                                    condition:
-                                                        _isPasswordHasSpecialCharacter,
-                                                    message:
-                                                        "Contains one special character"),
-                                              ),
-                                              kVSeparator(factor: 0.01),
-                                              Container(
-                                                child: validationRow(
-                                                    condition:
-                                                        _isPasswordEightCharacters,
-                                                    message:
-                                                        "Contains at least 8 characters"),
-                                              ),
-                                            ],
+                                  emailController.text.isNotEmpty &&
+                                          !isEmailCorrect
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.primary
+                                                .withOpacity(0.2),
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(15),
+                                                bottomRight:
+                                                    Radius.circular(15)),
                                           ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink(),
-                                kVSeparator(factor: 0.015),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                SolidButton(
-                                  color: Colors.white,
-                                  heightFactor: 0.06,
-                                  size: 20,
-                                  onTap: valid() ? () => _register() : null,
-                                  child: state is EmailExistLoadingState ||
-                                          state is RegisterLoadingState
-                                      ? const MyLoadingIndicator(
-                                          height: 20, width: 30)
-                                      : null,
-                                  text: "Create Account",
-                                ),
-                                kVSeparator(factor: 0.01),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Divider(
-                                        color: ColorManager.primary,
-                                        thickness: 1,
-                                        endIndent: 20,
-                                        indent: 10,
-                                      ),
-                                    ),
-                                    BodyText(
-                                        text: "OR",
-                                        color: ColorManager.primary,
-                                        size: 12),
-                                    Expanded(
-                                      child: Divider(
-                                        color: ColorManager.primary,
-                                        thickness: 1,
-                                        indent: 20,
-                                        endIndent: 10,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                kVSeparator(factor: 0.01),
-                                SolidButton(
-                                  color: ColorManager.subtitle,
-                                  splashColor: ColorManager.subtitle,
-                                  borderColor: ColorManager.subtitle,
-                                  heightFactor: 0.06,
-                                  size: 20,
-                                  backgroundColor: ColorManager.white,
-                                  onTap: () => accountController.previousPage(
-                                    duration: Duration(milliseconds: 500),
-                                    curve: Curves.easeOutSine,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  child: validationRow(
+                                                      condition: isEmailCorrect,
+                                                      message:
+                                                          "Email must contain '@' and '.'"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  kVSeparator(factor: 0.015),
+                                  AppFormField(
+                                    hint: "Full Name",
+                                    type: TextInputType.name,
+                                    inputAction: TextInputAction.next,
+                                    autoFill: [AutofillHints.name],
+                                    padding: kHeight * 0.015,
+                                    controller: nameController,
+                                    prefixIcon: FontAwesomeIcons.solidIdBadge,
+                                    onChanged: (name) =>
+                                        setState(() => valid()),
                                   ),
-                                  text: "Log in",
-                                ),
-                              ],
-                            ),
-                            kVSeparator(factor: 0.015),
-                          ],
+                                  kVSeparator(factor: 0.015),
+                                  AppFormField(
+                                    hint: "Phone Number",
+                                    autoFill: [AutofillHints.telephoneNumber],
+                                    inputAction: TextInputAction.next,
+                                    type: TextInputType.number,
+                                    padding: kHeight * 0.015,
+                                    controller: phoneController,
+                                    prefixIcon: FontAwesomeIcons.squarePhone,
+                                    onChanged: (phone) => setState(() {
+                                      onPhoneChanged(phone);
+                                      valid();
+                                    }),
+                                  ),
+                                  phoneController.text.isNotEmpty &&
+                                          (!isPhoneElevenDigits ||
+                                              !isPhoneCorrect)
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.primary
+                                                .withOpacity(.2),
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5)),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  child: validationRow(
+                                                      condition:
+                                                          isPhoneElevenDigits,
+                                                      message:
+                                                          "Phone must be exactly 11 digits."),
+                                                ),
+                                                kVSeparator(factor: 0.01),
+                                                Container(
+                                                  child: validationRow(
+                                                      condition: isPhoneCorrect,
+                                                      message:
+                                                          "phone must start with 010-011-012-015"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  kVSeparator(factor: 0.015),
+                                  AppFormField(
+                                    hint: "Password",
+                                    type: TextInputType.visiblePassword,
+                                    autoFill: [AutofillHints.password],
+                                    padding: kHeight * 0.015,
+                                    controller: passwordController,
+                                    prefixIcon: FontAwesomeIcons.lock,
+                                    inputAction: TextInputAction.done,
+                                    suffixIcon: AppCubit.get(context).suffix,
+                                    isPassword:
+                                        AppCubit.get(context).isPassword,
+                                    onPressed: () {
+                                      AppCubit.get(context)
+                                          .changePasswordVisibility();
+                                    },
+                                    onChanged: (password) => setState(
+                                      () {
+                                        onPasswordChanged(password);
+                                        valid();
+                                      },
+                                    ),
+                                    onSubmit: (value) =>
+                                        TextInput.finishAutofillContext(),
+                                  ),
+                                  passwordController.text.length > 0 &&
+                                          (!_isPasswordHasSpecialCharacter ||
+                                              !_isPasswordHasUpperAndLower ||
+                                              !_isPasswordEightCharacters)
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.primary
+                                                .withOpacity(0.2),
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(15),
+                                                bottomRight:
+                                                    Radius.circular(15)),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                kVSeparator(factor: 0.01),
+                                                Container(
+                                                  child: validationRow(
+                                                      condition:
+                                                          _isPasswordHasUpperAndLower,
+                                                      message:
+                                                          "Contains upper and lower case"),
+                                                ),
+                                                kVSeparator(factor: 0.01),
+                                                Container(
+                                                  child: validationRow(
+                                                      condition:
+                                                          _isPasswordHasSpecialCharacter,
+                                                      message:
+                                                          "Contains one special character"),
+                                                ),
+                                                kVSeparator(factor: 0.01),
+                                                Container(
+                                                  child: validationRow(
+                                                      condition:
+                                                          _isPasswordEightCharacters,
+                                                      message:
+                                                          "Contains at least 8 characters"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                  kVSeparator(factor: 0.015),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  SolidButton(
+                                    color: Colors.white,
+                                    heightFactor: 0.06,
+                                    size: 20,
+                                    onTap: valid() ? () => _register() : null,
+                                    child: state is EmailExistLoadingState ||
+                                            state is RegisterLoadingState
+                                        ? const MyLoadingIndicator(
+                                            height: 20, width: 30)
+                                        : null,
+                                    text: "Create Account",
+                                  ),
+                                  kVSeparator(factor: 0.01),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Divider(
+                                          color: ColorManager.primary,
+                                          thickness: 1,
+                                          endIndent: 20,
+                                          indent: 10,
+                                        ),
+                                      ),
+                                      BodyText(
+                                          text: "OR",
+                                          color: ColorManager.primary,
+                                          size: 12),
+                                      Expanded(
+                                        child: Divider(
+                                          color: ColorManager.primary,
+                                          thickness: 1,
+                                          indent: 20,
+                                          endIndent: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  kVSeparator(factor: 0.01),
+                                  SolidButton(
+                                    color: ColorManager.subtitle,
+                                    splashColor: ColorManager.subtitle,
+                                    borderColor: ColorManager.subtitle,
+                                    heightFactor: 0.06,
+                                    size: 20,
+                                    backgroundColor: ColorManager.white,
+                                    onTap: () => accountController.previousPage(
+                                      duration: Duration(milliseconds: 500),
+                                      curve: Curves.easeOutSine,
+                                    ),
+                                    text: "Log in",
+                                  ),
+                                ],
+                              ),
+                              kVSeparator(factor: 0.015),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

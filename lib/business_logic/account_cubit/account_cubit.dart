@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
-import 'package:graduation_project/data/dio_helper.dart';
-import 'package:graduation_project/data/models/address_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/constants_manager.dart';
+
+import '../../data/dio_helper.dart';
+import '../../data/models/address_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/resources/assets_manager.dart';
+import '../../shared/resources/constants_manager.dart';
+import 'account_states.dart';
 
 class AccountCubit extends Cubit<AccountStates> {
   AccountCubit() : super(AccountInitialState());

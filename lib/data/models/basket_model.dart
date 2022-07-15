@@ -1,4 +1,4 @@
-import 'package:graduation_project/data/models/product_model.dart';
+import 'product_model.dart';
 
 class BasketModel {
   String? basketId;

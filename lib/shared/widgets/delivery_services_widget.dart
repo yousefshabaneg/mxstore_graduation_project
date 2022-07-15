@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
+
+import '../helpers.dart';
+import '../resources/color_manager.dart';
+import 'app_text.dart';
 
 class DeliveryServices extends StatelessWidget {
   const DeliveryServices({Key? key}) : super(key: key);

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/presentation/order/review_success_widget.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
-import 'package:graduation_project/shared/widgets/textfield.dart';
+
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../business_logic/user_cubit/user_cubit.dart';
+import '../../data/models/order_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/indicators.dart';
+import '../../shared/widgets/product_details_widgets.dart';
+import '../../shared/widgets/textfield.dart';
+import 'review_success_widget.dart';
 
 class SubmitReviewWidget extends StatefulWidget {
   const SubmitReviewWidget(
@@ -48,7 +49,7 @@ class _SubmitReviewWidgetState extends State<SubmitReviewWidget> {
       builder: (context, state) => Scaffold(
         appBar: AppBar(),
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -185,7 +186,7 @@ class _SubmitReviewWidgetState extends State<SubmitReviewWidget> {
                         ),
                       ),
                       style: kTheme.textTheme.headline4,
-                      onChanged: (str) => setState(() => this.comment = str),
+                      onChanged: (str) => setState(() => comment = str),
                     ),
                   ],
                 ),
@@ -293,8 +294,7 @@ class _SubmitReviewWidgetState extends State<SubmitReviewWidget> {
                                         size: 12,
                                         backgroundColor: ColorManager.blue,
                                         onTap: () {
-                                          this.userName =
-                                              usernameController.text;
+                                          userName = usernameController.text;
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -326,27 +326,23 @@ class _SubmitReviewWidgetState extends State<SubmitReviewWidget> {
               heightFactor: 0.06,
               backgroundColor: ColorManager.blue,
               disabledColor: ColorManager.gray,
+              onTap: () async {
+                await ShopCubit.get(context)
+                    .rateProduct(
+                  productId: widget.orderItem.productId!,
+                  name: isAnonymous ? "Anonymous" : userName,
+                  rating: rating.toInt(),
+                  commentDescription: comment,
+                )
+                    .then((value) {
+                  if (value) {
+                    push(context, const ReviewSuccessfullyWidget(), root: true);
+                  }
+                });
+              },
               child: state is ShopLoadingRateProductState
                   ? const MyLoadingIndicator(height: 20, width: 30)
                   : null,
-              onTap: false
-                  ? null
-                  : () async {
-                      print(this.rating.toInt());
-                      print(this.comment);
-                      await ShopCubit.get(context)
-                          .rateProduct(
-                        productId: widget.orderItem.productId!,
-                        name: isAnonymous ? "Anonymous" : this.userName,
-                        rating: this.rating.toInt(),
-                        commentDescription: this.comment,
-                      )
-                          .then((value) {
-                        if (value) {
-                          push(context, ReviewSuccessfullyWidget(), root: true);
-                        }
-                      });
-                    },
             ),
           ),
         ),

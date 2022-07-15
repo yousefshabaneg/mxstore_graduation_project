@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/presentation/order/cancel_order_sheet.dart';
-import 'package:graduation_project/presentation/order/order_details_summary.dart';
-import 'package:graduation_project/presentation/order/review_order_sheet.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../data/models/order_model.dart';
+import '../../shared/components.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/product_details_widgets.dart';
+import 'cancel_order_sheet.dart';
+import 'order_details_summary.dart';
+import 'review_order_sheet.dart';
+
+// ignore: must_be_immutable
 class OrderDetailsView extends StatelessWidget {
   OrderDetailsView({Key? key, required this.orderModel}) : super(key: key);
 
@@ -29,12 +31,12 @@ class OrderDetailsView extends StatelessWidget {
           if (state is ShopErrorCancelOrderState) {
             showToast(
                 msg: ShopCubit.get(context).successMessage,
-                state: ToastStates.SUCCESS);
+                state: ToastStates.success);
           }
           if (state is ShopErrorCancelOrderState) {
             showToast(
                 msg: ShopCubit.get(context).errorMessage,
-                state: ToastStates.ERROR);
+                state: ToastStates.error);
           }
         },
         builder: (context, state) {
@@ -227,7 +229,7 @@ class OrderDetailsView extends StatelessWidget {
                           kDivider(factor: 0.01),
                         ],
                       ),
-                      if (orderModel?.orderStatus == OrderStatus.Delivered) ...[
+                      if (orderModel?.orderStatus == OrderStatus.delivered) ...[
                         kVSeparator(),
                         SolidButton(
                           color: ColorManager.blue,
@@ -252,7 +254,7 @@ class OrderDetailsView extends StatelessWidget {
                         ),
                         kVSeparator(),
                       ],
-                      if (orderModel?.orderStatus != OrderStatus.Cancelled)
+                      if (orderModel?.orderStatus != OrderStatus.cancelled)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -283,7 +285,7 @@ class OrderDetailsView extends StatelessWidget {
                                     size: 16,
                                     color: ColorManager.success),
                                 if (orderModel?.orderStatus ==
-                                    OrderStatus.Delivered)
+                                    OrderStatus.delivered)
                                   Row(
                                     children: [
                                       BodyText(
@@ -311,8 +313,8 @@ class OrderDetailsView extends StatelessWidget {
                             size: 16,
                             color: ColorManager.error),
                       kVSeparator(factor: 0.04),
-                      if (orderModel?.orderStatus != OrderStatus.Cancelled &&
-                          orderModel?.orderStatus != OrderStatus.Delivered) ...[
+                      if (orderModel?.orderStatus != OrderStatus.cancelled &&
+                          orderModel?.orderStatus != OrderStatus.delivered) ...[
                         SolidButton(
                           color: ColorManager.error,
                           backgroundColor: Colors.white,
@@ -337,7 +339,7 @@ class OrderDetailsView extends StatelessWidget {
                       ],
                       Container(
                         foregroundDecoration:
-                            orderModel?.orderStatus == OrderStatus.Cancelled
+                            orderModel?.orderStatus == OrderStatus.cancelled
                                 ? BoxDecoration(
                                     color: Colors.white.withOpacity(0.4),
                                     backgroundBlendMode: BlendMode.lighten,

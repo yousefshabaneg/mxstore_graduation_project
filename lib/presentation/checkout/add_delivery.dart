@@ -1,12 +1,13 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/indicators.dart';
 
 class DeliveryMethodView extends StatelessWidget {
   const DeliveryMethodView({Key? key}) : super(key: key);

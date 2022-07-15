@@ -9,9 +9,6 @@ ThemeData getApplicationTheme() {
   return ThemeData(
     dividerColor: Colors.transparent,
     scaffoldBackgroundColor: Colors.white,
-    colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: ColorManager.primaryColor,
-    ),
 
     bottomSheetTheme:
         BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
@@ -21,8 +18,6 @@ ThemeData getApplicationTheme() {
     disabledColor: ColorManager.dark,
     // ripple color
     splashColor: ColorManager.primary,
-    // will be used incase of disabled button for example
-    accentColor: ColorManager.primary,
     // App bar theme
     appBarTheme: AppBarTheme(
       elevation: 0,
@@ -95,5 +90,8 @@ ThemeData getApplicationTheme() {
         borderSide: BorderSide(color: ColorManager.primary),
       ),
     ),
+    colorScheme: ColorScheme.fromSwatch(
+      primarySwatch: ColorManager.primaryColor,
+    ).copyWith(secondary: ColorManager.primary),
   );
 }

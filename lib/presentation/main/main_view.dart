@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_offline/flutter_offline.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/app_cubit/app_cubit.dart';
-import 'package:graduation_project/business_logic/app_cubit/app_states.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/no_connection_widget.dart';
+
+import '../../business_logic/account_cubit/account_cubit.dart';
+import '../../business_logic/app_cubit/app_cubit.dart';
+import '../../business_logic/app_cubit/app_states.dart';
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../business_logic/user_cubit/user_cubit.dart';
+import '../../business_logic/user_cubit/user_states.dart';
+import '../../shared/components.dart';
+import '../../shared/constants.dart';
+import '../../shared/widgets/indicators.dart';
+import '../../shared/widgets/no_connection_widget.dart';
 
 class MainView extends StatelessWidget {
   @override
@@ -49,21 +50,21 @@ class MainView extends StatelessWidget {
                             msg: ShopCubit.get(context)
                                 .changeFavoritesModel!
                                 .message!,
-                            state: ToastStates.SUCCESS);
+                            state: ToastStates.success);
                       }
 
                       if (state is ShopSuccessAddToCartState ||
                           state is ShopSuccessRemoveFromCartState)
                         showToast(
                             msg: ShopCubit.get(context).successMessage,
-                            state: ToastStates.SUCCESS);
+                            state: ToastStates.success);
 
                       if (state is ShopErrorAddToCartState ||
                           state is ShopErrorChangeFavoritesState ||
                           state is ShopErrorRemoveFromCartState)
                         showToast(
                             msg: ShopCubit.get(context).errorMessage,
-                            state: ToastStates.ERROR);
+                            state: ToastStates.error);
                     },
                     builder: (context, state) =>
                         BlocConsumer<AppCubit, AppStates>(

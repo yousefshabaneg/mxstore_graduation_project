@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/presentation/order/order_details_view.dart';
-import 'package:graduation_project/presentation/order/review_order_sheet.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../data/models/order_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/assets_manager.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/indicators.dart';
+import 'order_details_view.dart';
+import 'review_order_sheet.dart';
 
 class MyOrdersView extends StatelessWidget {
   const MyOrdersView({Key? key}) : super(key: key);
@@ -114,7 +115,7 @@ class MyOrdersView extends StatelessWidget {
   }
 
   buildOrderItem(OrderModel order, context) => Container(
-        height: order.orderStatus == OrderStatus.Delivered
+        height: order.orderStatus == OrderStatus.delivered
             ? kHeight * 0.35
             : kHeight * 0.28,
         child: Padding(
@@ -202,12 +203,12 @@ class MyOrdersView extends StatelessWidget {
                 child: BodyText(
                   text: order.shipping!,
                   size: 14,
-                  color: order.orderStatus == OrderStatus.Cancelled
+                  color: order.orderStatus == OrderStatus.cancelled
                       ? ColorManager.error
                       : ColorManager.success,
                 ),
               ),
-              if (order.orderStatus == OrderStatus.Delivered) ...[
+              if (order.orderStatus == OrderStatus.delivered) ...[
                 kVSeparator(),
                 SolidButton(
                   color: ColorManager.blue,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/data/models/basket_model.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
+
+import '../../data/models/basket_model.dart';
+import '../helpers.dart';
+import '../resources/color_manager.dart';
+import 'app_text.dart';
+import 'product_details_widgets.dart';
 
 class OrderSummaryItem extends StatelessWidget {
   OrderSummaryItem({Key? key, required this.product}) : super(key: key);

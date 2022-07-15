@@ -1,11 +1,11 @@
 import 'package:dialogs/dialogs.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-var kSize, kHeight = 0.0, kWidth = 0.0;
+import 'resources/color_manager.dart';
+
+double kHeight = 0.0, kWidth = 0.0;
 
 Widget kGrayDivider({double factor = 0.02}) => Padding(
       padding: EdgeInsets.symmetric(vertical: kHeight * factor),
@@ -79,8 +79,8 @@ void push(context, widget, {root = false}) =>
     Navigator.of(context, rootNavigator: root).push(PageRouteBuilder(
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secAnimation, Widget child) {
-          var begin = Offset(1, 0);
-          var end = Offset(0, 0);
+          var begin = const Offset(1, 0);
+          var end = const Offset(0, 0);
           var tween = Tween(begin: begin, end: end);
           var offsetAnimation = animation.drive(tween);
           return SlideTransition(
@@ -99,10 +99,6 @@ void pushScaleTransition(context, widget) => Navigator.push(
     PageRouteBuilder(
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secAnimation, Widget child) {
-          var begin = Offset(1, 0);
-          var end = Offset(0, 0);
-          var tween = Tween(begin: begin, end: end);
-          var offsetAnimation = animation.drive(tween);
           return ScaleTransition(
             alignment: Alignment.bottomCenter,
             scale: Tween<double>(begin: 0.1, end: 1).animate(
@@ -114,7 +110,7 @@ void pushScaleTransition(context, widget) => Navigator.push(
             child: widget,
           );
         },
-        transitionDuration: Duration(milliseconds: 600),
+        transitionDuration: const Duration(milliseconds: 600),
         pageBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secAnimation) {
           return widget;
@@ -128,10 +124,6 @@ void pushReplacementScaleTransition(context, widget) =>
                 Animation<double> animation,
                 Animation<double> secAnimation,
                 Widget child) {
-              var begin = Offset(1, 0);
-              var end = Offset(0, 0);
-              var tween = Tween(begin: begin, end: end);
-              var offsetAnimation = animation.drive(tween);
               return ScaleTransition(
                 alignment: Alignment.bottomCenter,
                 scale: Tween<double>(begin: 0.1, end: 1).animate(
@@ -143,7 +135,7 @@ void pushReplacementScaleTransition(context, widget) =>
                 child: widget,
               );
             },
-            transitionDuration: Duration(milliseconds: 600),
+            transitionDuration: const Duration(milliseconds: 600),
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secAnimation) {
               return widget;
@@ -153,8 +145,8 @@ void pushReplacement(context, widget) => Navigator.pushReplacement(
     PageRouteBuilder(
         transitionsBuilder: (BuildContext context, Animation<double> animation,
             Animation<double> secAnimation, Widget child) {
-          var begin = Offset(1, 0);
-          var end = Offset(0, 0);
+          var begin = const Offset(1, 0);
+          var end = const Offset(0, 0);
           var tween = Tween(begin: begin, end: end);
           var offsetAnimation = animation.drive(tween);
           return SlideTransition(
@@ -194,22 +186,22 @@ showEditInfoSheet(context, {required Widget child}) =>
 OrderStatus getOrderStatus(String? shipping) {
   switch (shipping?.toLowerCase()) {
     case "cancelled":
-      return OrderStatus.Cancelled;
+      return OrderStatus.cancelled;
     case "processing":
-      return OrderStatus.Processing;
+      return OrderStatus.processing;
     case "shipped":
-      return OrderStatus.Shipped;
+      return OrderStatus.shipped;
     case "delivered":
-      return OrderStatus.Delivered;
+      return OrderStatus.delivered;
     default:
-      return OrderStatus.Ordered;
+      return OrderStatus.ordered;
   }
 }
 
 enum OrderStatus {
-  Ordered,
-  Processing,
-  Shipped,
-  Delivered,
-  Cancelled,
+  ordered,
+  processing,
+  shipped,
+  delivered,
+  cancelled,
 }

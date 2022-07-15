@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/search_cubit/search_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/presentation/categories/search_category_view.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../../business_logic/search_cubit/search_cubit.dart';
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/filtered_item_view.dart';
+import '../../shared/widgets/indicators.dart';
+import 'search_category_view.dart';
 
 class CategoriesView extends StatelessWidget {
   @override

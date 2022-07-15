@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:graduation_project/data/dio_exception.dart';
-import 'package:graduation_project/shared/resources/constants_manager.dart';
+
+import '../shared/resources/constants_manager.dart';
+import 'dio_exception.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -26,7 +27,7 @@ class DioHelper {
     dio.options.headers = getHeaders(token);
     try {
       Response response = await dio.get(url, queryParameters: query);
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       return response.data;
     } on DioError catch (ex) {
       throw DioExceptions.fromDioError(ex).toString();
@@ -41,12 +42,11 @@ class DioHelper {
   }) async {
     dio.options.headers = getHeaders(token);
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       Response response =
           await dio.post(url, queryParameters: query, data: data);
       return response.data;
     } on DioError catch (ex) {
-      print(ex);
       throw DioExceptions.fromDioError(ex).toString();
     }
   }
@@ -59,7 +59,7 @@ class DioHelper {
   }) async {
     dio.options.headers = getHeaders(token);
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       Response response = await dio.put(
         url,
         data: data,
@@ -77,7 +77,7 @@ class DioHelper {
   }) async {
     dio.options.headers = getHeaders(token);
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       Response response = await dio.delete(
         url,
       );

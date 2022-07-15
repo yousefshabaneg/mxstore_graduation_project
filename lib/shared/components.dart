@@ -1,15 +1,15 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:graduation_project/data/models/brand_model.dart';
-import 'package:graduation_project/data/models/category_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/filtered_item_view.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../data/models/brand_model.dart';
+import '../data/models/category_model.dart';
+import 'constants.dart';
+import 'helpers.dart';
+import 'resources/color_manager.dart';
+import 'widgets/filtered_item_view.dart';
+import 'widgets/indicators.dart';
 
 void showToast({
   required String msg,
@@ -22,18 +22,18 @@ void showToast({
       duration: Duration(seconds: seconds),
       contentColor: toastColor(state),
       clickClose: true,
-      align: Alignment(0, -1),
+      align: const Alignment(0, -1),
     );
 
-enum ToastStates { SUCCESS, ERROR, WARNING }
+enum ToastStates { success, error, warning }
 
 Color toastColor(ToastStates state) {
   switch (state) {
-    case ToastStates.SUCCESS:
+    case ToastStates.success:
       return Colors.green;
-    case ToastStates.ERROR:
+    case ToastStates.error:
       return Colors.red;
-    case ToastStates.WARNING:
+    case ToastStates.warning:
       return Colors.yellow;
   }
 }
@@ -43,7 +43,7 @@ Widget lvCategories(context, List<CategoryModel> categories) => Padding(
       child: SizedBox(
         height: kHeight * 0.12,
         child: ListView.builder(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) => Container(
             margin: EdgeInsets.only(right: kWidth * 0.06),
@@ -63,7 +63,7 @@ Widget lvCategories(context, List<CategoryModel> categories) => Padding(
                   Container(
                     width: kHeight * 0.08,
                     height: kHeight * 0.08,
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: ColorManager.info.withOpacity(0.5),
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -155,7 +155,7 @@ Widget kRatingBar() => RatingBar.builder(
       direction: Axis.horizontal,
       allowHalfRating: true,
       itemCount: 5,
-      itemBuilder: (context, _) => Icon(
+      itemBuilder: (context, _) => const Icon(
         Icons.star,
         color: Colors.amber,
       ),
@@ -164,7 +164,7 @@ Widget kRatingBar() => RatingBar.builder(
     );
 Widget kRatingIndicator({double size = 25.0, double rating = 5.0}) =>
     RatingBarIndicator(
-      itemBuilder: (context, _) => Icon(
+      itemBuilder: (context, _) => const Icon(
         Icons.star,
         color: Colors.amber,
       ),

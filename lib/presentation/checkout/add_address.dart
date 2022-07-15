@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
-import 'package:graduation_project/presentation/account/address_view.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../../business_logic/account_cubit/account_cubit.dart';
+import '../../business_logic/account_cubit/account_states.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/assets_manager.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/indicators.dart';
+import '../account/address_view.dart';
 
 class AddAddressView extends StatelessWidget {
   const AddAddressView({Key? key}) : super(key: key);

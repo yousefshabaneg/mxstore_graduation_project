@@ -1,22 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:graduation_project/data/dio_helper.dart';
-import 'package:graduation_project/data/models/address_model.dart';
-import 'package:graduation_project/data/models/banner_model.dart';
-import 'package:graduation_project/data/models/basket_model.dart';
-import 'package:graduation_project/data/models/brand_model.dart';
-import 'package:graduation_project/data/models/category_model.dart';
-import 'package:graduation_project/data/models/comment_model.dart';
-import 'package:graduation_project/data/models/delivery_model.dart';
-import 'package:graduation_project/data/models/favorites_model.dart';
-import 'package:graduation_project/data/models/identity/user_model.dart';
-import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/data/models/payment_model.dart';
-import 'package:graduation_project/data/models/product_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/constants_manager.dart';
 
+import '../../data/dio_helper.dart';
+import '../../data/models/address_model.dart';
+import '../../data/models/banner_model.dart';
+import '../../data/models/basket_model.dart';
+import '../../data/models/brand_model.dart';
+import '../../data/models/category_model.dart';
+import '../../data/models/comment_model.dart';
+import '../../data/models/delivery_model.dart';
+import '../../data/models/favorites_model.dart';
+import '../../data/models/identity/user_model.dart';
+import '../../data/models/order_model.dart';
+import '../../data/models/payment_model.dart';
+import '../../data/models/product_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/constants_manager.dart';
 import 'shop_states.dart';
 
 class ShopCubit extends Cubit<ShopStates> {
@@ -651,7 +651,7 @@ class ShopCubit extends Cubit<ShopStates> {
   }
 
   Future<void> cancelOrder(OrderModel orderModel) async {
-    if (orderModel.orderStatus != OrderStatus.Cancelled) {
+    if (orderModel.orderStatus != OrderStatus.cancelled) {
       emit(ShopLoadingCancelOrderState());
       await DioHelper.getData(
               url: "${ConstantsManager.CancelOrder}/${orderModel.id}",

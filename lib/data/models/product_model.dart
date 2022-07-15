@@ -1,4 +1,4 @@
-import 'package:graduation_project/data/models/comment_model.dart';
+import 'comment_model.dart';
 
 class ProductItemModel {
   int? id;

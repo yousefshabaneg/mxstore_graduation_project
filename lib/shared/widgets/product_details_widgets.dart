@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/data/models/product_model.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/scroll_top_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+
+import '../../data/models/product_model.dart';
+import '../components.dart';
+import '../constants.dart';
+import '../helpers.dart';
+import '../resources/color_manager.dart';
+import 'app_buttons.dart';
+import 'app_text.dart';
+import 'bottom_sheet_widgets/scroll_top_sheet.dart';
 
 class WarrantyWidget extends StatelessWidget {
   const WarrantyWidget({Key? key}) : super(key: key);
@@ -91,7 +92,7 @@ class WarrantyWidget extends StatelessWidget {
 
 class SpecificationExpansionList extends StatefulWidget {
   SpecificationExpansionList({Key? key, required this.specs}) : super(key: key);
-  Map<String, dynamic> specs = {};
+  final Map<String, dynamic> specs;
 
   @override
   State<SpecificationExpansionList> createState() =>

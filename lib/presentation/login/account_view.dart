@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/presentation/login/login_view.dart';
-import 'package:graduation_project/presentation/login/register_view.dart';
+
+import 'login_view.dart';
+import 'register_view.dart';
 
 PageController accountController = PageController();
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
+
+import '../../shared/helpers.dart';
+import '../../shared/resources/assets_manager.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
 
 class ReviewSuccessfullyWidget extends StatelessWidget {
   const ReviewSuccessfullyWidget({Key? key}) : super(key: key);

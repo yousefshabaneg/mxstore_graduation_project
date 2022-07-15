@@ -1,17 +1,18 @@
 import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:graduation_project/config.dart';
-import 'package:graduation_project/data/cashe_helper.dart';
-import 'package:graduation_project/data/dio_helper.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/resources/constants_manager.dart';
-import 'package:graduation_project/shared/resources/routes_manager.dart';
 
 import 'app/app.dart';
 import 'business_logic/bloc_observer.dart';
+import 'config.dart';
+import 'data/cashe_helper.dart';
+import 'data/dio_helper.dart';
+import 'shared/constants.dart';
+import 'shared/resources/constants_manager.dart';
+import 'shared/resources/routes_manager.dart';
 
 void chooseStartupWidget({required bool onBoarding, required String token}) {
   if (onBoarding) {

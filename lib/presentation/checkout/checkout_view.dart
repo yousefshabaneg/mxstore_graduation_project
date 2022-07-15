@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/presentation/checkout/add_address.dart';
-import 'package:graduation_project/presentation/checkout/add_delivery.dart';
-import 'package:graduation_project/presentation/checkout/order_confirmed_view.dart';
-import 'package:graduation_project/presentation/checkout/summary.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../../business_logic/account_cubit/account_cubit.dart';
+import '../../business_logic/account_cubit/account_states.dart';
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../business_logic/user_cubit/user_cubit.dart';
+import '../../shared/components.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/indicators.dart';
+import 'add_address.dart';
+import 'add_delivery.dart';
+import 'order_confirmed_view.dart';
+import 'summary.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({Key? key}) : super(key: key);
@@ -65,12 +66,12 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           if (state is ShopSuccessCreateOrderState) {
             showToast(
                 msg: ShopCubit.get(context).successMessage,
-                state: ToastStates.SUCCESS);
+                state: ToastStates.success);
           }
           if (state is ShopErrorCreateOrderState) {
             showToast(
                 msg: ShopCubit.get(context).errorMessage,
-                state: ToastStates.ERROR);
+                state: ToastStates.error);
           }
         },
         builder: (context, state) => Scaffold(

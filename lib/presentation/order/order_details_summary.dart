@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/data/models/order_model.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/product_details_widgets.dart';
+
+import '../../data/models/order_model.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/product_details_widgets.dart';
 
 class OrderDetailsSummaryItem extends StatelessWidget {
   const OrderDetailsSummaryItem(
@@ -48,8 +49,8 @@ class OrderDetailsSummaryItem extends StatelessWidget {
             ),
           ],
         ),
-        if (orderModel.orderStatus != OrderStatus.Cancelled &&
-            orderModel.orderStatus != OrderStatus.Delivered) ...[
+        if (orderModel.orderStatus != OrderStatus.cancelled &&
+            orderModel.orderStatus != OrderStatus.delivered) ...[
           kVSeparator(),
           ProductDetailsHelpers.deliverBy(),
         ]

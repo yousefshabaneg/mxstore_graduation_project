@@ -1,4 +1,4 @@
-import 'package:graduation_project/shared/resources/routes_manager.dart';
+import 'routes_manager.dart';
 
 const String IMAGE_PATH = "assets/images";
 

@@ -2,20 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_project/business_logic/app_cubit/app_cubit.dart';
-import 'package:graduation_project/business_logic/app_cubit/app_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/textfield.dart';
-import 'package:graduation_project/presentation/account/settings_view.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
+
+import '../../../business_logic/app_cubit/app_cubit.dart';
+import '../../../business_logic/app_cubit/app_states.dart';
+import '../../../business_logic/user_cubit/user_cubit.dart';
+import '../../../business_logic/user_cubit/user_states.dart';
+import '../../../presentation/account/settings_view.dart';
+import '../../components.dart';
+import '../../constants.dart';
+import '../../helpers.dart';
+import '../../resources/assets_manager.dart';
+import '../../resources/color_manager.dart';
+import '../app_buttons.dart';
+import '../app_text.dart';
+import '../indicators.dart';
+import '../textfield.dart';
 
 class EditPasswordWidget extends StatefulWidget {
   @override
@@ -91,7 +92,7 @@ class _EditPasswordWidgetState extends State<EditPasswordWidget> {
                     } else if (state is ChangePasswordErrorState) {
                       showToast(
                           msg: UserCubit.get(context).errorMessage,
-                          state: ToastStates.ERROR);
+                          state: ToastStates.error);
                     }
                   },
                   builder: (context, state) => SingleChildScrollView(

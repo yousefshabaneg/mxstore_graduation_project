@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+
+import '../constants.dart';
+import '../helpers.dart';
+import '../resources/color_manager.dart';
 
 class GalleryWidget extends StatefulWidget {
   GalleryWidget({required this.urlImages, required this.name, this.index = 0})
       : pageController = PageController(initialPage: index);
   final List<String> urlImages;
   final String name;
-  int index;
+  final int index;
   final PageController pageController;
 
   void changeIndex(index) {

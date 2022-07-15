@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shared/constants.dart';
+
+import '../constants.dart';
 
 class BodyText extends StatelessWidget {
   final double size;

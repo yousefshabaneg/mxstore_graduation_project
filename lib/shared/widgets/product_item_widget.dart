@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/data/models/basket_model.dart';
-import 'package:graduation_project/data/models/product_model.dart';
-import 'package:graduation_project/presentation/cart/cart_items.dart';
-import 'package:graduation_project/presentation/products/product_details_view.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/shimmer_loading.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../data/models/basket_model.dart';
+import '../../data/models/product_model.dart';
+import '../../presentation/cart/cart_items.dart';
+import '../../presentation/products/product_details_view.dart';
+import '../constants.dart';
+import '../helpers.dart';
+import '../resources/assets_manager.dart';
+import '../resources/color_manager.dart';
+import 'app_buttons.dart';
+import 'indicators.dart';
+import 'shimmer_loading.dart';
+
 class ProductItemWidget extends StatelessWidget {
-  ProductItemModel? model;
-  bool cartProduct = false;
+  final ProductItemModel? model;
+  final bool cartProduct;
   ProductItemWidget({
     Key? key,
-    this.model,
+    required this.model,
     this.cartProduct = false,
   }) : super(key: key);
   @override
@@ -63,7 +64,7 @@ class ProductItemWidget extends StatelessWidget {
             kVSeparator(),
             Align(
               alignment: Alignment.center,
-              child: true
+              child: model!.imageUrl != null || model!.imageUrl!.isNotEmpty
                   ? FadeInImage.assetNetwork(
                       placeholder: ImageAssets.loading,
                       image: model!.imageUrl!,
@@ -191,12 +192,12 @@ class ProductsHorizontalListBuilder extends StatefulWidget {
     this.categoryId,
     this.brandId,
   }) : super(key: key);
-  List<ProductItemModel> products = [];
-  int? brandId;
-  int? categoryId;
+  final List<ProductItemModel> products;
+  final int? brandId;
+  final int? categoryId;
   final String title;
   final double size;
-  bool cartProduct = false;
+  final bool cartProduct;
 
   @override
   State<ProductsHorizontalListBuilder> createState() =>

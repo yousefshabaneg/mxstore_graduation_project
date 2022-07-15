@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:graduation_project/data/models/boarding_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
+
+import '../../data/models/boarding_model.dart';
+import '../constants.dart';
+import '../helpers.dart';
+import '../resources/color_manager.dart';
+import 'app_text.dart';
 
 class BoardingItem extends StatelessWidget {
-  late OnBoardingModel model;
+  final OnBoardingModel model;
   BoardingItem({
     Key? key,
     required this.model,

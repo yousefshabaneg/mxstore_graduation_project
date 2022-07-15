@@ -2,20 +2,21 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_cubit.dart';
-import 'package:graduation_project/business_logic/shop_cubit/shop_states.dart';
-import 'package:graduation_project/presentation/cart/cart_items.dart';
-import 'package:graduation_project/presentation/cart/favorites_item.dart';
-import 'package:graduation_project/presentation/checkout/checkout_view.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/assets_manager.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
-import 'package:graduation_project/shared/widgets/delivery_services_widget.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/product_item_widget.dart';
+
+import '../../business_logic/shop_cubit/shop_cubit.dart';
+import '../../business_logic/shop_cubit/shop_states.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/assets_manager.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/app_text.dart';
+import '../../shared/widgets/delivery_services_widget.dart';
+import '../../shared/widgets/indicators.dart';
+import '../../shared/widgets/product_item_widget.dart';
+import '../checkout/checkout_view.dart';
+import 'cart_items.dart';
+import 'favorites_item.dart';
 
 class CartView extends StatelessWidget {
   CartView({Key? key}) : super(key: key);

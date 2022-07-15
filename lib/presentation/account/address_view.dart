@@ -2,20 +2,21 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_states.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/data/models/address_model.dart';
-import 'package:graduation_project/data/models/identity/user_model.dart';
-import 'package:graduation_project/shared/components.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/validator.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/indicators.dart';
-import 'package:graduation_project/shared/widgets/textfield.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+
+import '../../business_logic/account_cubit/account_cubit.dart';
+import '../../business_logic/account_cubit/account_states.dart';
+import '../../business_logic/user_cubit/user_cubit.dart';
+import '../../data/models/address_model.dart';
+import '../../data/models/identity/user_model.dart';
+import '../../shared/components.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/validator.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/indicators.dart';
+import '../../shared/widgets/textfield.dart';
 
 class AddressView extends StatefulWidget {
   const AddressView({Key? key}) : super(key: key);
@@ -89,11 +90,11 @@ class _AddressViewState extends State<AddressView> {
           Navigator.pop(context);
           showToast(
               msg: AccountCubit.get(context).successMessage,
-              state: ToastStates.SUCCESS);
+              state: ToastStates.success);
         } else if (state is ShopErrorUpdateAddressState) {
           showToast(
               msg: AccountCubit.get(context).errorMessage,
-              state: ToastStates.ERROR);
+              state: ToastStates.error);
         }
       },
       builder: (context, state) {

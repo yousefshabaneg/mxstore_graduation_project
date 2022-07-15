@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+
+import '../helpers.dart';
+import '../resources/color_manager.dart';
 
 class MyLoadingIndicator extends StatefulWidget {
   const MyLoadingIndicator({

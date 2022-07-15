@@ -1,5 +1,5 @@
-import 'package:graduation_project/data/models/favorites_model.dart';
-import 'package:graduation_project/data/models/product_model.dart';
+import '../../data/models/favorites_model.dart';
+import '../../data/models/product_model.dart';
 
 abstract class ShopStates {}
 

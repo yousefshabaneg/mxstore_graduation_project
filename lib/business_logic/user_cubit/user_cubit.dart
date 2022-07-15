@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/data/dio_helper.dart';
-import 'package:graduation_project/data/models/identity/user_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/resources/constants_manager.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../data/dio_helper.dart';
+import '../../data/models/identity/user_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/resources/constants_manager.dart';
 import 'user_states.dart';
 
 class UserCubit extends Cubit<UserStates> {

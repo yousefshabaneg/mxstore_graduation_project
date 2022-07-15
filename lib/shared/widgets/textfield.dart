@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
+
+import '../constants.dart';
+import '../resources/color_manager.dart';
 
 class AppFormField extends StatelessWidget {
-  TextEditingController controller;
-  TextInputType type;
-  TextInputAction inputAction;
-  Iterable<String>? autoFill;
-  String hint;
-  IconData? prefixIcon;
-  IconData? suffixIcon;
-  bool isPassword;
-  FocusNode? focusNode;
-  bool enabled;
-  double padding;
-  VoidCallback? onPressed;
-  ValueChanged<String>? onSubmit;
-  String? Function(String?)? validate;
-  ValueChanged<String>? onChanged;
-  AppFormField({
+  final TextEditingController controller;
+  final TextInputType type;
+  final TextInputAction inputAction;
+  final Iterable<String>? autoFill;
+  final String hint;
+  final IconData? prefixIcon;
+  final IconData? suffixIcon;
+  final bool isPassword;
+  final FocusNode? focusNode;
+  final bool enabled;
+  final double padding;
+  final VoidCallback? onPressed;
+  final ValueChanged<String>? onSubmit;
+  final String? Function(String?)? validate;
+  final ValueChanged<String>? onChanged;
+  const AppFormField({
     required this.hint,
     required this.type,
     this.inputAction = TextInputAction.done,

@@ -1,4 +1,4 @@
-import 'package:graduation_project/data/models/identity/user_model.dart';
+import '../../data/models/identity/user_model.dart';
 
 abstract class UserStates {}
 

@@ -1,19 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graduation_project/business_logic/account_cubit/account_cubit.dart';
-import 'package:graduation_project/business_logic/search_cubit/search_cubit.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/data/cashe_helper.dart';
-import 'package:graduation_project/presentation/account/account_view.dart';
-import 'package:graduation_project/presentation/cart/cart_view.dart';
-import 'package:graduation_project/presentation/categories/categories_view.dart';
-import 'package:graduation_project/presentation/categories/category_constants.dart';
-import 'package:graduation_project/presentation/products/products_view.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/resources/routes_manager.dart';
-import 'package:graduation_project/shared/widgets/app_text.dart';
+
+import '../business_logic/account_cubit/account_cubit.dart';
+import '../business_logic/search_cubit/search_cubit.dart';
+import '../business_logic/user_cubit/user_cubit.dart';
+import '../data/cashe_helper.dart';
+import '../presentation/account/account_view.dart';
+import '../presentation/cart/cart_view.dart';
+import '../presentation/categories/categories_view.dart';
+import '../presentation/categories/category_constants.dart';
+import '../presentation/products/products_view.dart';
+import 'helpers.dart';
+import 'resources/color_manager.dart';
+import 'resources/routes_manager.dart';
+import 'widgets/app_text.dart';
 
 String token = '';
 String basketId = '';
@@ -41,12 +42,13 @@ List<Widget> bottomScreens = [
 ];
 
 List<BottomNavigationBarItem> bottomItems = [
-  BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.house), label: "Home"),
-  BottomNavigationBarItem(
+  const BottomNavigationBarItem(
+      icon: FaIcon(FontAwesomeIcons.house), label: "Home"),
+  const BottomNavigationBarItem(
       icon: FaIcon(FontAwesomeIcons.shapes), label: "Categories"),
-  BottomNavigationBarItem(
+  const BottomNavigationBarItem(
       icon: FaIcon(FontAwesomeIcons.solidUser), label: "Account"),
-  BottomNavigationBarItem(
+  const BottomNavigationBarItem(
       icon: FaIcon(FontAwesomeIcons.cartShopping), label: "Cart"),
 ];
 
@@ -71,8 +73,8 @@ CupertinoTabView kCupertinoTabBuilder(context, index) {
     case 1:
       return CupertinoTabView(
           builder: (context) => CupertinoPageScaffold(
-                child: CategoriesView(),
                 navigationBar: categoryAppBar(context),
+                child: CategoriesView(),
               ));
     case 2:
       return CupertinoTabView(
@@ -81,7 +83,7 @@ CupertinoTabView kCupertinoTabBuilder(context, index) {
       return CupertinoTabView(
           builder: (context) => CupertinoPageScaffold(child: CartView()));
     default:
-      return CupertinoTabView();
+      return const CupertinoTabView();
   }
 }
 
@@ -89,7 +91,7 @@ CupertinoNavigationBar customAppBar(context, title,
         {icon = CupertinoIcons.left_chevron, onPressed}) =>
     CupertinoNavigationBar(
       leading: CupertinoButton(
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         child: Icon(
           icon,
           color: ColorManager.dark,
@@ -102,14 +104,14 @@ CupertinoNavigationBar customAppBar(context, title,
       ),
       middle: Text(title, style: kTheme.textTheme.headline4),
       backgroundColor: Colors.white,
-      padding: EdgeInsetsDirectional.only(start: 0),
+      padding: const EdgeInsetsDirectional.only(start: 0),
     );
 
 CupertinoNavigationBar customAppBarWithNoTitle(context,
         {icon = CupertinoIcons.left_chevron, onPressed}) =>
     CupertinoNavigationBar(
       leading: CupertinoButton(
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         child: Row(
           children: [
             Icon(
@@ -117,8 +119,8 @@ CupertinoNavigationBar customAppBarWithNoTitle(context,
               color: ColorManager.dark,
               size: 20,
             ),
-            SizedBox(width: 10),
-            BodyText(text: "Back"),
+            const SizedBox(width: 10),
+            const BodyText(text: "Back"),
           ],
         ),
         onPressed: () {
@@ -131,10 +133,10 @@ CupertinoNavigationBar customAppBarWithNoTitle(context,
 
 // Home AppBar
 CupertinoNavigationBar homeAppBar(context) => CupertinoNavigationBar(
-      padding: EdgeInsetsDirectional.only(start: 0),
+      padding: const EdgeInsetsDirectional.only(start: 0),
       leading: SearchCubit.get(context).isSearching
           ? CupertinoButton(
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: Icon(
                 CupertinoIcons.left_chevron,
                 color: ColorManager.dark,
@@ -149,7 +151,7 @@ CupertinoNavigationBar homeAppBar(context) => CupertinoNavigationBar(
       middle: SearchCubit.get(context).isSearching
           ? searchingField(context)
           : searchContainer(context),
-      border: Border(bottom: BorderSide(color: Colors.transparent)),
+      border: const Border(bottom: BorderSide(color: Colors.transparent)),
       backgroundColor: Colors.white,
       trailing: appBarTrailing(context),
     );

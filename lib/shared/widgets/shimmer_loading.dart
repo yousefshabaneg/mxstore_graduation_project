@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../helpers.dart';
+import '../resources/color_manager.dart';
 
 class ShimmerHomeLoading extends StatelessWidget {
   const ShimmerHomeLoading({Key? key}) : super(key: key);

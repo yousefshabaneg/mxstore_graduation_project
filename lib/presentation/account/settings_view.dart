@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_cubit.dart';
-import 'package:graduation_project/business_logic/user_cubit/user_states.dart';
-import 'package:graduation_project/data/models/identity/user_model.dart';
-import 'package:graduation_project/shared/constants.dart';
-import 'package:graduation_project/shared/helpers.dart';
-import 'package:graduation_project/shared/resources/color_manager.dart';
-import 'package:graduation_project/shared/widgets/app_buttons.dart';
-import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/change_password_sheet.dart';
-import 'package:graduation_project/shared/widgets/bottom_sheet_widgets/edit_personal_info_sheet.dart';
+
+import '../../business_logic/user_cubit/user_cubit.dart';
+import '../../business_logic/user_cubit/user_states.dart';
+import '../../data/models/identity/user_model.dart';
+import '../../shared/constants.dart';
+import '../../shared/helpers.dart';
+import '../../shared/resources/color_manager.dart';
+import '../../shared/widgets/app_buttons.dart';
+import '../../shared/widgets/bottom_sheet_widgets/change_password_sheet.dart';
+import '../../shared/widgets/bottom_sheet_widgets/edit_personal_info_sheet.dart';
 
 var emailController = TextEditingController();
 var passwordController = TextEditingController();
@@ -18,6 +19,7 @@ var confirmNewPasswordController = TextEditingController();
 var nameController = TextEditingController();
 var phoneController = TextEditingController();
 
+// ignore: must_be_immutable
 class SettingsView extends StatelessWidget {
   SettingsView({Key? key, this.user}) : super(key: key);
   UserModel? user;

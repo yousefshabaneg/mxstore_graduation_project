@@ -1,5 +1,5 @@
-import 'package:graduation_project/data/models/address_model.dart';
-import 'package:graduation_project/shared/helpers.dart';
+import '../../shared/helpers.dart';
+import 'address_model.dart';
 
 class OrderModel {
   int? id;
